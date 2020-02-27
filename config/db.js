@@ -5,10 +5,12 @@ const db = config.get('mongoURI');
 const connectDB = async () => {
   try {
     mongoose.set('useUnifiedTopology', true);
+    // mongoose.set('useFindAndModify', false);
     await // Work around deprecated Server settings
     mongoose.connect(db, {
       useNewUrlParser: true,
-      useCreateIndex: true
+      useCreateIndex: true,
+      useFindAndModify: false
     });
     console.log('MongoDB connected...');
   } catch (err) {
