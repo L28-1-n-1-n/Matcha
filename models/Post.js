@@ -17,6 +17,7 @@ const PostSchema = new Schema({
     type: String
   },
   likes: [
+    // liked by which users
     {
       user: {
         type: Schema.Types.ObjectId,
@@ -25,6 +26,7 @@ const PostSchema = new Schema({
     }
   ],
   comments: [
+    // commented by which users
     {
       user: {
         type: Schema.Types.ObjectId,
