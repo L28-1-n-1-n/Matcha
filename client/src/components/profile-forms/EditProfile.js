@@ -1,25 +1,90 @@
-import React, { Fragment, useState } from 'react';
+import React, { Fragment, useState, useEffect } from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { createProfile } from '../../actions/profile';
+import { createProfile, getCurrentProfile } from '../../actions/profile';
 
-const CreateProfile = ({ createProfile, history }) => {
-  const [formData, setFormData] = useState({
-    company: '',
-    website: '',
-    location: '',
-    status: '',
-    githubusername: '',
-    skills: '',
-    bio: '',
-    twitter: '',
-    facebook: '',
-    linkedin: '',
-    youtube: '',
-    instagram: ''
-  });
+// const EditProfile = ({
+//   profile: { profile, loading },
+//   createProfile,
+//   getCurrentProfile,
+//   history
+// }) => {
+//   const [formData, setFormData] = useState({
+//     company: '',
+//     website: '',
+//     location: '',
+//     status: '',
+//     githubusername: '',
+//     skills: '',
+//     bio: '',
+//     twitter: '',
+//     facebook: '',
+//     linkedin: '',
+//     youtube: '',
+//     instagram: ''
+//   });
+//   const [displaySocialInputs, toggleSocialInputs] = useState(false);
+
+//   useEffect(() => {
+//     getCurrentProfile();
+//     setFormData({
+//       company: loading || !profile.company ? '' : profile.company,
+//       website: loading || !profile.website ? '' : profile.website,
+//       location: loading || !profile.location ? '' : profile.location,
+//       status: loading || !profile.status ? '' : profile.status,
+//       skills: loading || !profile.skills ? '' : profile.skills.join(','),
+//       githubusername:
+//         loading || !profile.githubusername ? '' : profile.githubusername,
+//       bio: loading || !profile.bio ? '' : profile.bio,
+//       twitter: loading || !profile.twitter ? '' : profile.twitter,
+//       facebook: loading || !profile.facebook ? '' : profile.facebook,
+//       linkedin: loading || !profile.linkedin ? '' : profile.linkedin,
+//       youtube: loading || !profile.youtube ? '' : profile.youtube,
+//       instagram: loading || !profile.instagram ? '' : profile.instagram
+//     });
+//   }, [loading]);
+
+const initialState = {
+  company: '',
+  website: '',
+  location: '',
+  status: '',
+  skills: '',
+  githubusername: '',
+  bio: '',
+  twitter: '',
+  facebook: '',
+  linkedin: '',
+  youtube: '',
+  instagram: ''
+};
+
+const EditProfile = ({
+  profile: { profile, loading },
+  createProfile,
+  getCurrentProfile,
+  history
+}) => {
+  const [formData, setFormData] = useState(initialState);
+
   const [displaySocialInputs, toggleSocialInputs] = useState(false);
+
+  useEffect(() => {
+    if (!profile) getCurrentProfile();
+    if (!loading) {
+      const profileData = { ...initialState };
+      for (const key in profile) {
+        if (key in profileData) profileData[key] = profile[key];
+      }
+      for (const key in profile.social) {
+        if (key in profileData) profileData[key] = profile.social[key];
+      }
+      setFormData(profileData);
+    }
+  }, [loading, getCurrentProfile, profile]);
+
+  // The prop to depend on is loading, setFormData will run when it is loaded
   const {
     company,
     website,
@@ -40,18 +105,18 @@ const CreateProfile = ({ createProfile, history }) => {
 
   const onSubmit = e => {
     e.preventDefault();
-    createProfile(formData, history);
+    createProfile(formData, history, true);
   };
   return (
     <Fragment>
-      <h1 class='large text-primary'>Create Your Profile</h1>
-      <p class='lead'>
-        <i class='fas fa-user'></i> Let's get some information to make your
+      <h1 className='large text-primary'>Create Your Profile</h1>
+      <p className='lead'>
+        <i className='fas fa-user'></i> Let's get some information to make your
         profile stand out
       </p>
       <small>* = required field</small>
-      <form class='form' onSubmit={e => onSubmit(e)}>
-        <div class='form-group'>
+      <form className='form' onSubmit={e => onSubmit(e)}>
+        <div className='form-group'>
           <select name='status' value={status} onChange={e => onChange(e)}>
             <option value='0'>* Select Professional Status</option>
             <option value='Developer'>Developer</option>
@@ -63,7 +128,7 @@ const CreateProfile = ({ createProfile, history }) => {
             <option value='Intern'>Intern</option>
             <option value='Other'>Other</option>
           </select>
-          <small class='form-text'>
+          <small className='form-text'>
             Give us an idea of where you are at in your career
           </small>
         </div>
@@ -217,10 +282,18 @@ const CreateProfile = ({ createProfile, history }) => {
   );
 };
 
-CreateProfile.propTypes = {
-  createProfile: PropTypes.func.isRequired
+EditProfile.propTypes = {
+  createProfile: PropTypes.func.isRequired,
+  getCurrentProfile: PropTypes.func.isRequired,
+  profile: PropTypes.object.isRequired
 };
 
-export default connect(null, { createProfile })(withRouter(CreateProfile));
+const mapStateToProps = state => ({
+  profile: state.profile
+});
 
-// CreateProfile is wrapped in withRouter() to enable use of "history" action
+export default connect(mapStateToProps, { createProfile, getCurrentProfile })(
+  withRouter(EditProfile)
+);
+
+// EditProfile is wrapped in withRouter() to enable use of "history" action
