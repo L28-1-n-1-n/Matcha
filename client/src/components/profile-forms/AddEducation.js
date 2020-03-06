@@ -98,7 +98,7 @@ const AddEducation = ({ addEducation, history }) => {
           </p>
         </div>
         {/* the {' '} is such that it does not show up in JSX */}
-        {/* toggleDisabled is used to hide the 'to' field if experience is curent, hence only from date is required */}
+        {/* toggleDisabled is used to hide the 'to' field if education is curent, hence only from date is required */}
         <div className='form-group'>
           <h4>To Date</h4>
           <input

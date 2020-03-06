@@ -256,7 +256,7 @@ router.delete('/experience/:exp_id', auth, async (req, res) => {
 // @access  Private
 
 router.put(
-  '/education', // use PUT to create url that did not exist before, and update content, use POST to create and update if URL already exists
+  '/education',
   [
     auth,
     [
@@ -269,9 +269,10 @@ router.put(
       check('fieldofstudy', 'Field of study is required')
         .not()
         .isEmpty(),
-      check('from', 'From date is required')
+      check('from', 'From date is required and needs to be from the past')
         .not()
         .isEmpty()
+        .custom((value, { req }) => (req.body.to ? value < req.body.to : true))
     ]
   ],
   async (req, res) => {
