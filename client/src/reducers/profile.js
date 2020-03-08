@@ -37,7 +37,7 @@ export default function(state = initialState, action) {
         ...state,
         error: payload,
         loading: false,
-        profile: null
+        profile: null // Clear the profile state of the last user browsed, before a new one registers
       };
     case CLEAR_PROFILE:
       return {
