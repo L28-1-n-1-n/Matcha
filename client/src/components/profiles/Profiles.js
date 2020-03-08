@@ -8,7 +8,7 @@ import { getProfiles } from '../../actions/profile';
 const Profiles = ({ getProfiles, profile: { profiles, loading } }) => {
   useEffect(() => {
     getProfiles();
-  }, []); // run getProfiles once only (empty []) once it loads, so that profiles are put into the state
+  }, [getProfiles]); // run getProfiles once only (empty []) once it loads, so that profiles are put into the state
   return (
     <Fragment>
       {loading ? (
@@ -44,5 +44,3 @@ const mapStateToProps = state => ({
 });
 
 export default connect(mapStateToProps, { getProfiles })(Profiles);
-
-
