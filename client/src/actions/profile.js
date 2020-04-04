@@ -100,7 +100,16 @@ export const createProfile = (
       }
     };
     const res = await axios.post('/api/profile', formData, config);
-
+    // const res = await axios.post(
+    //   '/upload',
+    //   upload.single('file'),
+    //   (req, res) => {
+    //     console.log('we are here');
+    //     res.json({ file: req.file });
+    //     res.redirect('/');
+    //     console.log('Success!');
+    //   }
+    // );
     dispatch({
       type: GET_PROFILE,
       payload: res.data

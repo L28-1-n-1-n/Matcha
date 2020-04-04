@@ -138,6 +138,30 @@ const CreateProfile = ({ createProfile, history }) => {
           <small className='form-text'>Tell us a little about yourself</small>
         </div>
 
+        <div className='container'>
+          <div className='form-group'>
+            <h1 class='small text-primary'>Create Your Profile</h1>
+            <form action='/upload' method='POST' enctype='multipart/form-data'>
+              <div class='custom-file mb-3'>
+                <input
+                  type='file'
+                  name='file'
+                  id='file'
+                  class='custom-file-input'
+                />
+                <label for='file' class='custom-file-label'>
+                  Choose file
+                </label>
+              </div>
+              <input
+                type='submit'
+                value='Submit'
+                class='btn btn-primary btn-block'
+              />
+            </form>
+          </div>
+        </div>
+
         <div className='my-2'>
           <button
             onClick={() => toggleSocialInputs(!displaySocialInputs)}

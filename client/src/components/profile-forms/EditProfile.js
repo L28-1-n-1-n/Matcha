@@ -4,6 +4,20 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { createProfile, getCurrentProfile } from '../../actions/profile';
 
+// import Input from '@material-ui/core/Input';
+// import TextField from '@material-ui/core/TextField';
+// import Button from '@material-ui/core/Button';
+// import { makeStyles } from '@material-ui/core/styles';
+
+// const useStyles = makeStyles(theme => ({
+//   root: {
+//     '& > *': {
+//       margin: theme.spacing(1),
+//       width: '25ch'
+//     }
+//   }
+// }));
+
 // const EditProfile = ({
 //   profile: { profile, loading },
 //   createProfile,
@@ -59,7 +73,6 @@ const initialState = {
   youtube: '',
   instagram: ''
 };
-
 const EditProfile = ({
   profile: { profile, loading },
   createProfile,
@@ -70,6 +83,7 @@ const EditProfile = ({
 
   const [displaySocialInputs, toggleSocialInputs] = useState(false);
 
+  // const classes = useStyles();
   useEffect(() => {
     if (!profile) getCurrentProfile();
     if (!loading) {
@@ -109,7 +123,7 @@ const EditProfile = ({
   };
   return (
     <Fragment>
-      <h1 className='large text-primary'>Create Your Profile</h1>
+      <h1 className='large text-primary'>Edit Your Profile</h1>
       <p className='lead'>
         <i className='fas fa-user'></i> Let's get some information to make your
         profile stand out
@@ -203,6 +217,60 @@ const EditProfile = ({
           <small className='form-text'>Tell us a little about yourself</small>
         </div>
 
+        <div className='form-group'>
+          <h1 className='small text-primary'>Upload photos</h1>
+          <form action='/upload' method='POST' encType='multipart/form-data'>
+            <div className='custom-file mb-3'>
+              <input
+                type='file'
+                name='file'
+                id='file'
+                className='custom-file-input'
+              />
+              <label htmlFor='file' className='custom-file-label'>
+                Choose FILE
+              </label>
+            </div>
+            <input
+              type='submit'
+              value='Submit'
+              className='btn btn-primary btn-block'
+            />
+          </form>
+        </div>
+
+        {/* 
+        <div>
+          <form className={classes.root} noValidate autoComplete='off'>
+            <TextField id='standard-basic' label='Standard' />
+            <TextField id='filled-basic' label='Filled' variant='filled' />
+            <TextField
+              id='outlined-basic'
+              label='Outlined'
+              variant='outlined'
+            />
+          </form>
+        </div>
+        <div>
+          <input
+            accept='image/*'
+            className={classes.input}
+            style={{ display: 'none' }}
+            id='raised-button-file'
+            multiple
+            type='file'
+          />
+          <label htmlFor='raised-button-file'>
+            <Button
+              variant='raised'
+              component='span'
+              className={classes.button}
+            >
+              Upload
+            </Button>
+          </label>
+        </div>
+         */}
         <div className='my-2'>
           <button
             onClick={() => toggleSocialInputs(!displaySocialInputs)}
