@@ -11,6 +11,9 @@ export const Navbar = ({ auth: { isAuthenticated, loading }, logout }) => {
         <Link to='/profiles'>Developers</Link>
       </li>
       <li>
+        <Link to='/photos'>Gallery</Link>
+      </li>
+      <li>
         <Link to='/posts'>Posts</Link>
       </li>
       <li>
@@ -61,10 +64,10 @@ export const Navbar = ({ auth: { isAuthenticated, loading }, logout }) => {
 // equivalent to { !loading ? '' : null }
 Navbar.propTypes = {
   logout: PropTypes.func.isRequired,
-  auth: PropTypes.object.isRequired
+  auth: PropTypes.object.isRequired,
 };
 
-const mapStateToProps = state => ({
-  auth: state.auth
+const mapStateToProps = (state) => ({
+  auth: state.auth,
 });
 export default connect(mapStateToProps, { logout })(Navbar);

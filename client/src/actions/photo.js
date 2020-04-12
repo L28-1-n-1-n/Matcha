@@ -6,88 +6,108 @@ import {
   UPDATE_LIKES,
   DELETE_PHOTO,
   ADD_PHOTO,
-  GET_PHOTO
+  GET_PHOTO,
   // ADD_COMMENT,
   // REMOVE_COMMENT
 } from './types';
 
 // Get photos
-export const getPhotos = () => async dispatch => {
+export const getPhotos = () => async (dispatch) => {
   try {
     const res = await axios.get('/api/photos');
 
     dispatch({
       type: GET_PHOTOS,
-      payload: res.data
+      payload: res.data,
     });
   } catch (err) {
     dispatch({
       type: PHOTO_ERROR,
-      payload: { msg: err.response.statusText, status: err.response.status }
+      payload: { msg: err.response.statusText, status: err.response.status },
     });
   }
 };
 
+// arrayBufferToBase64(buffer) {
+//   var binary = '';
+//   var bytes = [].slice.call(new Uint8Array(buffer));
+//   bytes.forEach((b) => binary += String.fromCharCode(b));
+//   return window.btoa(binary);
+// };
+
+// componentDidMount() {
+//   fetch('http://yourserver.com/api/img_data')
+//   .then((res) => res.json())
+//   .then((data) => {
+//       // console.log(img)
+//       var base64Flag = 'data:image/jpeg;base64,';
+//       var imageStr = this.arrayBufferToBase64(data.img.data.data);
+//       this.setState({
+//           img: base64Flag + imageStr
+//       )}
+//   })
+// }
+
 // Add like
-export const addLike = id => async dispatch => {
+export const addLike = (id) => async (dispatch) => {
   try {
     const res = await axios.put(`/api/photos/like/${id}`);
 
     dispatch({
       type: UPDATE_LIKES,
-      payload: { id, likes: res.data }
+      payload: { id, likes: res.data },
     });
   } catch (err) {
     dispatch({
       type: PHOTO_ERROR,
-      payload: { msg: err.response.statusText, status: err.response.status }
+      payload: { msg: err.response.statusText, status: err.response.status },
     });
   }
 };
 
 // Remove like
-export const removeLike = id => async dispatch => {
+export const removeLike = (id) => async (dispatch) => {
   try {
     const res = await axios.put(`/api/photos/unlike/${id}`);
 
     dispatch({
       type: UPDATE_LIKES,
-      payload: { id, likes: res.data }
+      payload: { id, likes: res.data },
     });
   } catch (err) {
     dispatch({
       type: PHOTO_ERROR,
-      payload: { msg: err.response.statusText, status: err.response.status }
+      payload: { msg: err.response.statusText, status: err.response.status },
     });
   }
 };
 
 // Delete photo
-export const deletePhoto = id => async dispatch => {
+export const deletePhoto = (id) => async (dispatch) => {
   try {
     await axios.delete(`/api/photos/${id}`);
 
     dispatch({
       type: DELETE_PHOTO,
-      payload: id
+      payload: id,
     });
 
     dispatch(setAlert('Photo Removed', 'success'));
   } catch (err) {
     dispatch({
       type: PHOTO_ERROR,
-      payload: { msg: err.response.statusText, status: err.response.status }
+      payload: { msg: err.response.statusText, status: err.response.status },
     });
   }
 };
 
 // Add photo
-export const addPhoto = formData => async dispatch => {
+export const addPhoto = (formData) => async (dispatch) => {
   console.log('hey ');
   const config = {
     headers: {
-      'Content-Type': 'application/json'
-    }
+      'Content-Type': 'application/json',
+    },
   };
   console.log('lol');
   try {
@@ -106,31 +126,31 @@ export const addPhoto = formData => async dispatch => {
     // );
     dispatch({
       type: ADD_PHOTO,
-      payload: res.data
+      payload: res.data,
     });
 
     dispatch(setAlert('Photo added', 'success'));
   } catch (err) {
     dispatch({
       type: PHOTO_ERROR,
-      payload: { msg: err.response.statusText, status: err.response.status }
+      payload: { msg: err.response.statusText, status: err.response.status },
     });
   }
 };
 
 // Get photo
-export const getPhoto = id => async dispatch => {
+export const getPhoto = (id) => async (dispatch) => {
   try {
     const res = await axios.get(`/api/photos/${id}`);
 
     dispatch({
       type: GET_PHOTO,
-      payload: res.data
+      payload: res.data,
     });
   } catch (err) {
     dispatch({
       type: PHOTO_ERROR,
-      payload: { msg: err.response.statusText, status: err.response.status }
+      payload: { msg: err.response.statusText, status: err.response.status },
     });
   }
 };

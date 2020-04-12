@@ -10,35 +10,43 @@ const FileUpload = () => {
   const [message, setMessage] = useState('');
   const [uploadPercentage, setUploadPercentage] = useState(0);
 
-  const onChange = e => {
+  const onChange = (e) => {
     setFile(e.target.files[0]);
     setFilename(e.target.files[0].name);
   };
 
-  const onSubmit = async e => {
+  const onSubmit = async (e) => {
     e.preventDefault();
     const formData = new FormData();
     formData.append('file', file);
 
     try {
-      const res = await axios.post('/upload', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        },
-        onUploadProgress: progressEvent => {
-          setUploadPercentage(
-            parseInt(
-              Math.round((progressEvent.loaded * 100) / progressEvent.total)
-            )
-          );
+      const res = await axios.post(
+        'http://localhost:5000/api/photos',
+        // '/upload',
+        formData,
+        {
+          headers: {
+            'Content-Type':
+              'multipart/form-data; boundary=${formData._boundary}',
+          },
+          onUploadProgress: (progressEvent) => {
+            setUploadPercentage(
+              parseInt(
+                Math.round((progressEvent.loaded * 100) / progressEvent.total)
+              )
+            );
 
-          // Clear percentage
-          setTimeout(() => setUploadPercentage(0), 10000);
+            // Clear percentage
+            setTimeout(() => setUploadPercentage(0), 10000);
+          },
         }
-      });
-
+      );
+      console.log('res.data is');
+      console.log(res.data.file);
       const { fileName, filePath } = res.data;
       console.log(filePath);
+
       setUploadedFile({ fileName, filePath });
 
       setMessage('File Uploaded');
@@ -59,13 +67,33 @@ const FileUpload = () => {
           <input
             type='file'
             className='custom-file-input'
-            id='customFile'
+            id='file'
+            name='file'
             onChange={onChange}
           />
           <label className='custom-file-label' htmlFor='customFile'>
             {filename}
           </label>
         </div>
+
+        <form action='/upload' method='POST' enctype='multipart/form-data'>
+          <div className='custom-file mb-3'>
+            <input
+              type='file'
+              name='file'
+              id='file'
+              className='custom-file-input'
+            />
+            <label for='file' className='custom-file-label'>
+              Choose File
+            </label>
+          </div>
+          <input
+            type='submit'
+            value='Submit'
+            className='btn btn-primary btn-block'
+          />
+        </form>
 
         <Progress percentage={uploadPercentage} />
 

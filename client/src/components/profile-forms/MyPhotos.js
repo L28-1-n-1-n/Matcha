@@ -23,14 +23,14 @@ import FileUpload from '../FileUpload';
 const initialState = {
   name: '',
   size: '',
-  type: ''
+  type: '',
 };
 const EditPhoto = ({
   photo: { photo, loading },
   // profile: { profile, loading },
   createProfile,
   // getCurrentProfile,
-  history
+  history,
 }) => {
   const [formData, setFormData] = useState(initialState);
 
@@ -62,14 +62,14 @@ const EditPhoto = ({
   // The prop to depend on is loading, setFormData will run when it is loaded
   const { name, size, type } = formData;
 
-  const onChange = e =>
+  const onChange = (e) =>
     // setFormData({ ...formData, [e.target.name]: e.target.value });
     {
       console.log(e.target.files[0]);
       setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
-  const onSubmit = e => {
+  const onSubmit = (e) => {
     e.preventDefault();
     console.log(formData);
     console.log(e.target.files[0]);
@@ -100,29 +100,29 @@ const EditPhoto = ({
 
         <FileUpload />
       </div>
-      {/* <form className='form' onSubmit={e => onSubmit(e)}>
-        <div className='form-group'>
-          <h1 className='small text-primary'>Upload photos</h1>
-          <form action='/upload' method='POST' encType='multipart/form-data'>
-            <div className='custom-file mb-3'>
-              <input
-                type='file'
-                name='file'
-                id='file'
-                className='custom-file-input'
-              />
-              <label htmlFor='file' className='custom-file-label'>
-                Choose FILE
-              </label>
-            </div>
+      {/* <form className='form' onSubmit={(e) => onSubmit(e)}> */}
+      {/* <div className='form-group'>
+        <h1 className='small text-primary'>Upload photos</h1>
+        <form action='/upload' method='POST' encType='multipart/form-data'>
+          <div className='custom-file mb-3'>
             <input
-              type='submit'
-              value='Submit'
-              className='btn btn-primary btn-block'
+              type='file'
+              name='file'
+              id='file'
+              className='custom-file-input'
             />
-          </form>
-        </div>
-      </form> */}
+            <label htmlFor='file' className='custom-file-label'>
+              Choose FILE
+            </label>
+          </div>
+          <input
+            type='submit'
+            value='Submit'
+            className='btn btn-primary btn-block'
+          />
+        </form>
+      </div> */}
+      {/* </form> */}
 
       {/* <form
         action='../../../../api/photos'
@@ -130,7 +130,7 @@ const EditPhoto = ({
         encType='multipart/form-data'
       > */}
       {/* <div className='form-group files'> */}
-      <form onSubmit={onSubmit}>
+      {/* <form onSubmit={onSubmit}>
         <div className='custom-file mb-3'>
           <label>Upload your photo</label>
           <input
@@ -152,8 +152,8 @@ const EditPhoto = ({
           onClick={onClick}
         >
          Upload
-        </button> */}
-      </form>
+        </button>
+      </form> */}
     </Fragment>
   );
 };
@@ -162,18 +162,18 @@ EditPhoto.propTypes = {
   // createProfile: PropTypes.func.isRequired,
   // getCurrentProfile: PropTypes.func.isRequired,
   // profile: PropTypes.object.isRequired,
-  photo: PropTypes.object.isRequired
+  photo: PropTypes.object.isRequired,
 };
 
-const mapStateToProps = state => ({
-  photo: state.photo
+const mapStateToProps = (state) => ({
+  photo: state.photo,
   // profile: state.profile
 });
 
 export default connect(mapStateToProps, {
   // createProfile,
   // getCurrentProfile,
-  getPhotos
+  getPhotos,
 })(withRouter(EditPhoto));
 
 // export default connect(mapStateToProps, {})(withRouter(EditPhoto));

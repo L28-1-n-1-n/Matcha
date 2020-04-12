@@ -1,154 +1,134 @@
-const express = require('express');
-const router = express.Router();
-const { check, validationResult } = require('express-validator');
-const auth = require('../../middleware/auth');
-const Post = require('../../models/Post');
-const Profile = require('../../models/Profile');
-const Photo = require('../../models/Photo');
-const User = require('../../models/User');
-// const upload = require('../../upload.js');
-
-// import { upload } from '../upload.js';
-// const bodyParser = require('body-parser');
-// const path = require('path');
-// const crypto = require('crypto');
+// const express = require('express');
+// const router = express.Router();
+// const { check, validationResult } = require('express-validator');
+// const auth = require('../../middleware/auth');
+// const Post = require('../../models/Post');
+// const Profile = require('../../models/Profile');
+// const Photo = require('../../models/Photo');
+// const User = require('../../models/User');
 // const multer = require('multer');
-// const GridFsStorage = require('multer-gridfs-storage');
-// const Grid = require('gridfs-stream');
-// const methodOverride = require('method-override');
-
-// const mongoose = require('mongoose');
-// const config = require('config');
-// const db = config.get('mongoURI');
-
+// const upload = require('../../upload');
 // // @route   POST api/users
 // // @desc    Create a post
 // // @access  Private
-
-// var conn = mongoose.connection;
-// conn.on('error', console.error.bind(console, 'Connection error'));
-// conn.once('open', () => {
-//   //Init Stream
-
-//   gfs = Grid(conn.db, mongoose.mongo);
-//   gfs.collection('uploads');
-// });
-
-// // Create Storage Engine
-
-// const storage = new GridFsStorage({
-//   url: db,
-//   file: (req, file) => {
-//     return new Promise((resolve, reject) => {
-//       crypto.randomBytes(16, (err, buf) => {
-//         if (err) {
-//           return reject(err);
-//         }
-//         const filename = buf.toString('hex') + path.extname(file.originalname);
-//         const fileInfo = {
-//           filename: filename,
-//           bucketName: 'uploads'
-//         };
-//         resolve(fileInfo);
-//       });
-//     });
-//   }
-// });
-// const upload = multer({ storage });
-
-// app.post('/upload', upload.single('file'), (req, res) => {
-//   console.log('we are here');
-//   res.json({ file: req.file });
-//   res.redirect('/');
-//   console.log('Success!');
-// });
-
-const bodyParser = require('body-parser');
-const path = require('path');
-const crypto = require('crypto');
-const multer = require('multer');
-const GridFsStorage = require('multer-gridfs-storage');
-const Grid = require('gridfs-stream');
-const methodOverride = require('method-override');
-
-const mongoose = require('mongoose');
-const config = require('config');
-const db = config.get('mongoURI');
 
 // @route   POST api/users
 // @desc    Create a post
 // @access  Private
 
-var conn = mongoose.connection;
-conn.on('error', console.error.bind(console, 'Connection error'));
-conn.once('open', () => {
-  //Init Stream
+// app.post('/upload', upload.single('file'), (req, res) => {
+//   if (req.files === null) {
+//     return res.status(400).json({ msg: 'No file uploaded' });
+//   }
+//   const file = req.files.file;
+//   console.log(file);
+//   file.mv(`${__dirname}/client/public/uploads/${file.name}`, (err) => {
+//     if (err) {
+//       console.error(err);
+//       return res.status(500).send(err);
+//     }
+//     const newPhoto = new Photo({
+//       text: 'LOL',
+//       fileName: file.name,
+//       filePath: `/uploads/${file.name}`,
+//     });
 
-  gfs = Grid(conn.db, mongoose.mongo);
-  gfs.collection('uploads');
-});
+//     const photo = newPhoto.save();
+//     console.log('photo is :');
+//     console.log(photo);
+//     res.json({ fileName: file.name, filePath: `/uploads/${file.name}` });
 
-// Create Storage Engine
+//     console.log('we are here');
 
-const storage = new GridFsStorage({
-  url: db,
-  file: (req, file) => {
-    return new Promise((resolve, reject) => {
-      crypto.randomBytes(16, (err, buf) => {
-        if (err) {
-          return reject(err);
-        }
-        const filename = buf.toString('hex') + path.extname(file.originalname);
-        const fileInfo = {
-          filename: filename,
-          bucketName: 'uploads'
-        };
-        resolve(fileInfo);
-      });
-    });
-  }
-});
+//     // res.json({ file: req.file });
+//     console.log('Success!');
+//   });
+// });
 
-const upload = multer({ storage });
+// router.post(
+//   '/',
+//   auth,
+//   upload.single('file'),
 
-router.post(
-  '/',
-  upload.single('file'),
-  //   [
-  //     auth,
-  //     [
-  //       check('text', 'Text is required')
-  //         .not()
-  //         .isEmpty()
-  //     ]
-  //   ],
-  async (req, res) => {
-    // const errors = validationResult(req);
-    // if (!errors.isEmpty()) {
-    //   return res.status(400).json({ errors: errors.array() });
-    // }
+//   //   [
+//   //     auth,
+//   //     [
+//   //       check('text', 'Text is required')
+//   //         .not()
+//   //         .isEmpty()
+//   //     ]
+//   //   ],
+//   async (req, res) => {
+//     // const errors = validationResult(req);
+//     // if (!errors.isEmpty()) {
+//     //   return res.status(400).json({ errors: errors.array() });
+//     // }
+//     if (req.files === null) {
+//       return res.status(400).json({ msg: 'No file uploaded' });
+//     }
 
-    try {
-      const user = await User.findById(req.user.id).select('-password');
-      // new Post() is used to create new instance newPost from model Post
-      const newPhoto = new Photo({
-        // text: req.body.text,
-        name: user.name,
-        avatar: user.avatar,
-        user: req.user.id
-      });
-      console.log('we are here');
-      res.json({ file: req.file });
-      res.redirect('/');
-      console.log('Success!');
-      const photo = await newPhoto.save();
-      res.json(photo);
-    } catch (err) {
-      console.error(err.message);
-      res.status(500).send('Server Error');
-    }
-  }
-);
+//     try {
+//       const user = await User.findById(req.user.id).select('-password');
+//       const file = req.files.file;
+//       // file.mv(`${__dirname}/client/public/uploads/${file.name}`, (err) => {
+//       file.mv(`../../client/public/uploads/${file.name}`, (err) => {
+//         if (err) {
+//           console.error(err);
+//           // return res.status(500).send(err);
+//         }
+//         // new Photo() is used to create new instance newPhoto from model Photo
+//         const newPhoto = new Photo({
+//           name: user.name,
+//           avatar: user.avatar,
+//           user: req.user.id,
+//           // text: req.body.text,
+//           text: 'LOL',
+//           fileName: file.name,
+//           filePath: `/uploads/${file.name}`,
+//         });
+
+//         // res.json({ fileName: file.name, filePath: `/uploads/${file.name}` });
+//         // res.json({ file: req.file });
+//         console.log('Success!');
+//       });
+//       const photo = await newPhoto.save();
+//       res.json(photo);
+//     } catch (err) {
+//       console.error(err.message);
+//       res.status(500).send('Server Error');
+//     }
+//   }
+// );
+
+// router.post('/upload', function (req, res) {
+//   upload(req, res, (error) => {
+//     if (error) {
+//       res.redirect('/');
+//     } else {
+//       if (req.file == undefined) {
+//         res.redirect('/');
+//       } else {
+//         /**
+//          * Create new record in mongoDB
+//          */
+//         var fullPath = 'files/' + req.file.filename;
+
+//         var document = {
+//           filePath: fullPath,
+//           fileName: req.file.filename,
+//         };
+
+//         var photo = new Photo(document);
+//         photo.save(function (error) {
+//           if (error) {
+//             throw error;
+//           }
+//           res.redirect('/');
+//         });
+//       }
+//     }
+//   });
+// });
 
 // @route GET api/posts
 // @desc Get all posts
@@ -343,5 +323,101 @@ router.post(
 //     res.status(500).send('Server Error');
 //   }
 // });
+
+// module.exports = router;
+
+const express = require('express');
+const router = express.Router();
+// const { check, validationResult } = require('express-validator');
+const auth = require('../../middleware/auth');
+const Photo = require('../../models/Photo');
+
+const User = require('../../models/User');
+
+const path = require('path');
+const multer = require('multer');
+const fs = require('fs');
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    const uploadsDir = path.join(
+      __dirname,
+      '..',
+      '..',
+      'client',
+      'public',
+      'uploads'
+    );
+    // fs.mkdirSync(uploadsDir)
+    cb(null, uploadsDir);
+  },
+  filename: function (req, file, cb) {
+    cb(null, file.originlaname);
+  },
+});
+const upload = multer({ storage });
+// const controller = require('../../controllers/images');
+// app.route('/').get(controller.index).post(upload.single("data").controller.create);
+// app.route('/:id').get(controller.show).put(controller.update).delete(controller.destroy);
+
+router.get('/', auth, async (req, res) => {
+  try {
+    const photos = await Photo.find().sort({ date: -1 }); // latest photo first
+    res.json(photos);
+    console.log('images are:');
+    console.log(photos);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
+});
+
+// .get(function(req, res) {
+//   Img.findOne({}, 'img createdAt', function(err, img) {
+//       if (err)
+//           res.send(err);
+//       // console.log(img);
+//       res.contentType('json');
+//       res.send(img);
+//   }).sort({ createdAt: 'desc' });
+
+router.post('/', auth, upload.single('file'), (req, res) => {
+  if (req.files === null) {
+    return res.status(400).json({ msg: 'No file uploaded' });
+  }
+
+  const user = User.findById(req.user.id).select('-password');
+  const file = req.files.file;
+  console.log(file);
+  const uploadsDir = path.join(
+    __dirname,
+    '..',
+    '..',
+    'client',
+    'public',
+    'uploads'
+  );
+  console.log(uploadsDir);
+  console.log(path.resolve(uploadsDir, file.name));
+  file.mv(path.resolve(uploadsDir, file.name), (err) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).send(err);
+    }
+
+    // new Photo() is used to create new instance newPost from model Photo
+    const newPhoto = new Photo({
+      name: user.name,
+      avatar: user.avatar,
+      user: req.user.id,
+      text: 'YOYOYO',
+      fileName: file.name,
+      filePath: `/uploads/${file.name}`,
+      // data: fs.readFileSync(`${__dirname}/client/public/uploads/${file.name}`),
+      data: fs.readFileSync(path.resolve(uploadsDir, file.name)),
+    });
+    const photo = newPhoto.save();
+    res.json(photo);
+  });
+});
 
 module.exports = router;
