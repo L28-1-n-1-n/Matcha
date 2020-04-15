@@ -16,6 +16,7 @@ import Posts from '../posts/Posts';
 import Post from '../post/Post';
 import NotFound from '../layout/NotFound';
 import PrivateRoute from '../routing/PrivateRoute';
+import VerificationSuccess from '../layout/VerificationSuccess';
 
 const Routes = () => {
   return (
@@ -35,6 +36,11 @@ const Routes = () => {
         <PrivateRoute exact path='/posts' component={Posts} />
         <PrivateRoute exact path='/photos' component={Photos} />
         <PrivateRoute exact path='/posts/:id' component={Post} />
+        <Route
+          exact
+          path='/users/confirmation/:token'
+          component={VerificationSuccess}
+        />
         <Route component={NotFound} />
       </Switch>
     </section>

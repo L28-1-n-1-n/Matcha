@@ -2,5 +2,7 @@
   "mongoURI": "mongodb+srv://root:root42@cluster0-axv6m.gcp.mongodb.net/test?retryWrites=true&w=majority",
   "jwtSecret": "mysecrettoken",
   "githubClientId": "0e9c35da28367033ce02",
-  "githubSecret": "7c62f97ee21cd78e15806c3a4681ef53f249601c"
+  "githubSecret": "7c62f97ee21cd78e15806c3a4681ef53f249601c",
+  "mailerUser": "no-reply.tindurr@outlook.com",
+  "mailerPass": "D6wLtS0vhwZrn"
 }
