@@ -38,7 +38,7 @@ const Routes = () => {
         <PrivateRoute exact path='/posts/:id' component={Post} />
         <Route
           exact
-          path='/users/confirmation/:token'
+          path='/confirmation/:token'
           component={VerificationSuccess}
         />
         <Route component={NotFound} />

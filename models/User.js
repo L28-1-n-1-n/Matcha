@@ -21,7 +21,7 @@ const UserSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
-  verification_token: {
+  token: {
     type: String,
   },
   confirmed: {

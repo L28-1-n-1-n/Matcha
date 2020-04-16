@@ -50,7 +50,7 @@ app.use('/api/auth', require('./routes/api/auth'));
 app.use('/api/profile', require('./routes/api/profile'));
 app.use('/api/posts', require('./routes/api/posts'));
 app.use('/api/photos', require('./routes/api/photos'));
-
+app.use('/api/confirmation', require('./routes/api/confirmation'));
 // var conn = mongoose.connection;
 // conn.on('error', console.error.bind(console, 'Connection error'));
 // let gfs;

@@ -103,7 +103,7 @@ router.post(
         { expiresIn: 360000 },
         (err, token) => {
           if (err) throw err;
-          user.verification_token = token;
+          user.token = token;
           user.save();
           const url = `http://localhost:3000/confirmation/${token}`;
           console.log('url is :');
