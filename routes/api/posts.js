@@ -56,15 +56,19 @@ router.get('/', auth, async (req, res) => {
 router.get('/:id', auth, async (req, res) => {
   try {
     const posts = await Post.findById(req.params.id);
+    console.log(posts);
     if (!posts) {
-      return res.stataus(404).json({ msg: 'Post not found' });
+      // console.log('res is here');
+      // console.log(res);
+      return res.status(404).json({ msg: 'Post not found1' });
     }
 
     res.json(posts);
   } catch (err) {
-    console.error(err.message);
+    // console.error(err.message);
+    console.log(err);
     if (err.kind === 'ObjectId') {
-      return res.status(404).json({ msg: 'Post not found' });
+      return res.status(404).json({ msg: 'Post not found2' });
     }
     res.status(500).send('Server Error');
   }

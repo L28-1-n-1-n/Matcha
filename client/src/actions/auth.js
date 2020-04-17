@@ -49,7 +49,13 @@ export const register = ({ name, email, password }) => async (dispatch) => {
       type: REGISTER_SUCCESS,
       payload: res.data,
     });
-    dispatch(loadUser());
+    // dispatch(loadUser());
+    dispatch(
+      setAlert(
+        'Please check your email and click on verification link.',
+        'success'
+      )
+    );
   } catch (err) {
     const errors = err.response.data.errors;
 

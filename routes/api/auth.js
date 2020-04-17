@@ -63,8 +63,7 @@ router.post(
           .status(400)
           .json({ errors: [{ msg: 'Invalid credentials' }] }); // array of errors
       }
-      console.log(user);
-      console.log(user.confirmed);
+
       if (!user.confirmed) {
         return res.status(400).json({
           errors: [
@@ -83,54 +82,12 @@ router.post(
       };
 
       // Use payload and token to sign token
-      //   jwt.sign(
-      //     payload,
-      //     config.get('jwtSecret'),
-      //     { expiresIn: 360000 },
-      //     (err, token) => {
-      //       if (err) throw err;
-      //       res.json({ token }); // callback : if no error, get token
-      //     }
-      //   );
-      // } catch (err) {
-      //   console.error(err.message);
-      //   res.status(500).send('Server error');
-      // }
       jwt.sign(
         payload,
         config.get('jwtSecret'),
         { expiresIn: 360000 },
         (err, token) => {
           if (err) throw err;
-          const url = `http://localhost:3000/confirmation/${token}`;
-          console.log('url is :');
-          // console.log(url);
-          const html = `Hello, <br />Thank you for signing up for Tindurr.<br /><br />Please click the link below to activate your account:<br /><a href=${url}>${url}</a>`;
-          // console.log(url);
-          console.log(html);
-          var mailOptions = {
-            from: 'no-reply.tindurr@outlook.com',
-            to: user.email,
-            subject: 'Confirm your Tindurr Account',
-            html: html,
-          };
-          console.log(mailOptions);
-          transporter.sendMail(
-            // {
-            //   from: 'no-reply@tindurr.com',
-            //   to: user.email,
-            //   subject: 'Confirm your Tindurr Account',
-            //   html: html,
-            // },
-            mailOptions,
-            (error, info) => {
-              if (error) {
-                return console.log(error);
-              } else {
-                console.log('Email sent: ' + info.response);
-              }
-            }
-          );
           res.json({ token }); // callback : if no error, get token
         }
       );

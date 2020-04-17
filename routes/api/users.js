@@ -106,8 +106,6 @@ router.post(
           user.token = token;
           user.save();
           const url = `http://localhost:3000/confirmation/${token}`;
-          console.log('url is :');
-          console.log(url);
           const html = `Hello, <br />Thank you for signing up for Tindurr.<br /><br />Please click the link below to activate your account:<br /><a href=${url}>${url}</a>`;
           console.log(html);
           var mailOptions = {
@@ -116,8 +114,6 @@ router.post(
             subject: 'Confirm your Tindurr Account',
             html: html,
           };
-          console.log(mailOptions);
-          console.log(user);
           transporter.sendMail(mailOptions, (error, info) => {
             if (error) {
               return console.log(error);

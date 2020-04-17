@@ -12,6 +12,8 @@ const VerificationSuccess = ({
   useEffect(() => {
     verifyEmail(match.params.token);
   }, [verifyEmail, match.params.token]);
+  // }, []);
+
   console.log('token here is ');
   console.log(match.params.token);
 
