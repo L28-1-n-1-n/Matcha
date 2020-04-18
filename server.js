@@ -52,7 +52,7 @@ app.use('/api/posts', require('./routes/api/posts'));
 app.use('/api/photos', require('./routes/api/photos'));
 app.use('/api/confirmation', require('./routes/api/confirmation'));
 app.use('/api/recuperation', require('./routes/api/recuperation'));
-
+app.use('/api/reset', require('./routes/api/reset'));
 // var conn = mongoose.connection;
 // conn.on('error', console.error.bind(console, 'Connection error'));
 // let gfs;

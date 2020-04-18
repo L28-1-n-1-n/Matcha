@@ -3,6 +3,8 @@ import {
   VERIFICATION_ERROR,
   RECUPERATE_ACCOUNT,
   RECUPERATION_ERROR,
+  RESET_PW,
+  RESET_PW_ERROR,
 } from '../actions/types';
 
 const initialState = {
@@ -15,13 +17,14 @@ export default function (state = initialState, action) {
   const { type, payload } = action;
 
   switch (type) {
+    case RESET_PW:
     case EMAIL_VERIFIED:
       return {
         ...state,
         user: payload,
         loading: false,
       };
-
+    case RESET_PW_ERROR:
     case VERIFICATION_ERROR:
       return {
         ...state,

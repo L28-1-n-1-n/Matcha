@@ -18,7 +18,7 @@ import NotFound from '../layout/NotFound';
 import PrivateRoute from '../routing/PrivateRoute';
 import VerificationSuccess from '../verification/VerificationSuccess';
 import Recuperation from '../verification/Recuperation';
-
+import Reset from '../verification/Reset';
 const Routes = () => {
   return (
     <section className='container'>
@@ -43,7 +43,7 @@ const Routes = () => {
           component={VerificationSuccess}
         />
         <Route exact path='/recuperation' component={Recuperation} />
-        {/* <Route exact path='/reset' component={Reset} /> */}
+        <Route exact path='/reset/:token' component={Reset} />
 
         <Route component={NotFound} />
       </Switch>

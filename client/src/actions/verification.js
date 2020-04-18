@@ -5,6 +5,8 @@ import {
   VERIFICATION_ERROR,
   RECUPERATE_ACCOUNT,
   RECUPERATION_ERROR,
+  RESET_PW,
+  RESET_PW_ERROR,
 } from './types';
 
 // Verify user's email
@@ -56,6 +58,39 @@ export const fpCheckEmail = ({ email }) => async (dispatch) => {
 
     dispatch({
       type: RECUPERATION_ERROR,
+      payload: { msg: err.response.statusText, status: err.response.status },
+    });
+  }
+};
+
+// Check if email entered by user upon forgetting password has bee registered
+export const fpReset = ({ token, password }) => async (dispatch) => {
+  const config = {
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  };
+
+  const body = JSON.stringify({ token, password });
+
+  try {
+    console.log('token here is :');
+    console.log(token);
+    console.log(password);
+    const res = await axios.post(`/api/reset`, body, config);
+    dispatch({
+      type: RESET_PW,
+      payload: res.data,
+    });
+  } catch (err) {
+    const errors = err.response.data.errors;
+
+    if (errors) {
+      errors.forEach((error) => dispatch(setAlert(error.msg, 'danger')));
+    }
+
+    dispatch({
+      type: RESET_PW_ERROR,
       payload: { msg: err.response.statusText, status: err.response.status },
     });
   }
