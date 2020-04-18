@@ -1,4 +1,9 @@
-import { EMAIL_VERIFIED, VERIFICATION_ERROR } from '../actions/types';
+import {
+  EMAIL_VERIFIED,
+  VERIFICATION_ERROR,
+  RECUPERATE_ACCOUNT,
+  RECUPERATION_ERROR,
+} from '../actions/types';
 
 const initialState = {
   user: null,
@@ -23,7 +28,20 @@ export default function (state = initialState, action) {
         error: payload,
         loading: false,
       };
-
+    case RECUPERATE_ACCOUNT:
+      return {
+        ...state,
+        user: payload,
+        loading: false,
+      };
+    case RECUPERATION_ERROR:
+      localStorage.removeItem('token'); // Remove token completely from local storage
+      return {
+        ...state,
+        token: null,
+        isAuthenticated: false,
+        loading: false, // even though authentication failed, it is still done loading
+      };
     default:
       return state;
   }

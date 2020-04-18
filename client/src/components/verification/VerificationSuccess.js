@@ -1,9 +1,9 @@
 import React, { Fragment, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
+
 import { connect } from 'react-redux';
 import { verifyEmail } from '../../actions/verification';
-import Spinner from '../layout/Spinner';
+
 const VerificationSuccess = ({
   verifyEmail,
   //   confirmation: { user, loading },
