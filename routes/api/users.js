@@ -5,20 +5,20 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const config = require('config');
 const { check, validationResult } = require('express-validator');
-
+const transporter = require('../../mailer');
 const User = require('../../models/User');
 
 // Setting up nodemailer
-const nodemailer = require('nodemailer');
-const MAILER_USER = config.get('mailerUser');
-const MAILER_PASS = config.get('mailerPass');
-const transporter = nodemailer.createTransport({
-  service: 'Outlook365',
-  auth: {
-    user: MAILER_USER,
-    pass: MAILER_PASS,
-  },
-});
+// const nodemailer = require('nodemailer');
+// const MAILER_USER = config.get('mailerUser');
+// const MAILER_PASS = config.get('mailerPass');
+// const transporter = nodemailer.createTransport({
+//   service: 'Outlook365',
+//   auth: {
+//     user: MAILER_USER,
+//     pass: MAILER_PASS,
+//   },
+// });
 
 // @route   POST api/users
 // @desc    Register users
@@ -130,26 +130,5 @@ router.post(
     }
   }
 );
-
-// @route   GET api/users/confirmation/:token
-// @desc    Verify user registration token
-// @access  Public
-// router.get('/confirmation/:token', async (req, res) => {
-//   try {
-//     const user = await User.findOne({ verification_token: token }).select(
-//       '-password'
-//     );
-//     if (!user) {
-//       res.flash('error', 'No user found');
-//       res.redicrect('/');
-//     }
-//     res.json(user);
-//     user.confirmed = true;
-//     await user.save();
-//   } catch (err) {
-//     console.error(err.message);
-//     res.status(500).send('Server Error');
-//   }
-// });
 
 module.exports = router;

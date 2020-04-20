@@ -3,33 +3,33 @@ const router = express.Router();
 const jwt = require('jsonwebtoken');
 const config = require('config');
 const { check, validationResult } = require('express-validator');
-
+const transporter = require('../../mailer');
 const User = require('../../models/User');
 // Setting up nodemailer
-const nodemailer = require('nodemailer');
-const MAILER_USER = config.get('mailerUser');
-const MAILER_PASS = config.get('mailerPass');
-const transporter = nodemailer.createTransport({
-  service: 'Outlook365',
-  auth: {
-    user: MAILER_USER,
-    pass: MAILER_PASS,
-  },
-});
+// const nodemailer = require('nodemailer');
+// const MAILER_USER = config.get('mailerUser');
+// const MAILER_PASS = config.get('mailerPass');
+// const transporter = nodemailer.createTransport({
+//   service: 'Outlook365',
+//   auth: {
+//     user: MAILER_USER,
+//     pass: MAILER_PASS,
+//   },
+// });
 
 // @route   POST api/recuperation
 // @desc    Verify user registration token
 // @access  Public
 router.post(
   '/',
-  //   [check('email', 'Please include a valid email').isEmail()],
+  [check('email', 'Please include a valid email').isEmail()],
   async (req, res) => {
     try {
-      //   const errors = validationResult(req);
+      const errors = validationResult(req);
 
-      //   if (!errors.isEmpty()) {
-      //     return res.status(400).json({ errors: errors.array() }); // array of errors
-      //   }
+      if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() }); // array of errors
+      }
 
       const { email } = req.body;
       console.log(email);

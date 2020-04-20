@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { fpReset } from '../../actions/verification';
 import { setAlert } from '../../actions/alert';
-const Reset = ({ fpReset, match }) => {
+const Reset = ({ setAlert, fpReset, match }) => {
   const [formData, setFormData] = useState({
     password: '',
     password2: '',
@@ -55,6 +55,7 @@ const Reset = ({ fpReset, match }) => {
             name='password2'
             value={password2}
             onChange={(e) => onChange(e)}
+            minLength='6'
           />
         </div>
         <input type='submit' className='btn btn-primary' value='Confirm' />
@@ -73,4 +74,4 @@ Reset.propTypes = {
   setAlert: PropTypes.func.isRequired,
 };
 
-export default connect(null, { fpReset })(Reset);
+export default connect(null, { setAlert, fpReset })(Reset);
