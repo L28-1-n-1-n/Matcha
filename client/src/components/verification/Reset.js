@@ -11,8 +11,7 @@ const Reset = ({ setAlert, fpReset, match }) => {
   });
   const [showText, setShowText] = useState(false);
   const { password, password2 } = formData; // pull variables out of formData so we don't have to do formData.name, etc
-  console.log('token here is ');
-  console.log(match.params.token);
+
   const token = match.params.token;
   const onChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });

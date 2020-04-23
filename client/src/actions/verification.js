@@ -42,8 +42,6 @@ export const fpCheckEmail = ({ email }) => async (dispatch) => {
   const body = JSON.stringify({ email });
 
   try {
-    console.log('email here is :');
-    console.log(email);
     const res = await axios.post(`/api/recuperation`, body, config);
     dispatch({
       type: RECUPERATE_ACCOUNT,
@@ -74,9 +72,6 @@ export const fpReset = ({ token, password }) => async (dispatch) => {
   const body = JSON.stringify({ token, password });
 
   try {
-    console.log('token here is :');
-    console.log(token);
-    console.log(password);
     const res = await axios.post(`/api/reset`, body, config);
     dispatch({
       type: RESET_PW,

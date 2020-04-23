@@ -20,7 +20,7 @@ const Recuperation = ({ fpCheckEmail }) => {
 
   const onSubmit = async (e) => {
     e.preventDefault();
-    console.log(email);
+
     fpCheckEmail({ email });
     setShowText(!showText);
   };

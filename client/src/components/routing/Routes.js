@@ -19,6 +19,8 @@ import PrivateRoute from '../routing/PrivateRoute';
 import VerificationSuccess from '../verification/VerificationSuccess';
 import Recuperation from '../verification/Recuperation';
 import Reset from '../verification/Reset';
+import ChatLanding from '../chat/ChatLanding';
+import Chat from '../chat/Chat';
 const Routes = () => {
   return (
     <section className='container'>
@@ -37,6 +39,8 @@ const Routes = () => {
         <PrivateRoute exact path='/posts' component={Posts} />
         <PrivateRoute exact path='/photos' component={Photos} />
         <PrivateRoute exact path='/posts/:id' component={Post} />
+        <PrivateRoute exact path='/chatlanding' component={ChatLanding} />
+        <PrivateRoute exact path='/chat' component={Chat} />
         <Route
           exact
           path='/confirmation/:token'

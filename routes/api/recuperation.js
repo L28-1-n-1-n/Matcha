@@ -5,17 +5,6 @@ const config = require('config');
 const { check, validationResult } = require('express-validator');
 const transporter = require('../../mailer');
 const User = require('../../models/User');
-// Setting up nodemailer
-// const nodemailer = require('nodemailer');
-// const MAILER_USER = config.get('mailerUser');
-// const MAILER_PASS = config.get('mailerPass');
-// const transporter = nodemailer.createTransport({
-//   service: 'Outlook365',
-//   auth: {
-//     user: MAILER_USER,
-//     pass: MAILER_PASS,
-//   },
-// });
 
 // @route   POST api/recuperation
 // @desc    Verify user registration token
@@ -32,7 +21,6 @@ router.post(
       }
 
       const { email } = req.body;
-      console.log(email);
       // See if user exists
       let user = await User.findOne({ email: email }).select('-password');
       if (!user) {
@@ -40,12 +28,6 @@ router.post(
           .status(404)
           .json({ errors: [{ msg: 'User already exists' }] });
       }
-
-      // new from below
-      console.log(user);
-      console.log(user.confirmed);
-
-      // new above
 
       // Get payload
 

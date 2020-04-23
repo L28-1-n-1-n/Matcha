@@ -8,18 +8,6 @@ const { check, validationResult } = require('express-validator');
 const transporter = require('../../mailer');
 const User = require('../../models/User');
 
-// Setting up nodemailer
-// const nodemailer = require('nodemailer');
-// const MAILER_USER = config.get('mailerUser');
-// const MAILER_PASS = config.get('mailerPass');
-// const transporter = nodemailer.createTransport({
-//   service: 'Outlook365',
-//   auth: {
-//     user: MAILER_USER,
-//     pass: MAILER_PASS,
-//   },
-// });
-
 // @route   POST api/users
 // @desc    Register users
 // @access  Public
@@ -72,12 +60,6 @@ router.post(
       // Save user in Database
       await user.save();
 
-      // new from below
-      console.log(user);
-      console.log(user.confirmed);
-
-      // new above
-
       // Get payload
 
       const payload = {
@@ -107,7 +89,7 @@ router.post(
           user.save();
           const url = `http://localhost:3000/confirmation/${token}`;
           const html = `Hello, <br />Thank you for signing up for Tindurr.<br /><br />Please click the link below to activate your account:<br /><a href=${url}>${url}</a>`;
-          console.log(html);
+
           var mailOptions = {
             from: 'no-reply.tindurr@outlook.com',
             to: user.email,

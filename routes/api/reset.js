@@ -23,8 +23,6 @@ router.post(
 
     const { token, password } = req.body;
     try {
-      console.log(token);
-
       // See if user exists
 
       // let user = await User.findOne({ token: token }).select('-password');
@@ -34,10 +32,6 @@ router.post(
         return res.status(404).json({ errors: [{ msg: 'Token not valid' }] });
       }
 
-      // new from below
-      console.log(user);
-
-      // Get payload
       // Encrypt password
       const salt = await bcrypt.genSalt(10);
       user.password = await bcrypt.hash(password, salt);

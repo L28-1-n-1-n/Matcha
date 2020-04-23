@@ -22,14 +22,36 @@ const PORT = process.env.PORT || 5000;
 const User = require('./models/User');
 
 const router = express.Router();
-const auth = require('./middleware/auth');
+
 const fs = require('fs');
 const cors = require('cors');
 // const cors = require('./cors');
 // cors(app);
 const uuidv4 = require('uuid/v4');
+
+// For Socket.io
+const http = require('http');
+const server = http.createServer(app);
+const socketio = require('socket.io');
+const io = socketio(server);
 // Connect Database
 connectDB();
+
+// Run when client connects
+io.on('connection', (socket) => {
+  console.log('New WS Connection ...');
+  socket.emit('message', 'Welcome LOLLLLL!');
+  // console.log(socket);
+  // Broadcast to all clients except the current one
+  // Broadcast when a user connects
+  socket.broadcast.emit('messsage', 'A user has joined the chat');
+  // io.emit(); will emit to ALL clients
+
+  // Runs when client disconnects
+  socket.on('disconnect', () => {
+    io.emit('message', 'A user has left the chat');
+  });
+});
 
 // Init Middleware
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -325,5 +347,7 @@ app.use('/api/reset', require('./routes/api/reset'));
 
 // Working code above
 
-app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
+// app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
 // () => is the callback part
+
+server.listen(PORT, () => console.log(`Server started on port ${PORT}`));

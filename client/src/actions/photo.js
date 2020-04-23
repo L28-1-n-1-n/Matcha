@@ -103,17 +103,15 @@ export const deletePhoto = (id) => async (dispatch) => {
 
 // Add photo
 export const addPhoto = (formData) => async (dispatch) => {
-  console.log('hey ');
   const config = {
     headers: {
       'Content-Type': 'application/json',
     },
   };
-  console.log('lol');
+
   try {
-    console.log('first');
     const res = await axios.post('/api/photos', formData, config);
-    console.log(res.data);
+
     // const res = await axios.post(
     //   '/api/photos',
     //   upload.single('file'),

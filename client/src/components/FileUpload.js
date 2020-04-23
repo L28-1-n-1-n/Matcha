@@ -42,10 +42,9 @@ const FileUpload = () => {
           },
         }
       );
-      console.log('res.data is');
+
       console.log(res.data.file);
       const { fileName, filePath } = res.data;
-      console.log(filePath);
 
       setUploadedFile({ fileName, filePath });
 
@@ -75,7 +74,7 @@ const FileUpload = () => {
             {filename}
           </label>
         </div>
-
+        {/* 
         <form action='/upload' method='POST' enctype='multipart/form-data'>
           <div className='custom-file mb-3'>
             <input
@@ -93,7 +92,7 @@ const FileUpload = () => {
             value='Submit'
             className='btn btn-primary btn-block'
           />
-        </form>
+        </form> */}
 
         <Progress percentage={uploadPercentage} />
 
