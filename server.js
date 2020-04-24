@@ -51,6 +51,11 @@ io.on('connection', (socket) => {
   socket.on('disconnect', () => {
     io.emit('message', 'A user has left the chat');
   });
+  // Listen for newChatMessage
+  socket.on('newChatMessage', (msg) => {
+    console.log(msg);
+    io.emit('message', msg);
+  });
 });
 
 // Init Middleware

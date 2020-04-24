@@ -1,5 +1,5 @@
 import React, { Fragment, useState } from 'react';
-import Message from './Message';
+import UploadAlertMessage from './UploadAlertMessage';
 import Progress from './Progress';
 import axios from 'axios';
 
@@ -7,7 +7,7 @@ const FileUpload = () => {
   const [file, setFile] = useState('');
   const [filename, setFilename] = useState('Choose File');
   const [uploadedFile, setUploadedFile] = useState({});
-  const [message, setMessage] = useState('');
+  const [uamessage, setUAMessage] = useState('');
   const [uploadPercentage, setUploadPercentage] = useState(0);
 
   const onChange = (e) => {
@@ -48,19 +48,19 @@ const FileUpload = () => {
 
       setUploadedFile({ fileName, filePath });
 
-      setMessage('File Uploaded');
+      setUAMessage('File Uploaded');
     } catch (err) {
       if (err.response.status === 500) {
-        setMessage('There was a problem with the server');
+        setUAMessage('There was a problem with the server');
       } else {
-        setMessage(err.response.data.msg);
+        setUAMessage(err.response.data.msg);
       }
     }
   };
 
   return (
     <Fragment>
-      {message ? <Message msg={message} /> : null}
+      {uamessage ? <UploadAlertMessage msg={uamessage} /> : null}
       <form onSubmit={onSubmit}>
         <div className='custom-file mb-4'>
           <input

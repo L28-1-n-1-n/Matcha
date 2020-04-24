@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const Message = ({ msg }) => {
+const UploadAlertMessage = ({ msg }) => {
   return (
     <div className='alert alert-info alert-dismissible fade show' role='alert'>
       {msg}
@@ -17,8 +17,8 @@ const Message = ({ msg }) => {
   );
 };
 
-Message.propTypes = {
-  msg: PropTypes.string.isRequired
+UploadAlertMessage.propTypes = {
+  msg: PropTypes.string.isRequired,
 };
 
-export default Message;
+export default UploadAlertMessage;

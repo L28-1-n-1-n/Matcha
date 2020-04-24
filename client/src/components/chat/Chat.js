@@ -1,20 +1,29 @@
-import React, { Fragment, useEffect } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { getProfiles } from '../../actions/chat';
-
 import io from 'socket.io-client';
 
-const Chat = ({ getProfiles, profile: { profiles }, socket }) => {
+const Chat = ({ getProfiles, profile: { profiles } }) => {
+  const [msg, setMsg] = useState('');
+  const socket = io.connect('http://localhost:5000');
   useEffect(() => {
-    const socket = io.connect('http://localhost:5000');
     console.log(socket);
-
+    //Message from server
     socket.on('message', (message) => {
       console.log(message);
+      // outputMessage(message);
     });
     getProfiles();
   }, [getProfiles]);
+  const onSubmit = async (e) => {
+    e.preventDefault();
+    console.log(msg);
+    // Emit message to server
+    socket.emit('newChatMessage', msg);
+    setMsg('');
+  };
+
   return (
     <div className='chat-container'>
       <header className='chat-header'>
@@ -35,12 +44,6 @@ const Chat = ({ getProfiles, profile: { profiles }, socket }) => {
             <i className='fas fa-users'></i> Users
           </h3>
           <ul id='users'>
-            {/* <li>Brad</li>
-            <li>John</li>
-            <li>Mary</li>
-            <li>Paul</li>
-            <li>Mike</li> */}
-
             {profiles.length > 0 ? (
               profiles.map((profile) => (
                 <li key={profile._id}>{profile.user.name} </li>
@@ -72,17 +75,21 @@ const Chat = ({ getProfiles, profile: { profiles }, socket }) => {
         </div>
       </main>
       <div className='chat-form-container'>
-        <form id='chat-form'>
+        <form id='chat-form' onSubmit={(e) => onSubmit(e)}>
           <input
-            id='msg'
+            id='message'
+            name='message'
             type='text'
             placeholder='Enter Message'
+            value={msg}
+            onChange={(e) => setMsg(e.target.value)}
             required
             autoComplete='off'
           />
-          <button className='btn'>
+          <input type='submit' className='btn btn-primary' value='Send' />
+          {/* <button className='btn'>
             <i className='fas fa-paper-plane'></i> Send
-          </button>
+          </button> */}
         </form>
       </div>
     </div>

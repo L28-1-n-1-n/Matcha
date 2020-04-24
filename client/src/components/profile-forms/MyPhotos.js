@@ -6,19 +6,6 @@ import { createProfile, getCurrentProfile } from '../../actions/profile';
 import { getPhotos } from '../../actions/photo';
 import { addPhoto } from '../../actions/photo';
 import FileUpload from '../FileUpload';
-// import Input from '@material-ui/core/Input';
-// import TextField from '@material-ui/core/TextField';
-// import Button from '@material-ui/core/Button';
-// import { makeStyles } from '@material-ui/core/styles';
-
-// const useStyles = makeStyles(theme => ({
-//   root: {
-//     '& > *': {
-//       margin: theme.spacing(1),
-//       width: '25ch'
-//     }
-//   }
-// }));
 
 const initialState = {
   name: '',

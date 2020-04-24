@@ -11,7 +11,7 @@ export const Navbar = ({ auth: { isAuthenticated, loading }, logout }) => {
         <Link to='/profiles'>Developers</Link>
       </li>
       <li>
-        <Link to='/photos'>Gallery</Link>
+        <Link to='/photos'>Photos</Link>
       </li>
       <li>
         <Link to='/posts'>Posts</Link>
