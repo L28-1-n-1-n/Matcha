@@ -2,7 +2,9 @@ import axios from 'axios';
 import { setAlert } from './alert';
 import {
   GET_PHOTOS,
+  GET_MY_PHOTOS,
   PHOTO_ERROR,
+  CLEAR_MY_PHOTOS,
   UPDATE_LIKES,
   DELETE_PHOTO,
   ADD_PHOTO,
@@ -27,6 +29,43 @@ export const getPhotos = () => async (dispatch) => {
     });
   }
 };
+
+// Get current users photos
+export const getMyPhotos = () => async (dispatch) => {
+  try {
+    // make request to backend api/profile/me
+    const res = await axios.get('/api/photos/me');
+
+    dispatch({
+      type: GET_MY_PHOTOS,
+      payload: res.data,
+    });
+  } catch (err) {
+    dispatch({ type: CLEAR_MY_PHOTOS });
+    dispatch({
+      type: PHOTO_ERROR,
+      payload: { msg: err.response.statusText, status: err.response.status },
+    });
+  }
+};
+
+// // Get profile by ID
+// export const getPhotoById = (userId) => async (dispatch) => {
+//   try {
+//     // make request to backend api/profile/user/${userId}
+//     const res = await axios.get(`/api/profile/user/${userId}`);
+
+//     dispatch({
+//       type: GET_PROFILE,
+//       payload: res.data,
+//     });
+//   } catch (err) {
+//     dispatch({
+//       type: PROFILE_ERROR,
+//       payload: { msg: err.response.statusText, status: err.response.status },
+//     });
+//   }
+// };
 
 // arrayBufferToBase64(buffer) {
 //   var binary = '';
@@ -105,7 +144,7 @@ export const deletePhoto = (id) => async (dispatch) => {
 export const addPhoto = (formData) => async (dispatch) => {
   const config = {
     headers: {
-      'Content-Type': 'application/json',
+      'Content-Type': 'multipart/form-data; boundary=${formData._boundary}',
     },
   };
 
@@ -133,6 +172,7 @@ export const addPhoto = (formData) => async (dispatch) => {
       type: PHOTO_ERROR,
       payload: { msg: err.response.statusText, status: err.response.status },
     });
+    // }
   }
 };
 
