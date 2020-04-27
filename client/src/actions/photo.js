@@ -12,7 +12,7 @@ import {
   // ADD_COMMENT,
   // REMOVE_COMMENT
 } from './types';
-
+import io from 'socket.io-client';
 // Get photos
 export const getPhotos = () => async (dispatch) => {
   try {
@@ -91,7 +91,7 @@ export const getMyPhotos = () => async (dispatch) => {
 export const addLike = (id) => async (dispatch) => {
   try {
     const res = await axios.put(`/api/photos/like/${id}`);
-
+    console.log(res);
     dispatch({
       type: UPDATE_LIKES,
       payload: { id, likes: res.data },
@@ -99,7 +99,8 @@ export const addLike = (id) => async (dispatch) => {
   } catch (err) {
     dispatch({
       type: PHOTO_ERROR,
-      payload: { msg: err.response.statusText, status: err.response.status },
+      // payload: { msg: err.response.statusText, status: err.response.status },
+      payload: { msg: 'server error', status: 500 },
     });
   }
 };
@@ -141,15 +142,23 @@ export const deletePhoto = (id) => async (dispatch) => {
 };
 
 // Add photo
-export const addPhoto = (formData) => async (dispatch) => {
-  const config = {
-    headers: {
-      'Content-Type': 'multipart/form-data; boundary=${formData._boundary}',
-    },
-  };
 
+const socket = io.connect('http://localhost:5000');
+export const addPhoto = () => (dispatch) => {
+  // const config = {
+  //   headers: {
+  //     'Content-Type': 'multipart/form-data; boundary=${formData._boundary}',
+  //   },
+  // };      console.log(socket);
+  //Message from server
+  // var photo;
+  // socket.on('message', (message) => {
+  //   console.log(message);
+  //   photo = message;
+  //   // outputMessage(message);
+  // });
   try {
-    const res = await axios.post('/api/photos', formData, config);
+    // const res = await axios.post('/api/photos', formData, config);
 
     // const res = await axios.post(
     //   '/api/photos',
@@ -161,11 +170,17 @@ export const addPhoto = (formData) => async (dispatch) => {
     //     console.log('Success!');
     //   }
     // );
-    dispatch({
-      type: ADD_PHOTO,
-      payload: res.data,
-    });
+    // console.log('teyy');
+    // console.log(photo);
+    // dispatch({
+    //   type: ADD_PHOTO,
+    //   payload: { photo: photo, reload: true },
+    // });
 
+    // dispatch({
+    //   type: ADD_PHOTO,
+    //   // payload: { photo: photo, reload: true },
+    // });
     dispatch(setAlert('Photo added', 'success'));
   } catch (err) {
     dispatch({

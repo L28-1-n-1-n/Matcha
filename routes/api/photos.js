@@ -363,8 +363,8 @@ router.get('/', auth, async (req, res) => {
   try {
     const photos = await Photo.find().sort({ date: -1 }); // latest photo first
     res.json(photos);
-    console.log('images are:');
-    console.log(photos);
+    // console.log('images are:');
+    // console.log(photos);
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server Error');
@@ -383,7 +383,7 @@ router.get('/me', auth, async (req, res) => {
       user: req.user.id,
       // }).populate('user', ['name', 'avatar']);
     });
-    console.log(photo);
+    // console.log(photo);
     if (!photo) {
       return res
         .status(400)
@@ -396,6 +396,7 @@ router.get('/me', auth, async (req, res) => {
   }
 });
 
+// const io = require('../../server').io;
 router.post('/', auth, upload.single('file'), (req, res) => {
   if (req.files === null) {
     return res.status(400).json({ msg: 'No file uploaded' });
@@ -403,7 +404,7 @@ router.post('/', auth, upload.single('file'), (req, res) => {
 
   const user = User.findById(req.user.id).select('-password');
   const file = req.files.file;
-  console.log(file);
+  // console.log(file);
   const uploadsDir = path.join(
     __dirname,
     '..',
@@ -433,7 +434,97 @@ router.post('/', auth, upload.single('file'), (req, res) => {
     });
     const photo = newPhoto.save();
     res.json(photo);
+
+    // io.on('connection', (socket) => {
+    //   console.log('New WS Connection 222...');
+    //   console.log('socket connected with id:' + socket.id);
+    //   console.log(newPhoto.fileName);
+    //   socket.emit('message', 'we are here');
+    //   socket.emit('message', newPhoto.fileName);
+    // });
   });
+});
+// @route PUT api/photos/like/:id
+// @desc Like a post
+// @access Private
+
+router.put('/like/:id', auth, async (req, res) => {
+  try {
+    const photo = await Photo.findById(req.params.id);
+    // Check if the post has already been liked by the login user
+    // .filter returns an array of strings where the username of the people who liked the post equals to the loggedin user
+    // if this length is not zero, the current logged in user has liked the post already
+    if (
+      photo.likes.filter((like) => like.user.toString() === req.user.id)
+        .length > 0
+    ) {
+      return res.status(400).json({ msg: 'Photo already liked' });
+    }
+    // if the logged in user has not liked the post, add the user to the top of the list of people who have liked the post
+    photo.likes.unshift({ user: req.user.id });
+
+    await photo.save();
+    res.json(photo.likes);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
+});
+
+// @route PUT api/posts/unlike/:id
+// @desc Unlike a post
+// @access Private
+
+router.put('/unlike/:id', auth, async (req, res) => {
+  try {
+    const photo = await Photo.findById(req.params.id);
+    // Check if the post has already been liked by the login user
+    // .filter returns an array of strings where the username of the people who liked the post equals to the loggedin user
+    // if this length is not zero, the current logged in user has liked the post already
+    if (
+      photo.likes.filter((like) => like.user.toString() === req.user.id)
+        .length === 0
+    ) {
+      return res.status(400).json({ msg: 'Photo not yet liked' });
+    }
+    // Get remove index
+    const removeIndex = photo.likes
+      .map((like) => like.user.toString())
+      .indexOf(req.user.id);
+    photo.likes.splice(removeIndex, 1);
+
+    await photo.save();
+    res.json(photo.likes);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
+});
+
+// @route DELETE api/photos/:id
+// @desc Delete a photo
+// @access Private
+router.delete('/:id', auth, async (req, res) => {
+  try {
+    const photo = await Photo.findById(req.params.id);
+
+    if (!photo) {
+      return res.status(404).json({ msg: 'Photo not found ' });
+    }
+    // Check user
+    if (photo.user.toString() !== req.user.id) {
+      // toString() required since photo.user is an object, but req.user.id is a string
+      return res.status(401).json({ msg: 'User not authorized' });
+    }
+    await photo.remove();
+    res.json({ msg: 'Post removed' });
+  } catch (err) {
+    console.error(err.message);
+    if (err.kind === 'ObjectId') {
+      return res.status(404).json({ msg: 'Photo not found ' });
+    }
+    res.status(500).send('Server Error');
+  }
 });
 
 module.exports = router;

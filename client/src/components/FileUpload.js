@@ -117,28 +117,56 @@
 
 // export default FileUpload;
 
-import React, { Fragment, useState } from 'react';
+import React, { Fragment, useState, useEffect } from 'react';
 import UploadAlertMessage from './UploadAlertMessage';
 import Progress from './Progress';
+import PropTypes from 'prop-types';
 import axios from 'axios';
 
-const FileUpload = () => {
+import { connect } from 'react-redux';
+import { addPhoto } from '../actions/photo';
+import { ADD_PHOTO } from '../actions/types';
+import { Link, Redirect } from 'react-router-dom';
+
+import io from 'socket.io-client';
+
+// const onSubmit = async (e) => {
+//   e.preventDefault();
+//   console.log(msg);
+//   // Emit message to server
+//   socket.emit('newChatMessage', msg);
+//   setMsg('');
+// };
+
+const FileUpload = ({ addPhoto }) => {
   const [file, setFile] = useState('');
   const [filename, setFilename] = useState('Choose File');
   const [uploadedFile, setUploadedFile] = useState({});
   const [uamessage, setUAMessage] = useState('');
   const [uploadPercentage, setUploadPercentage] = useState(0);
+  const socket = io.connect('http://localhost:5000');
+  // useEffect(() => {
+  //   console.log(socket);
+  //   //Message from server
+  //   socket.on('message', (message) => {
+  //     console.log(message);
+  //     // outputMessage(message);
+  //   });
+  // }, []);
 
   const onChange = (e) => {
     setFile(e.target.files[0]);
     setFilename(e.target.files[0].name);
   };
 
+  // const onSubmit = async (e) => {
   const onSubmit = async (e) => {
     e.preventDefault();
     const formData = new FormData();
     formData.append('file', file);
+    console.log(file);
 
+    // addPhoto(formData);
     try {
       const res = await axios.post(
         'http://localhost:5000/api/photos',
@@ -161,13 +189,21 @@ const FileUpload = () => {
           },
         }
       );
-
-      console.log(res.data.file);
+      console.log(res);
       const { fileName, filePath } = res.data;
 
       setUploadedFile({ fileName, filePath });
 
       setUAMessage('File Uploaded');
+      console.log(socket);
+      //Message from server
+      socket.on('message', (message) => {
+        console.log(message);
+        // outputMessage(message);
+      });
+      // addPhoto(res);
+
+      addPhoto(formData);
     } catch (err) {
       if (err.response.status === 500) {
         setUAMessage('There was a problem with the server');
@@ -221,16 +257,20 @@ const FileUpload = () => {
           className='btn btn-primary btn-block mt-4'
         />
       </form>
-      {uploadedFile ? (
+      {/* {uploadedFile ? (
         <div className='row mt-5'>
           <div className='col-md-6 m-auto'>
             <h3 className='text-center'>{uploadedFile.fileName}</h3>
             <img style={{ width: '100%' }} src={uploadedFile.filePath} alt='' />
           </div>
         </div>
-      ) : null}
+      ) : null} */}
     </Fragment>
   );
 };
 
-export default FileUpload;
+FileUpload.propTypes = {
+  addPhoto: PropTypes.func.isRequired,
+};
+
+export default connect(null, { addPhoto })(FileUpload);

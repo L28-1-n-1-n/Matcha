@@ -12,7 +12,7 @@ const Image = (data) => {
     var base64Flag = 'data:image/jpeg;base64,';
     var imageStr = window.btoa(binary);
     setImg(base64Flag + imageStr);
-    console.log(imageStr);
+
     // });
   }, []);
 

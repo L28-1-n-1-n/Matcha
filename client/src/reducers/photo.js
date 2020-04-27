@@ -6,7 +6,6 @@ import {
   UPDATE_LIKES,
   DELETE_PHOTO,
   ADD_PHOTO,
-  GET_PHOTO,
   ADD_COMMENT,
   REMOVE_COMMENT,
 } from '../actions/types';
@@ -14,6 +13,7 @@ import {
 const initialState = {
   photos: [],
   photo: null,
+  // reload: false,
   loading: true,
   error: {},
 };
@@ -39,6 +39,7 @@ export default function (state = initialState, action) {
         ...state,
         // copy existing photo array, add new photo to the top of the array
         photos: [payload, ...state.photos],
+        // photos: { reload : true},
         loading: false,
       };
     case DELETE_PHOTO:
@@ -64,7 +65,7 @@ export default function (state = initialState, action) {
       // make sure we are adding like to the correct photo
       return {
         ...state,
-        photo: state.photos.map((photo) =>
+        photos: state.photos.map((photo) =>
           photo._id === payload.id ? { ...photo, likes: payload.likes } : photo
         ),
         loading: false,
