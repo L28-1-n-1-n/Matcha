@@ -6,9 +6,12 @@ const PhotoSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'users',
   },
+  isProfilePic: {
+    type: Boolean,
+    default: false,
+  },
   text: {
     type: String,
-    required: true,
   },
   name: {
     type: String,

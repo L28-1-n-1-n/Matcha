@@ -9,6 +9,7 @@ import {
   DELETE_PHOTO,
   ADD_PHOTO,
   GET_PHOTO,
+  MAKE_PROFILE_PIC,
   // ADD_COMMENT,
   // REMOVE_COMMENT
 } from './types';
@@ -33,7 +34,7 @@ export const getPhotos = () => async (dispatch) => {
 // Get current users photos
 export const getMyPhotos = () => async (dispatch) => {
   try {
-    // make request to backend api/profile/me
+    // make request to backend api/photos/me
     const res = await axios.get('/api/photos/me');
 
     dispatch({
@@ -204,6 +205,25 @@ export const getPhoto = (id) => async (dispatch) => {
     dispatch({
       type: PHOTO_ERROR,
       payload: { msg: err.response.statusText, status: err.response.status },
+    });
+  }
+};
+
+// Make this picture the profile pic
+export const makeProfilePic = (id) => async (dispatch) => {
+  try {
+    const res = await axios.put(`/api/photos/isProfilePic/${id}`);
+    console.log(res);
+    dispatch({
+      type: MAKE_PROFILE_PIC,
+      payload: { id, isProfilePic: res.data },
+    });
+    dispatch(setAlert('Profile Picture set', 'success'));
+  } catch (err) {
+    dispatch({
+      type: PHOTO_ERROR,
+      // payload: { msg: err.response.statusText, status: err.response.status },
+      payload: { msg: 'server error', status: 500 },
     });
   }
 };

@@ -8,6 +8,7 @@ import {
   ADD_PHOTO,
   ADD_COMMENT,
   REMOVE_COMMENT,
+  MAKE_PROFILE_PIC,
 } from '../actions/types';
 
 const initialState = {
@@ -47,6 +48,16 @@ export default function (state = initialState, action) {
         ...state,
         // returns all photos except the one that got deleted (the one that matches the payload)
         photos: state.photos.filter((photo) => photo._id !== payload),
+        loading: false,
+      };
+    case MAKE_PROFILE_PIC:
+      return {
+        ...state,
+        photos: state.photos.map((photo) =>
+          photo._id === payload.id
+            ? { ...photo, isProfilePic: true }
+            : { ...photo, isProfilePic: false }
+        ),
         loading: false,
       };
     case CLEAR_MY_PHOTOS:

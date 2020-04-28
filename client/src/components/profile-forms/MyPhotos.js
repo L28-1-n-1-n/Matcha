@@ -10,7 +10,7 @@ import axios from 'axios';
 // import { addPhoto } from '../../actions/photo';
 import FileUpload from '../FileUpload';
 
-const MyPhotos = ({ getMyPhotos, photo: { photos, loading, reload } }) => {
+const MyPhotos = ({ getMyPhotos, photo: { photos, loading } }) => {
   useEffect(() => {
     getMyPhotos();
   }, [getMyPhotos]);
@@ -22,7 +22,7 @@ const MyPhotos = ({ getMyPhotos, photo: { photos, loading, reload } }) => {
       <h1 className='large text-primary'>Manage Your Photos</h1>
       <div className='photos'>
         {photos.map((photo) => (
-          <PhotoItem key={photo._id} photo={photo} reload={reload} />
+          <PhotoItem key={photo._id} photo={photo} />
         ))}
       </div>
 

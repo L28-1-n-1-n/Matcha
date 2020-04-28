@@ -57,8 +57,9 @@ module.exports = {
 // const io = require('./socket.js').init(server);
 
 // Init Middleware
-app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+
 app.use(express.json({ extended: false }));
 // app.use(methodOverride('_method'));
 

@@ -35,3 +35,4 @@ export const RESET_PW = 'RESET_PW';
 export const RESET_PW_ERROR = 'RESET_PW_ERROR';
 export const GET_MY_PHOTOS = 'GET_MY_PHOTOS';
 export const CLEAR_MY_PHOTOS = 'CLEAR_MY_PHOTOS';
+export const MAKE_PROFILE_PIC = 'MAKE_PROFILE_PIC';

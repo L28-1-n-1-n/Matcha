@@ -140,6 +140,10 @@ import io from 'socket.io-client';
 
 const FileUpload = ({ addPhoto }) => {
   const [file, setFile] = useState('');
+  // const [text, setText] = useState({
+  //   text: '',
+  // });
+  const [text, setText] = useState('');
   const [filename, setFilename] = useState('Choose File');
   const [uploadedFile, setUploadedFile] = useState({});
   const [uamessage, setUAMessage] = useState('');
@@ -155,18 +159,31 @@ const FileUpload = ({ addPhoto }) => {
   // }, []);
 
   const onChange = (e) => {
-    setFile(e.target.files[0]);
-    setFilename(e.target.files[0].name);
+    // console.log(e.target.value);
+    // setText(e.target.value);
+    if (e.target.files) {
+      setFile(e.target.files[0]);
+
+      setFilename(e.target.files[0].name);
+    }
   };
 
   // const onSubmit = async (e) => {
   const onSubmit = async (e) => {
     e.preventDefault();
     const formData = new FormData();
+    // formData.append('text', text);
+    // console.log('text is');
+    // console.log(text);
     formData.append('file', file);
-    console.log(file);
 
-    // addPhoto(formData);
+    // Get the form data from the event object
+    for (var pair of formData.entries()) {
+      console.log(pair[0] + ', ' + pair[1]);
+    }
+
+    // console.log(file);
+
     try {
       const res = await axios.post(
         'http://localhost:5000/api/photos',
@@ -195,13 +212,12 @@ const FileUpload = ({ addPhoto }) => {
       setUploadedFile({ fileName, filePath });
 
       setUAMessage('File Uploaded');
-      console.log(socket);
-      //Message from server
-      socket.on('message', (message) => {
-        console.log(message);
-        // outputMessage(message);
-      });
-      // addPhoto(res);
+      // console.log(socket);
+      // //Message from server
+      // socket.on('message', (message) => {
+      //   console.log(message);
+      //   // outputMessage(message);
+      // });
 
       addPhoto(formData);
     } catch (err) {
@@ -216,20 +232,34 @@ const FileUpload = ({ addPhoto }) => {
   return (
     <Fragment>
       {uamessage ? <UploadAlertMessage msg={uamessage} /> : null}
-      <form onSubmit={onSubmit}>
-        <div className='custom-file mb-4'>
+      <form
+        onSubmit={onSubmit}
+      >
+        <div className='form-group'>
           <input
-            type='file'
-            className='custom-file-input'
-            id='file'
-            name='file'
-            onChange={onChange}
+            type='text'
+            className='form-control'
+            value={text}
+            placeholder='Write an optional caption'
+            name='text'
+            onChange={(e) => onChange(e)}
+            // onChange={onChange}
           />
-          <label className='custom-file-label' htmlFor='customFile'>
-            {filename}
-          </label>
-        </div>
-        {/* 
+          <div className='custom-file mb-4'>
+            <input
+              type='file'
+              className='custom-file-input'
+              id='file'
+              name='file'
+              onChange={(e) => onChange(e)}
+              // onChange={onChange}
+            />
+
+            <label className='custom-file-label' htmlFor='customFile'>
+              {filename}
+            </label>
+          </div>
+          {/* 
         <form action='/upload' method='POST' enctype='multipart/form-data'>
           <div className='custom-file mb-3'>
             <input
@@ -249,13 +279,14 @@ const FileUpload = ({ addPhoto }) => {
           />
         </form> */}
 
-        <Progress percentage={uploadPercentage} />
+          <Progress percentage={uploadPercentage} />
 
-        <input
-          type='submit'
-          value='Upload'
-          className='btn btn-primary btn-block mt-4'
-        />
+          <input
+            type='submit'
+            value='Upload'
+            className='btn btn-primary btn-block mt-4'
+          />
+        </div>
       </form>
       {/* {uploadedFile ? (
         <div className='row mt-5'>

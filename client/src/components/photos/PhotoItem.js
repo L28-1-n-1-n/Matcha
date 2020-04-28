@@ -1,18 +1,36 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import Moment from 'react-moment';
 import { connect } from 'react-redux';
-import { addLike, removeLike, deletePhoto } from '../../actions/photo';
+import {
+  addLike,
+  removeLike,
+  deletePhoto,
+  makeProfilePic,
+} from '../../actions/photo';
 import Image from '../Image';
 
 const PhotoItem = ({
   addLike,
   removeLike,
   deletePhoto,
+  makeProfilePic,
   auth,
-  photo: { _id, text, name, avatar, user, likes, comments, date, data },
+  photo: {
+    _id,
+    isProfilePic,
+    text,
+    name,
+    avatar,
+    user,
+    likes,
+    comments,
+    date,
+    data,
+  },
   showActions,
+  history,
 }) => (
   <div className='photo bg-white p-1 my-1'>
     <div>
@@ -46,12 +64,14 @@ const PhotoItem = ({
           >
             <i className='fas fa-thumbs-down' />
           </button>
-          <Link to={`/photos/${_id}`} className='btn btn-primary'>
-            Discussion{' '}
-            {/* {comments.length > 0 && (
-              <span className='comment-count'>{comments.length}</span>
-            )} */}
-          </Link>
+
+          <button
+            onClick={() => makeProfilePic(_id)}
+            type='button'
+            className='btn btn-primary'
+          >
+            Make Profile Picture
+          </button>
           {/* To tell whether the current user is owner of this photo, if yes then display delete button */}
           {!auth.loading && user === auth.user._id && (
             <button
@@ -80,12 +100,24 @@ PhotoItem.propTypes = {
   removeLike: PropTypes.func.isRequired,
   deletePhoto: PropTypes.func.isRequired,
   showActions: PropTypes.bool,
+  makeProfilePic: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
   auth: state.auth,
+  // photo: state.photo,
 });
 
-export default connect(mapStateToProps, { addLike, removeLike, deletePhoto })(
-  PhotoItem
-);
+export default connect(mapStateToProps, {
+  addLike,
+  removeLike,
+  deletePhoto,
+  makeProfilePic,
+})(PhotoItem);
+
+// export default connect(mapStateToProps, {
+//   addLike,
+//   removeLike,
+//   deletePhoto,
+//   addCaption,
+// })(withRouter(PhotoItem));

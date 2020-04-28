@@ -339,6 +339,7 @@ const multer = require('multer');
 const fs = require('fs');
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
+    console.log(req.body);
     const uploadsDir = path.join(
       __dirname,
       '..',
@@ -355,10 +356,10 @@ const storage = multer.diskStorage({
   },
 });
 const upload = multer({ storage });
-// const controller = require('../../controllers/images');
-// app.route('/').get(controller.index).post(upload.single("data").controller.create);
-// app.route('/:id').get(controller.show).put(controller.update).delete(controller.destroy);
 
+// @route   GET api/photo
+// @desc    Get all photos
+// @access  Private
 router.get('/', auth, async (req, res) => {
   try {
     const photos = await Photo.find().sort({ date: -1 }); // latest photo first
@@ -404,7 +405,7 @@ router.post('/', auth, upload.single('file'), (req, res) => {
 
   const user = User.findById(req.user.id).select('-password');
   const file = req.files.file;
-  // console.log(file);
+  // console.log(req.files);
   const uploadsDir = path.join(
     __dirname,
     '..',
@@ -443,6 +444,8 @@ router.post('/', auth, upload.single('file'), (req, res) => {
     //   socket.emit('message', newPhoto.fileName);
     // });
   });
+  console.log('text is ');
+  console.log(req.body);
 });
 // @route PUT api/photos/like/:id
 // @desc Like a post
@@ -523,6 +526,54 @@ router.delete('/:id', auth, async (req, res) => {
     if (err.kind === 'ObjectId') {
       return res.status(404).json({ msg: 'Photo not found ' });
     }
+    res.status(500).send('Server Error');
+  }
+});
+
+// @route PUT api/photos/isProfilePic/:id
+// @desc Make a photo profilepic
+// @access Private
+
+router.put('/isProfilePic/:id', auth, async (req, res) => {
+  try {
+    const photos = await Photo.find();
+    // console.log(photo);
+    if (!photos) {
+      return res
+        .status(400)
+        .json({ msg: ' No photos found. Try uploading some !' });
+    }
+    console.log('req.params.id is');
+    console.log(req.params.id);
+    photos.map(async (photo) => {
+      console.log(photo._id);
+      console.log(req.params.id);
+      photo._id == req.params.id
+        ? (photo.isProfilePic = true)
+        : (photo.isProfilePic = false);
+      // ?  console.log('yes')
+      // : console.log('no');
+      await photo.save();
+      console.log(photo);
+      res.json(photo.isProfiePic);
+    });
+
+    // Check if the post has already been liked by the login user
+    // .filter returns an array of strings where the username of the people who liked the post equals to the loggedin user
+    // if this length is not zero, the current logged in user has liked the post already
+    // if (
+    //   photo.likes.filter((like) => like.user.toString() === req.user.id)
+    //     .length > 0
+    // ) {
+    //   return res.status(400).json({ msg: 'Photo already liked' });
+    // }
+    // if the logged in user has not liked the post, add the user to the top of the list of people who have liked the post
+    // photo.isProfilePic = true;
+
+    // await photo.save();
+    // res.json(photo.isProfilePic);
+  } catch (err) {
+    console.error(err.message);
     res.status(500).send('Server Error');
   }
 });
