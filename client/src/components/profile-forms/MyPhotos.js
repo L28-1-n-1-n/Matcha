@@ -20,7 +20,7 @@ const MyPhotos = ({ getMyPhotos, photo: { photos, loading } }) => {
   ) : (
     <Fragment>
       <h1 className='large text-primary'>Manage Your Photos</h1>
-      <div className='photos'>
+      <div className='photo-collection'>
         {photos.map((photo) => (
           <PhotoItem key={photo._id} photo={photo} />
         ))}

@@ -494,19 +494,31 @@ button {
   padding: 0.5rem;
 }
 
-.photo {
+.photo-collection {
   display: grid;
-  grid-template-columns: 1fr 4fr;
-  grid-gap: 2rem;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  /* grid-template-areas: 1fr; */
+  grid-gap: 1rem;
   align-items: center;
 }
 
-.photo > div:first-child {
+.photo-collection > div {
   text-align: center;
+  grid-template-rows: 4fr 1fr;
 }
+/* 
+.photo {
+  text-align: center;
+  grid-template-rows: 4fr 1fr;
+  grid-column-start: auto;
+  grid-row-start: auto;
+} */
+/* .photo > div:first-child {
+  text-align: center;
+} */
 
 .photo img {
-  width: 100px;
+  max-width: 100%;
 }
 
 .photo .comment-count {
@@ -611,7 +623,7 @@ button {
   }
 
   .photo {
-    grid-template-columns: 1fr;
+    grid-template-rows: 4fr;
   }
   .photo a,
   .photo button {
