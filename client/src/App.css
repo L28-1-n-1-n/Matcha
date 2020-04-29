@@ -14,7 +14,7 @@
 }
 
 body {
-  font-family: 'Raleway', sans-serif;
+  font-family: 'Pacifico', sans-serif;
   font-size: 1rem;
   line-height: 1.6;
   background-color: #fff;
@@ -506,16 +506,6 @@ button {
   text-align: center;
   grid-template-rows: 4fr 1fr;
 }
-/* 
-.photo {
-  text-align: center;
-  grid-template-rows: 4fr 1fr;
-  grid-column-start: auto;
-  grid-row-start: auto;
-} */
-/* .photo > div:first-child {
-  text-align: center;
-} */
 
 .photo img {
   max-width: 100%;
@@ -622,9 +612,17 @@ button {
     padding: 0.3rem 0.4rem;
   }
 
+  .photo-collection {
+    grid-template-columns: 1fr;
+  }
   .photo {
     grid-template-rows: 4fr;
   }
+
+  .photo img {
+    max-width: 100%;
+  }
+
   .photo a,
   .photo button {
     padding: 0.3rem 0.4rem;
@@ -633,7 +631,7 @@ button {
 
 /* Chat */
 
-@import url('https://fonts.googleapis.com/css?family=Roboto&display=swap');
+/* @import url('https://fonts.googleapis.com/css?family=Roboto&display=swap'); */
 
 :root {
   --dark-color-a: #667aff;
@@ -650,7 +648,7 @@ button {
 }
 
 body {
-  font-family: 'Roboto', sans-serif;
+  font-family: 'Pacifico', sans-serif;
   font-size: 16px;
   /* background: var(--light-color); */
   margin: 20px;

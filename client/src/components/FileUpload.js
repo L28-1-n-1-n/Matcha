@@ -128,7 +128,7 @@ import { addPhoto } from '../actions/photo';
 import { ADD_PHOTO } from '../actions/types';
 import { Link, Redirect } from 'react-router-dom';
 
-import io from 'socket.io-client';
+// import io from 'socket.io-client';
 
 // const onSubmit = async (e) => {
 //   e.preventDefault();
@@ -148,7 +148,7 @@ const FileUpload = ({ addPhoto }) => {
   const [uploadedFile, setUploadedFile] = useState({});
   const [uamessage, setUAMessage] = useState('');
   const [uploadPercentage, setUploadPercentage] = useState(0);
-  const socket = io.connect('http://localhost:5000');
+  // const socket = io.connect('http://localhost:5000');
   // useEffect(() => {
   //   console.log(socket);
   //   //Message from server
@@ -178,9 +178,9 @@ const FileUpload = ({ addPhoto }) => {
     formData.append('file', file);
 
     // Get the form data from the event object
-    for (var pair of formData.entries()) {
-      console.log(pair[0] + ', ' + pair[1]);
-    }
+    // for (var pair of formData.entries()) {
+    //   console.log(pair[0] + ', ' + pair[1]);
+    // }
 
     // console.log(file);
 
@@ -231,20 +231,15 @@ const FileUpload = ({ addPhoto }) => {
 
   return (
     <Fragment>
+      {/* <h4 className='display-4 text-center mb-4'>
+        <i className='far fa-images' /> Upload a photo
+      </h4> */}
+      <p className='lead'>
+        <i className='far fa-images' /> Upload a photo
+      </p>
       {uamessage ? <UploadAlertMessage msg={uamessage} /> : null}
-      <form
-        onSubmit={onSubmit}
-      >
+      <form onSubmit={onSubmit}>
         <div className='form-group'>
-          <input
-            type='text'
-            className='form-control'
-            value={text}
-            placeholder='Write an optional caption'
-            name='text'
-            onChange={(e) => onChange(e)}
-            // onChange={onChange}
-          />
           <div className='custom-file mb-4'>
             <input
               type='file'

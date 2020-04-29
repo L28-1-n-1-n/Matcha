@@ -14,7 +14,7 @@ const MyPhotos = ({ getMyPhotos, photo: { photos, loading } }) => {
   useEffect(() => {
     getMyPhotos();
   }, [getMyPhotos]);
-
+  console.log(photos.length);
   return loading ? (
     <Spinner />
   ) : (
@@ -31,11 +31,10 @@ const MyPhotos = ({ getMyPhotos, photo: { photos, loading } }) => {
         1 profile picture
       </p>
       <div className='container mt-4'>
-        <h4 className='display-4 text-center mb-4'>
-          <i className='fab fa-react' /> React File Upload
-        </h4>
-
-        <FileUpload />
+        {/* <h4 className='display-4 text-center mb-4'>
+          <i className='far fa-images' /> Upload a photo
+        </h4> */}
+        {photos.length > 4 ? null : <FileUpload />}
       </div>
     </Fragment>
   );
