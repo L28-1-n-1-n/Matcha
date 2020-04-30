@@ -55,11 +55,20 @@ const CreateProfile = ({ createProfile, history }) => {
     //   ...formData,
     //   bday: moment(startDate).format('l').toString(),
     // });
+    var result = moment(startDate).format('l').toString().split('/');
+    console.log(result);
+    console.log(result[0]);
+    console.log(result[1]);
+    console.log(result[2]);
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
-      bday: moment(startDate).format('l').toString(),
+      // bday: moment(startDate).format('l').toString().split('/')[0],
+      // bday: moment(startDate).format('l').toString(),
+      // bday: moment(startDate).month(),
     });
+    console.log(formData);
+    console.log(result);
     // setFormData({ ...formData, [e.target.name]: e.target.value });
     // console.log(formData);
     // console.log(usePosition);
@@ -96,6 +105,7 @@ const CreateProfile = ({ createProfile, history }) => {
     //   bday: moment(startDate).format('l').toString(),
     //   // bday: 'LOL',
     // });
+
     console.log(formData);
     createProfile(formData, history);
   };
@@ -127,29 +137,19 @@ const CreateProfile = ({ createProfile, history }) => {
         <div className='form-group'>
           <DatePicker
             selected={startDate}
-            // onChange={(date) => {
-            // setStartDate(date);
-            //   console.log(date);
-            //   console.log(startDate);
-            //   console.log(typeof date);
-            //   console.log(bday);
-            //   console.log(typeof bday);
-            // }}
-            // selected={bday}
-            // onChange={(date) => setBDay(date)}
-
             onChange={(date) => {
               setStartDate(date);
+              setFormData({
+                ...formData,
+                // [e.target.name]: e.target.value,
+                // bday: moment(startDate).format('l').toString().split('/')[0],
+                bday: moment(date).format('l').toString(),
+                // bday: moment(startDate).month(),
+              });
 
-              // console.log(moment(date).format('l').toString());
-              // console.log(date.toString());
-              // setFormData({
-              //   ...formData,
-              //   bday: moment(startDate).format('l').toString(),
-              // });
-              // console.log(moment(startDate).format('l').toString());
-              // console.log(bday);
-              // console.log(formData);
+              console.log('we are here');
+              console.log(moment(date).format('l').toString());
+              console.log(formData);
             }}
             peekNextMonth
             showMonthDropdown

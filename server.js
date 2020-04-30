@@ -83,4 +83,27 @@ app.use('/api/reset', require('./routes/api/reset'));
 // app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
 // () => is the callback part
 
+console.log('we are here');
+
+const publicIp = require('public-ip');
+
+// (async () => {
+//   // console.log(await publicIp.v4());
+//   //=> '46.5.21.123'
+//   const result = await publicIp.v4();
+//   console.log(result);
+//   console.log(await publicIp.v6());
+//   //=> 'fe80::200:f8ff:fe21:67cf'
+// })();
+
+const ipLocation = require('iplocation');
+
+(async () => {
+  // console.log(await ipLocation('172.217.167.78'));
+  const result = await publicIp.v4();
+  console.log(result);
+  // console.log(await publicIp.v6());
+  console.log(await ipLocation('129.234.0.173'));
+  //=> { latitude: -33.8591, longitude: 151.2002, region: { name: "New South Wales" ... } ... }
+})();
 server.listen(PORT, () => console.log(`Server started on port ${PORT}`));
