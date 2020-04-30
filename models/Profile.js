@@ -5,6 +5,13 @@ const ProfileSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'user',
   },
+  bday: {
+    type: String,
+    // default: Date.now,
+  },
+  age: {
+    type: String,
+  },
   company: {
     type: String,
   },

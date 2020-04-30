@@ -398,12 +398,13 @@ router.get('/me', auth, async (req, res) => {
 });
 
 // const io = require('../../server').io;
-router.post('/', auth, upload.single('file'), (req, res) => {
+router.post('/', auth, upload.single('file'), async (req, res) => {
   if (req.files === null) {
     return res.status(400).json({ msg: 'No file uploaded' });
   }
 
-  const user = User.findById(req.user.id).select('-password');
+  const user = await User.findById(req.user.id).select('-password');
+  console.log(user);
   const file = req.files.file;
   // console.log(req.files);
   const uploadsDir = path.join(
@@ -435,7 +436,7 @@ router.post('/', auth, upload.single('file'), (req, res) => {
     });
     const photo = newPhoto.save();
     res.json(photo);
-
+    console.log(photo);
     // io.on('connection', (socket) => {
     //   console.log('New WS Connection 222...');
     //   console.log('socket connected with id:' + socket.id);

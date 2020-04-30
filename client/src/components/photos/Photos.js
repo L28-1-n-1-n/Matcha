@@ -2,7 +2,7 @@ import React, { Fragment, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Spinner from '../layout/Spinner';
-import PhotoItem from './PhotoItem';
+import GalleryPhotoItem from './GalleryPhotoItem';
 // import PhotoForm from './PhotoForm';
 import { getPhotos } from '../../actions/photo';
 
@@ -23,14 +23,15 @@ const Photos = ({ getPhotos, photo: { photos, loading } }) => {
     <Spinner />
   ) : (
     <Fragment>
-      <h1 className='large text-primary'>Photos</h1>
+      <h1 className='large text-primary'>Matches</h1>
       <p className='lead'>
-        <i className='fas fa-user' /> Welcome to the community
+        <i className='fas fa-heartbeat' /> Based on your preferences, here are
+        your matches
       </p>
       {/* <PhotoForm /> */}
-      <div className='photos'>
+      <div className='photo-collection'>
         {photos.map((photo) => (
-          <PhotoItem key={photo._id} photo={photo} />
+          <GalleryPhotoItem key={photo._id} photo={photo} />
         ))}
       </div>
     </Fragment>

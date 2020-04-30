@@ -144,7 +144,7 @@ export const deletePhoto = (id) => async (dispatch) => {
 
 // Add photo
 
-const socket = io.connect('http://localhost:5000');
+// const socket = io.connect('http://localhost:5000');
 export const addPhoto = () => (dispatch) => {
   // const config = {
   //   headers: {

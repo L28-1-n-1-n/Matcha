@@ -3,7 +3,7 @@ const router = express.Router();
 const { check, validationResult } = require('express-validator');
 const auth = require('../../middleware/auth');
 const Post = require('../../models/Post');
-const Profile = require('../../models/Profile');
+
 const User = require('../../models/User');
 
 // @route   POST api/posts
@@ -12,6 +12,7 @@ const User = require('../../models/User');
 router.post(
   '/',
   [auth, [check('text', 'Text is required').not().isEmpty()]],
+
   async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -21,6 +22,7 @@ router.post(
     try {
       const user = await User.findById(req.user.id).select('-password');
       // new Post() is used to create new instance newPost from model Post
+      console.log(user);
       const newPost = new Post({
         text: req.body.text,
         name: user.name,

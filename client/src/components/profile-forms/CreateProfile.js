@@ -3,9 +3,18 @@ import { Link, withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { createProfile } from '../../actions/profile';
-
+import { changeBDay } from '../../actions/profile';
+import DatePicker from 'react-datepicker';
+import Moment from 'react-moment';
+import 'react-datepicker/dist/react-datepicker.css';
+import moment from 'moment';
+// import { usePosition } from './usePosition';
 const CreateProfile = ({ createProfile, history }) => {
   const [formData, setFormData] = useState({
+    // startDate: '',
+    // bday: '',
+    // bday: moment(Date.now, 'DD-MM-YYYY'),
+    age: '',
     company: '',
     website: '',
     location: '',
@@ -17,10 +26,15 @@ const CreateProfile = ({ createProfile, history }) => {
     facebook: '',
     linkedin: '',
     youtube: '',
-    instagram: ''
+    instagram: '',
   });
   const [displaySocialInputs, toggleSocialInputs] = useState(false);
+  const [startDate, setStartDate] = useState(new Date());
+  // const [bday, setBDay] = useState(new Date());
   const {
+    // startDate,
+    // bday,
+    age,
     company,
     website,
     location,
@@ -32,14 +46,57 @@ const CreateProfile = ({ createProfile, history }) => {
     facebook,
     linkedin,
     youtube,
-    instagram
+    instagram,
   } = formData;
 
-  const onChange = e =>
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+  const onChange = (e) => {
+    // setFormData({ ...formData, [e.target.name]: e.target.value });
+    // setFormData({
+    //   ...formData,
+    //   bday: moment(startDate).format('l').toString(),
+    // });
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+      bday: moment(startDate).format('l').toString(),
+    });
+    // setFormData({ ...formData, [e.target.name]: e.target.value });
+    // console.log(formData);
+    // console.log(usePosition);
+    // const geo = navigator.geolocation;
+    // console.log(geo);
+    navigator.geolocation.getCurrentPosition(function (position) {
+      console.log('Latitude is :', position.coords.latitude);
+      console.log('Longitude is :', position.coords.longitude);
+    });
+  };
 
-  const onSubmit = e => {
+  // setFormData({ ...formData, bday: startDate });
+  // {
+  //   if (typeof e === 'object') {
+  //     if (e.target.name != bday) {
+  //       setFormData({ ...formData, [e.target.name]: e.target.value });
+  //     }
+  //   } else {
+  //     setFormData({ ...formData, bday: e });
+  //   }
+  // };
+  const onSubmit = (e) => {
     e.preventDefault();
+    // console.log(startDate);
+
+    // setFormData({
+    //   ...formData,
+    //   bday: moment(startDate).format('l').toString(),
+    // });
+    console.log(moment(startDate).format('l').toString());
+    // console.log(bday);
+    // setFormData({
+    //   ...formData,
+    //   bday: moment(startDate).format('l').toString(),
+    //   // bday: 'LOL',
+    // });
+    console.log(formData);
     createProfile(formData, history);
   };
   return (
@@ -50,9 +107,9 @@ const CreateProfile = ({ createProfile, history }) => {
         profile stand out
       </p>
       <small>* = required field</small>
-      <form class='form' onSubmit={e => onSubmit(e)}>
+      <form class='form' onSubmit={(e) => onSubmit(e)}>
         <div class='form-group'>
-          <select name='status' value={status} onChange={e => onChange(e)}>
+          <select name='status' value={status} onChange={(e) => onChange(e)}>
             <option value='0'>* Select Professional Status</option>
             <option value='Developer'>Developer</option>
             <option value='Junior Developer'>Junior Developer</option>
@@ -68,12 +125,45 @@ const CreateProfile = ({ createProfile, history }) => {
           </small>
         </div>
         <div className='form-group'>
+          <DatePicker
+            selected={startDate}
+            // onChange={(date) => {
+            // setStartDate(date);
+            //   console.log(date);
+            //   console.log(startDate);
+            //   console.log(typeof date);
+            //   console.log(bday);
+            //   console.log(typeof bday);
+            // }}
+            // selected={bday}
+            // onChange={(date) => setBDay(date)}
+
+            onChange={(date) => {
+              setStartDate(date);
+
+              // console.log(moment(date).format('l').toString());
+              // console.log(date.toString());
+              // setFormData({
+              //   ...formData,
+              //   bday: moment(startDate).format('l').toString(),
+              // });
+              // console.log(moment(startDate).format('l').toString());
+              // console.log(bday);
+              // console.log(formData);
+            }}
+            peekNextMonth
+            showMonthDropdown
+            showYearDropdown
+            dropdownMode='select'
+          />
+        </div>
+        <div className='form-group'>
           <input
             type='text'
             placeholder='Company'
             name='company'
             value={company}
-            onChange={e => onChange(e)}
+            onChange={(e) => onChange(e)}
           />
           <small className='form-text'>
             Could be your own company or one you work for
@@ -85,7 +175,7 @@ const CreateProfile = ({ createProfile, history }) => {
             placeholder='Website'
             name='website'
             value={website}
-            onChange={e => onChange(e)}
+            onChange={(e) => onChange(e)}
           />
           <small className='form-text'>
             Could be your own or a company website
@@ -97,7 +187,7 @@ const CreateProfile = ({ createProfile, history }) => {
             placeholder='Location'
             name='location'
             value={location}
-            onChange={e => onChange(e)}
+            onChange={(e) => onChange(e)}
           />
           <small className='form-text'>
             City & state suggested (eg. Boston, MA)
@@ -109,7 +199,7 @@ const CreateProfile = ({ createProfile, history }) => {
             placeholder='* Skills'
             name='skills'
             value={skills}
-            onChange={e => onChange(e)}
+            onChange={(e) => onChange(e)}
           />
           <small className='form-text'>
             Please use comma separated values (eg. HTML,CSS,JavaScript,PHP)
@@ -121,7 +211,7 @@ const CreateProfile = ({ createProfile, history }) => {
             placeholder='Github Username'
             name='githubusername'
             value={githubusername}
-            onChange={e => onChange(e)}
+            onChange={(e) => onChange(e)}
           />
           <small className='form-text'>
             If you want your latest repos and a Github link, include your
@@ -133,12 +223,12 @@ const CreateProfile = ({ createProfile, history }) => {
             placeholder='A short bio of yourself'
             name='bio'
             value={bio}
-            onChange={e => onChange(e)}
+            onChange={(e) => onChange(e)}
           ></textarea>
           <small className='form-text'>Tell us a little about yourself</small>
         </div>
 
-        <div className='container'>
+        {/* <div className='container'>
           <div className='form-group'>
             <h1 class='small text-primary'>Create Your Profile</h1>
             <form action='/upload' method='POST' enctype='multipart/form-data'>
@@ -160,7 +250,7 @@ const CreateProfile = ({ createProfile, history }) => {
               />
             </form>
           </div>
-        </div>
+        </div> */}
 
         <div className='my-2'>
           <button
@@ -182,7 +272,7 @@ const CreateProfile = ({ createProfile, history }) => {
                 placeholder='Twitter URL'
                 name='twitter'
                 value={twitter}
-                onChange={e => onChange(e)}
+                onChange={(e) => onChange(e)}
               />
             </div>
 
@@ -193,7 +283,7 @@ const CreateProfile = ({ createProfile, history }) => {
                 placeholder='Facebook URL'
                 name='facebook'
                 value={facebook}
-                onChange={e => onChange(e)}
+                onChange={(e) => onChange(e)}
               />
             </div>
 
@@ -204,7 +294,7 @@ const CreateProfile = ({ createProfile, history }) => {
                 placeholder='YouTube URL'
                 name='youtube'
                 value={youtube}
-                onChange={e => onChange(e)}
+                onChange={(e) => onChange(e)}
               />
             </div>
 
@@ -215,7 +305,7 @@ const CreateProfile = ({ createProfile, history }) => {
                 placeholder='Linkedin URL'
                 name='linkedin'
                 value={linkedin}
-                onChange={e => onChange(e)}
+                onChange={(e) => onChange(e)}
               />
             </div>
 
@@ -226,7 +316,7 @@ const CreateProfile = ({ createProfile, history }) => {
                 placeholder='Instagram URL'
                 name='instagram'
                 value={instagram}
-                onChange={e => onChange(e)}
+                onChange={(e) => onChange(e)}
               />
             </div>
           </Fragment>
@@ -242,7 +332,7 @@ const CreateProfile = ({ createProfile, history }) => {
 };
 
 CreateProfile.propTypes = {
-  createProfile: PropTypes.func.isRequired
+  createProfile: PropTypes.func.isRequired,
 };
 
 export default connect(null, { createProfile })(withRouter(CreateProfile));

@@ -9,6 +9,7 @@ import {
   CLEAR_PROFILE,
   ACCOUNT_DELETED,
   GET_REPOS,
+  SET_BDAY,
 } from './types';
 
 // Get current users profile
@@ -97,12 +98,16 @@ export const createProfile = (formData, history, edit = false) => async (
         'Content-Type': 'application/json',
       },
     };
+    console.log('formdata is');
+    console.log(formData);
     const res = await axios.post('/api/profile', formData, config);
 
     dispatch({
       type: GET_PROFILE,
       payload: res.data,
     });
+    console.log('res.data is');
+    console.log(res.data);
     dispatch(setAlert(edit ? 'Profile Updated' : 'Profile Created', 'success'));
 
     if (!edit) {
