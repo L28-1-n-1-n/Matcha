@@ -6,8 +6,18 @@ const ProfileSchema = new mongoose.Schema({
     ref: 'user',
   },
   bday: {
-    type: String,
-    // default: Date.now,
+    day: {
+      type: String,
+      required: true,
+    },
+    month: {
+      type: String,
+      required: true,
+    },
+    year: {
+      type: String,
+      require: true,
+    },
   },
   age: {
     type: String,

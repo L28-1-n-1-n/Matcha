@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react';
+import React, { Fragment, useState, useEffect } from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
@@ -48,29 +48,7 @@ const CreateProfile = ({ createProfile, history }) => {
     youtube,
     instagram,
   } = formData;
-
-  const onChange = (e) => {
-    // setFormData({ ...formData, [e.target.name]: e.target.value });
-    // setFormData({
-    //   ...formData,
-    //   bday: moment(startDate).format('l').toString(),
-    // });
-    var result = moment(startDate).format('l').toString().split('/');
-    console.log(result);
-    console.log(result[0]);
-    console.log(result[1]);
-    console.log(result[2]);
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-      // bday: moment(startDate).format('l').toString().split('/')[0],
-      // bday: moment(startDate).format('l').toString(),
-      // bday: moment(startDate).month(),
-    });
-    console.log(formData);
-    console.log(result);
-    // setFormData({ ...formData, [e.target.name]: e.target.value });
-    // console.log(formData);
+  useEffect(() => {
     // console.log(usePosition);
     // const geo = navigator.geolocation;
     // console.log(geo);
@@ -78,47 +56,39 @@ const CreateProfile = ({ createProfile, history }) => {
       console.log('Latitude is :', position.coords.latitude);
       console.log('Longitude is :', position.coords.longitude);
     });
+    // put result in variables
+    // if variables = null, launch IP locate via node
+    // update state with latitide and longitude
+  }, []);
+  const onChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+
+    // console.log(usePosition);
+    // const geo = navigator.geolocation;
+    // console.log(geo);
+    // navigator.geolocation.getCurrentPosition(function (position) {
+    //   console.log('Latitude is :', position.coords.latitude);
+    //   console.log('Longitude is :', position.coords.longitude);
+    // });
   };
 
-  // setFormData({ ...formData, bday: startDate });
-  // {
-  //   if (typeof e === 'object') {
-  //     if (e.target.name != bday) {
-  //       setFormData({ ...formData, [e.target.name]: e.target.value });
-  //     }
-  //   } else {
-  //     setFormData({ ...formData, bday: e });
-  //   }
-  // };
   const onSubmit = (e) => {
     e.preventDefault();
-    // console.log(startDate);
-
-    // setFormData({
-    //   ...formData,
-    //   bday: moment(startDate).format('l').toString(),
-    // });
-    console.log(moment(startDate).format('l').toString());
-    // console.log(bday);
-    // setFormData({
-    //   ...formData,
-    //   bday: moment(startDate).format('l').toString(),
-    //   // bday: 'LOL',
-    // });
-
-    console.log(formData);
     createProfile(formData, history);
   };
   return (
     <Fragment>
-      <h1 class='large text-primary'>Create Your Profile</h1>
-      <p class='lead'>
-        <i class='fas fa-user'></i> Let's get some information to make your
+      <h1 className='large text-primary'>Create Your Profile</h1>
+      <p className='lead'>
+        <i className='fas fa-user'></i> Let's get some information to make your
         profile stand out
       </p>
       <small>* = required field</small>
-      <form class='form' onSubmit={(e) => onSubmit(e)}>
-        <div class='form-group'>
+      <form className='form' onSubmit={(e) => onSubmit(e)}>
+        <div className='form-group'>
           <select name='status' value={status} onChange={(e) => onChange(e)}>
             <option value='0'>* Select Professional Status</option>
             <option value='Developer'>Developer</option>
@@ -130,7 +100,7 @@ const CreateProfile = ({ createProfile, history }) => {
             <option value='Intern'>Intern</option>
             <option value='Other'>Other</option>
           </select>
-          <small class='form-text'>
+          <small className='form-text'>
             Give us an idea of where you are at in your career
           </small>
         </div>
@@ -139,12 +109,14 @@ const CreateProfile = ({ createProfile, history }) => {
             selected={startDate}
             onChange={(date) => {
               setStartDate(date);
+              var result = moment(date).format('l').toString().split('/');
+
               setFormData({
                 ...formData,
-                // [e.target.name]: e.target.value,
-                // bday: moment(startDate).format('l').toString().split('/')[0],
-                bday: moment(date).format('l').toString(),
-                // bday: moment(startDate).month(),
+
+                day: result[0],
+                month: result[1],
+                year: result[2],
               });
 
               console.log('we are here');

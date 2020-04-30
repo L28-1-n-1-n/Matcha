@@ -42,6 +42,7 @@ router.post(
     [
       check('status', 'Status is required').not().isEmpty(),
       check('skills', 'Skills is required').not().isEmpty(),
+      check('day', 'Date of birth is required').not().isEmpty(),
     ],
   ],
   async (req, res) => {
@@ -51,7 +52,9 @@ router.post(
     }
 
     const {
-      bday,
+      day,
+      month,
+      year,
       company,
       location,
       website,
@@ -81,7 +84,6 @@ router.post(
 
     const profileFields = {
       user: req.user.id,
-      bday,
       company,
       location,
       // website: website === '' ? '' : normalize(website, { forceHttps: true }),
@@ -96,12 +98,15 @@ router.post(
 
     // Build social object
     profileFields.social = {}; // Initialize empty object to avoid errors
+    profileFields.bday = {};
     if (youtube) profileFields.social.youtube = youtube;
     if (twitter) profileFields.social.twitter = twitter;
     if (facebook) profileFields.social.facebook = facebook;
     if (linkedin) profileFields.social.linkedin = linkedin;
     if (instagram) profileFields.social.instagram = instagram;
-
+    profileFields.bday.day = day;
+    profileFields.bday.month = month;
+    profileFields.bday.year = year;
     try {
       let profile = await Profile.findOne({ user: req.user.id });
       if (profile) {

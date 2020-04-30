@@ -103,7 +103,7 @@ const ipLocation = require('iplocation');
   const result = await publicIp.v4();
   console.log(result);
   // console.log(await publicIp.v6());
-  console.log(await ipLocation('129.234.0.173'));
+  console.log(await ipLocation(result));
   //=> { latitude: -33.8591, longitude: 151.2002, region: { name: "New South Wales" ... } ... }
 })();
 server.listen(PORT, () => console.log(`Server started on port ${PORT}`));
