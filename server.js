@@ -85,8 +85,6 @@ app.use('/api/reset', require('./routes/api/reset'));
 
 console.log('we are here');
 
-const publicIp = require('public-ip');
-
 // (async () => {
 //   // console.log(await publicIp.v4());
 //   //=> '46.5.21.123'
@@ -96,16 +94,18 @@ const publicIp = require('public-ip');
 //   //=> 'fe80::200:f8ff:fe21:67cf'
 // })();
 
+const publicIp = require('public-ip');
 const ipLocation = require('iplocation');
 
-// (async () => {
-//   // console.log(await ipLocation('172.217.167.78'));
-//   const result = await publicIp.v4();
-//   console.log(result);
-//   // console.log(await publicIp.v6());
-//   console.log(await ipLocation(result));
-//   //=> { latitude: -33.8591, longitude: 151.2002, region: { name: "New South Wales" ... } ... }
-// })();
+(async () => {
+  // console.log(await ipLocation('172.217.167.78'));
+  const result = await publicIp.v4();
+  console.log(result);
+  // console.log(await publicIp.v6());
+  console.log(await ipLocation(result));
+  // console.log(await ipLocation('::1'));
+  //=> { latitude: -33.8591, longitude: 151.2002, region: { name: "New South Wales" ... } ... }
+})();
 
 // const requestIp = require('request-ip');
 // app.use(requestIp.mw());

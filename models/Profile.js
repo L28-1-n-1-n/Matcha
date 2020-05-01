@@ -26,6 +26,12 @@ const ProfileSchema = new mongoose.Schema({
     latitude: {
       type: Number,
     },
+    city: {
+      type: String,
+    },
+    country: {
+      type: String,
+    },
   },
   age: {
     type: String,

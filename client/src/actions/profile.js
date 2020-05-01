@@ -9,7 +9,6 @@ import {
   CLEAR_PROFILE,
   ACCOUNT_DELETED,
   GET_REPOS,
-  SET_BDAY,
 } from './types';
 
 // Get current users profile
@@ -244,17 +243,27 @@ export const deleteAccount = (id) => async (dispatch) => {
   }
 };
 
-// export const detailedGeo = () => async (dispatch) => {
-//   console.log('detailedGeo logged');
-//   try {
-//     // make request to backend api/profile/me
-//     const res = axios.get('/api/profile/cip');
-//     // console.log(res);
-//   } catch (err) {
-//     // console.log(err);
-//     dispatch({
-//       type: PROFILE_ERROR,
-//       payload: { msg: err.response.statusText, status: err.response.status },
-//     });
-//   }
-// };
+// Example code for getting Client-side IP address, not used here to get physical location of user since client side ip is localhost
+export const detailedGeo = () => async (dispatch) => {
+  console.log('detailedGeo logged');
+  try {
+    const res = axios.get('/api/profile/cip');
+  } catch (err) {
+    if (err.response) {
+      // The request was made and the server responded with a status code
+      // that falls out of the range of 2xx
+      console.log(err.response.data);
+      console.log(err.response.status);
+      console.log(err.response.headers);
+    } else if (err.request) {
+      // The request was made but no response was received
+      // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+      // http.ClientRequest in node.js
+      console.log(err.request);
+    } else {
+      // Something happened in setting up the request that triggered an Error
+      console.log('Error', err.message);
+    }
+    console.log(err.config);
+  }
+};

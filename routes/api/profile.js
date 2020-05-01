@@ -7,6 +7,11 @@ const { check, validationResult } = require('express-validator');
 const Profile = require('../../models/Profile');
 const User = require('../../models/User');
 const Post = require('../../models/Post');
+const publicIp = require('public-ip');
+const ipLocation = require('iplocation');
+// for getting client-side ip, won't work here since it is localhost.
+// See router.get('/cip', auth, ... at the end of this file
+const requestIp = require('request-ip');
 
 // @route   GET api/profile/me
 // @desc    Get current user's profile
@@ -55,10 +60,9 @@ router.post(
       day,
       month,
       year,
-      latitude,
-      longitude,
+      pre_latitude,
+      pre_longitude,
       company,
-      location,
       website,
       bio,
       skills,
@@ -83,6 +87,10 @@ router.post(
     // if (skills) {
     //   profileFields.skills = skills.split(',').map(skill => skill.trim()); // parse using ',' as delimiter, trim all spaces and put into an array
     // }
+    let latitude;
+    let longitude;
+    let city;
+    let country;
 
     const profileFields = {
       user: req.user.id,
@@ -97,10 +105,25 @@ router.post(
       githubusername,
     };
 
-    // Build social object
-    profileFields.social = {}; // Initialize empty object to avoid errors
+    try {
+      // This only works if user has ipv4, not ipv6, as ipLocation only works with ipv4
+      const ipresult = await publicIp.v4();
+      const georesult = await ipLocation(ipresult);
+      city = georesult.city;
+      country = georesult.country.name;
+
+      latitude = pre_latitude == 200 ? georesult.latitude : pre_latitude;
+      longitude = pre_longitude == 200 ? georesult.longitude : pre_longitude;
+    } catch (error) {
+      console.log('location determination by IP rejected');
+    }
+
+    // Build social, bday, location object
+    // Initialize empty object to avoid errors
+    profileFields.social = {};
     profileFields.bday = {};
     profileFields.location = {};
+
     if (youtube) profileFields.social.youtube = youtube;
     if (twitter) profileFields.social.twitter = twitter;
     if (facebook) profileFields.social.facebook = facebook;
@@ -111,10 +134,12 @@ router.post(
     if (year) profileFields.bday.year = year;
     if (latitude) profileFields.location.latitude = latitude;
     if (longitude) profileFields.location.longitude = longitude;
+    if (city) profileFields.location.city = city;
+    if (country) profileFields.location.country = country;
+
     try {
       let profile = await Profile.findOne({ user: req.user.id });
       if (profile) {
-        // Update
         profile = await Profile.findOneAndUpdate(
           { user: req.user.id },
           { $set: profileFields },
@@ -381,26 +406,17 @@ router.get('/github/:username', (req, res) => {
     res.stastus(500).send('Server Error');
   }
 });
-// const requestIp = require('request-ip');
-// router.use(requestIp.mw());
-// const ip = req.clientIp;
-// console.log(ip);
-// res.end(ip);
-// expect ip = "127.0.0.1" or ip = "::1"
 
-// router.get('/cip', auth, async (req, res) => {
-//   console.log('we got to the router');
+// example use of getting Client-side IP address
+// The result is not incorporated in the database since it is localhost
+// Instead the server-side ip address is used to determine user location, on this particular occation only
+// router.get('/cip', async (req, res) => {
 //   try {
-
-//     console.log(user);
 //     const ip = req.clientIp;
 //     console.log(ip);
 //     res.end(ip);
 //   } catch (err) {
 //     console.error(err.message);
-//     if (err.kind == 'ObjectId') {
-//       return res.status(400).json({ msg: 'Profile not found' }); // display message for non-valid userid
-//     }
 //     res.status(500).send('Server Error');
 //   }
 // });

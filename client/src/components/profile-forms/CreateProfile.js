@@ -2,20 +2,16 @@ import React, { Fragment, useState, useEffect } from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { createProfile } from '../../actions/profile';
-import { changeBDay } from '../../actions/profile';
+import { detailedGeo, createProfile } from '../../actions/profile';
 import DatePicker from 'react-datepicker';
-import Moment from 'react-moment';
 import 'react-datepicker/dist/react-datepicker.css';
 import moment from 'moment';
 
-// import { usePosition } from './usePosition';
 const CreateProfile = ({ createProfile, history }) => {
   const [formData, setFormData] = useState({
     age: '',
     company: '',
     website: '',
-    // location: '',
     status: '',
     githubusername: '',
     skills: '',
@@ -28,12 +24,11 @@ const CreateProfile = ({ createProfile, history }) => {
   });
   const [displaySocialInputs, toggleSocialInputs] = useState(false);
   const [startDate, setStartDate] = useState(new Date());
-  // const [bday, setBDay] = useState(new Date());
+
   const {
     age,
     company,
     website,
-    // location,
     status,
     githubusername,
     skills,
@@ -45,26 +40,60 @@ const CreateProfile = ({ createProfile, history }) => {
     instagram,
   } = formData;
   useEffect(() => {
-    // console.log(usePosition);
-    // const geo = navigator.geolocation;
-    // console.log(geo);
-
-    navigator.geolocation.getCurrentPosition((position) => {
-      console.log('Latitude is :', position.coords.latitude);
-      console.log('Longitude is :', position.coords.longitude);
-      console.log(typeof position.coords.latitude);
-      setFormData({
-        ...formData,
-        latitude: position.coords.latitude,
-        longitude: position.coords.longitude,
-      });
+    // var lat;
+    // var long;
+    // pre-set latitude and longitude to an out-of-range value 200
+    // Normally latitude and longitude are +/-90 and +/-180 respectively
+    // This value (200) will be replaced by GPS values if navigator.geolocation is allowed by user
+    // Otherwise thier value will be updated in the server using guesses by ip address
+    // Please see below (towards the end of useEffect()) on arrangements for guessing geolocation by ip address
+    setFormData({
+      ...formData,
+      pre_latitude: 200,
+      pre_longitude: 200,
     });
-    // put result in variables
-    // if variables = null, launch IP locate via node
-    // update state with latitide and longitude
+    // Replace error value with latitude and longitude obtained by GPS if user allows navigator.geolocation
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          // lat = position.coords.latitude;
+          // long = position.coords.longitude;
+
+          setFormData({
+            ...formData,
+            pre_latitude: position.coords.latitude,
+            pre_longitude: position.coords.longitude,
+          });
+        },
+        (error) => {
+          switch (error.code) {
+            case error.PERMISSION_DENIED:
+              console.log('User denied the request for Geolocation.');
+              break;
+            case error.POSITION_UNAVAILABLE:
+              console.log('Location information is unavailable.');
+              break;
+            case error.TIMEOUT:
+              console.log('The request to get user location timed out.');
+              break;
+            case error.UNKNOWN_ERROR:
+              console.log('An unknown error occurred.');
+              break;
+          }
+        }
+      );
+    }
+
+    // In this project, the built-in method to obtina IP gets the server-side IP
+    // This is because the client is localhost, so under the circumstances of this project, the user's physical location is given by the server IP
+    // However, I've also built the code that would have gotten the client-side IP, although this was not incorporated into the database
+    // Uncomment below to get client-side IP, which will be a reserved IP since client is localhost
+    // detailedGeo();
+    // Also uncomment detailedGeo() in ../../actions/profile.js
+    // Also uncomment router.get('/cip', auth, ... at the end of the file ../../../routes/api/profile.js
   }, []);
 
-  var result = moment(startDate).format('l').toString().split('/');
+  let result = moment(startDate).format('l').toString().split('/');
   const onChange = (e) => {
     setFormData({
       ...formData,
@@ -110,7 +139,7 @@ const CreateProfile = ({ createProfile, history }) => {
             selected={startDate}
             onChange={(date) => {
               setStartDate(date);
-              var result = moment(date).format('l').toString().split('/');
+              result = moment(date).format('l').toString().split('/');
 
               setFormData({
                 ...formData,
@@ -189,30 +218,6 @@ const CreateProfile = ({ createProfile, history }) => {
           ></textarea>
           <small className='form-text'>Tell us a little about yourself</small>
         </div>
-
-        {/* <div className='container'>
-          <div className='form-group'>
-            <h1 class='small text-primary'>Create Your Profile</h1>
-            <form action='/upload' method='POST' enctype='multipart/form-data'>
-              <div class='custom-file mb-3'>
-                <input
-                  type='file'
-                  name='file'
-                  id='file'
-                  class='custom-file-input'
-                />
-                <label for='file' class='custom-file-label'>
-                  Choose file
-                </label>
-              </div>
-              <input
-                type='submit'
-                value='Submit'
-                class='btn btn-primary btn-block'
-              />
-            </form>
-          </div>
-        </div> */}
 
         <div className='my-2'>
           <button
@@ -295,8 +300,11 @@ const CreateProfile = ({ createProfile, history }) => {
 
 CreateProfile.propTypes = {
   createProfile: PropTypes.func.isRequired,
+  detailedGeo: PropTypes.func.isRequired,
 };
 
-export default connect(null, { createProfile })(withRouter(CreateProfile));
+export default connect(null, { createProfile, detailedGeo })(
+  withRouter(CreateProfile, detailedGeo)
+);
 
 // CreateProfile is wrapped in withRouter() to enable use of "history" action
