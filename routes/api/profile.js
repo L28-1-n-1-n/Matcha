@@ -55,6 +55,8 @@ router.post(
       day,
       month,
       year,
+      latitude,
+      longitude,
       company,
       location,
       website,
@@ -85,7 +87,6 @@ router.post(
     const profileFields = {
       user: req.user.id,
       company,
-      location,
       // website: website === '' ? '' : normalize(website, { forceHttps: true }),
       website: website === '' ? '' : website,
       bio,
@@ -99,14 +100,17 @@ router.post(
     // Build social object
     profileFields.social = {}; // Initialize empty object to avoid errors
     profileFields.bday = {};
+    profileFields.location = {};
     if (youtube) profileFields.social.youtube = youtube;
     if (twitter) profileFields.social.twitter = twitter;
     if (facebook) profileFields.social.facebook = facebook;
     if (linkedin) profileFields.social.linkedin = linkedin;
     if (instagram) profileFields.social.instagram = instagram;
-    profileFields.bday.day = day;
-    profileFields.bday.month = month;
-    profileFields.bday.year = year;
+    if (day) profileFields.bday.day = day;
+    if (month) profileFields.bday.month = month;
+    if (year) profileFields.bday.year = year;
+    if (latitude) profileFields.location.latitude = latitude;
+    if (longitude) profileFields.location.longitude = longitude;
     try {
       let profile = await Profile.findOne({ user: req.user.id });
       if (profile) {

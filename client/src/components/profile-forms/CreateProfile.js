@@ -8,16 +8,14 @@ import DatePicker from 'react-datepicker';
 import Moment from 'react-moment';
 import 'react-datepicker/dist/react-datepicker.css';
 import moment from 'moment';
+
 // import { usePosition } from './usePosition';
 const CreateProfile = ({ createProfile, history }) => {
   const [formData, setFormData] = useState({
-    // startDate: '',
-    // bday: '',
-    // bday: moment(Date.now, 'DD-MM-YYYY'),
     age: '',
     company: '',
     website: '',
-    location: '',
+    // location: '',
     status: '',
     githubusername: '',
     skills: '',
@@ -32,12 +30,10 @@ const CreateProfile = ({ createProfile, history }) => {
   const [startDate, setStartDate] = useState(new Date());
   // const [bday, setBDay] = useState(new Date());
   const {
-    // startDate,
-    // bday,
     age,
     company,
     website,
-    location,
+    // location,
     status,
     githubusername,
     skills,
@@ -52,27 +48,31 @@ const CreateProfile = ({ createProfile, history }) => {
     // console.log(usePosition);
     // const geo = navigator.geolocation;
     // console.log(geo);
-    navigator.geolocation.getCurrentPosition(function (position) {
+    navigator.geolocation.getCurrentPosition((position) => {
       console.log('Latitude is :', position.coords.latitude);
       console.log('Longitude is :', position.coords.longitude);
+      console.log(typeof position.coords.latitude);
+      setFormData({
+        ...formData,
+        latitude: position.coords.latitude,
+        longitude: position.coords.longitude,
+      });
     });
     // put result in variables
     // if variables = null, launch IP locate via node
     // update state with latitide and longitude
   }, []);
+
+  var result = moment(startDate).format('l').toString().split('/');
   const onChange = (e) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
+      day: result[0],
+      month: result[1],
+      year: result[2],
     });
-
-    // console.log(usePosition);
-    // const geo = navigator.geolocation;
-    // console.log(geo);
-    // navigator.geolocation.getCurrentPosition(function (position) {
-    //   console.log('Latitude is :', position.coords.latitude);
-    //   console.log('Longitude is :', position.coords.longitude);
-    // });
+    console.log(formData);
   };
 
   const onSubmit = (e) => {
@@ -153,18 +153,7 @@ const CreateProfile = ({ createProfile, history }) => {
             Could be your own or a company website
           </small>
         </div>
-        <div className='form-group'>
-          <input
-            type='text'
-            placeholder='Location'
-            name='location'
-            value={location}
-            onChange={(e) => onChange(e)}
-          />
-          <small className='form-text'>
-            City & state suggested (eg. Boston, MA)
-          </small>
-        </div>
+
         <div className='form-group'>
           <input
             type='text'

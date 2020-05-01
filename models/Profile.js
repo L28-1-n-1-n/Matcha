@@ -19,6 +19,14 @@ const ProfileSchema = new mongoose.Schema({
       require: true,
     },
   },
+  location: {
+    longitude: {
+      type: Number,
+    },
+    latitude: {
+      type: Number,
+    },
+  },
   age: {
     type: String,
   },
@@ -26,9 +34,6 @@ const ProfileSchema = new mongoose.Schema({
     type: String,
   },
   website: {
-    type: String,
-  },
-  location: {
     type: String,
   },
   status: {
