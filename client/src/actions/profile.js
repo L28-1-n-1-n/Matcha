@@ -243,3 +243,18 @@ export const deleteAccount = (id) => async (dispatch) => {
     }
   }
 };
+
+// export const detailedGeo = () => async (dispatch) => {
+//   console.log('detailedGeo logged');
+//   try {
+//     // make request to backend api/profile/me
+//     const res = axios.get('/api/profile/cip');
+//     // console.log(res);
+//   } catch (err) {
+//     // console.log(err);
+//     dispatch({
+//       type: PROFILE_ERROR,
+//       payload: { msg: err.response.statusText, status: err.response.status },
+//     });
+//   }
+// };

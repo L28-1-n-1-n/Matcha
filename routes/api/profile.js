@@ -381,5 +381,28 @@ router.get('/github/:username', (req, res) => {
     res.stastus(500).send('Server Error');
   }
 });
+// const requestIp = require('request-ip');
+// router.use(requestIp.mw());
+// const ip = req.clientIp;
+// console.log(ip);
+// res.end(ip);
+// expect ip = "127.0.0.1" or ip = "::1"
+
+// router.get('/cip', auth, async (req, res) => {
+//   console.log('we got to the router');
+//   try {
+
+//     console.log(user);
+//     const ip = req.clientIp;
+//     console.log(ip);
+//     res.end(ip);
+//   } catch (err) {
+//     console.error(err.message);
+//     if (err.kind == 'ObjectId') {
+//       return res.status(400).json({ msg: 'Profile not found' }); // display message for non-valid userid
+//     }
+//     res.status(500).send('Server Error');
+//   }
+// });
 
 module.exports = router;
