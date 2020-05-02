@@ -9,35 +9,41 @@ import moment from 'moment';
 
 const CreateProfile = ({ createProfile, history }) => {
   const [formData, setFormData] = useState({
-    age: '',
-    company: '',
-    website: '',
-    status: '',
-    githubusername: '',
-    skills: '',
+    gender: '',
+    interestedGender: '',
     bio: '',
-    twitter: '',
-    facebook: '',
-    linkedin: '',
-    youtube: '',
-    instagram: '',
+    age: '',
+    tags: '',
+    // company: '',
+    // website: '',
+    // status: '',
+    // githubusername: '',
+    // skills: '',
+    // twitter: '',
+    // facebook: '',
+    // linkedin: '',
+    // youtube: '',
+    // instagram: '',
   });
-  const [displaySocialInputs, toggleSocialInputs] = useState(false);
+  // const [displaySocialInputs, toggleSocialInputs] = useState(false);
   const [startDate, setStartDate] = useState(new Date());
 
   const {
-    age,
-    company,
-    website,
-    status,
-    githubusername,
-    skills,
+    gender,
+    interestedGender,
     bio,
-    twitter,
-    facebook,
-    linkedin,
-    youtube,
-    instagram,
+    age,
+    tags,
+    // company,
+    // website,
+    // status,
+    // githubusername,
+    // skills,
+    // twitter,
+    // facebook,
+    // linkedin,
+    // youtube,
+    // instagram,
   } = formData;
   useEffect(() => {
     // var lat;
@@ -113,26 +119,16 @@ const CreateProfile = ({ createProfile, history }) => {
     <Fragment>
       <h1 className='large text-primary'>Create Your Profile</h1>
       <p className='lead'>
-        <i className='fas fa-user'></i> Let's get some information to make your
-        profile stand out
+        <i className='fas fa-user'></i>Tell us more about you
       </p>
       <small>* = required field</small>
       <form className='form' onSubmit={(e) => onSubmit(e)}>
         <div className='form-group'>
-          <select name='status' value={status} onChange={(e) => onChange(e)}>
-            <option value='0'>* Select Professional Status</option>
-            <option value='Developer'>Developer</option>
-            <option value='Junior Developer'>Junior Developer</option>
-            <option value='Senior Developer'>Senior Developer</option>
-            <option value='Manager'>Manager</option>
-            <option value='Student or Learning'>Student or Learning</option>
-            <option value='Instructor'>Instructor or Teacher</option>
-            <option value='Intern'>Intern</option>
-            <option value='Other'>Other</option>
+          <select name='gender' value={gender} onChange={(e) => onChange(e)}>
+            <option value='0'>* Select gender</option>
+            <option value='Male'>Male</option>
+            <option value='Female'>Female</option>
           </select>
-          <small className='form-text'>
-            Give us an idea of where you are at in your career
-          </small>
         </div>
         <div className='form-group'>
           <DatePicker
@@ -158,8 +154,47 @@ const CreateProfile = ({ createProfile, history }) => {
             showYearDropdown
             dropdownMode='select'
           />
+          <small className='form-text'>* Date of Birth</small>
         </div>
         <div className='form-group'>
+          <select
+            name='interestedGender'
+            value={interestedGender}
+            onChange={(e) => onChange(e)}
+          >
+            <option value='0'>* I am interested in ...</option>
+            <option value='Male'>Men</option>
+            <option value='Female'>Women</option>
+            <option value='Both'>Both</option>
+          </select>
+        </div>
+        <div className='form-group'>
+          <textarea
+            placeholder='* A few sentences about yourself [Max 200 characters] '
+            name='bio'
+            value={bio}
+            onChange={(e) => onChange(e)}
+          ></textarea>
+          <small className='form-text'>
+            Please write a short bio of yourself
+          </small>
+        </div>
+
+        <div className='form-group'>
+          <input
+            type='text'
+            placeholder='* My Interests'
+            name='tags'
+            value={tags}
+            onChange={(e) => onChange(e)}
+          />
+          <small className='form-text'>
+            Please enter a list of your interests separated by commas (eg.
+            Hiking,Maths,Gardening,Pokemon)
+          </small>
+        </div>
+
+        {/* <div className='form-group'>
           <input
             type='text'
             placeholder='Company'
@@ -182,8 +217,8 @@ const CreateProfile = ({ createProfile, history }) => {
           <small className='form-text'>
             Could be your own or a company website
           </small>
-        </div>
-
+        </div> */}
+        {/* 
         <div className='form-group'>
           <input
             type='text'
@@ -195,8 +230,8 @@ const CreateProfile = ({ createProfile, history }) => {
           <small className='form-text'>
             Please use comma separated values (eg. HTML,CSS,JavaScript,PHP)
           </small>
-        </div>
-        <div className='form-group'>
+        </div> */}
+        {/* <div className='form-group'>
           <input
             type='text'
             placeholder='Github Username'
@@ -208,15 +243,6 @@ const CreateProfile = ({ createProfile, history }) => {
             If you want your latest repos and a Github link, include your
             username
           </small>
-        </div>
-        <div className='form-group'>
-          <textarea
-            placeholder='A short bio of yourself'
-            name='bio'
-            value={bio}
-            onChange={(e) => onChange(e)}
-          ></textarea>
-          <small className='form-text'>Tell us a little about yourself</small>
         </div>
 
         <div className='my-2'>
@@ -230,7 +256,7 @@ const CreateProfile = ({ createProfile, history }) => {
           <span>Optional</span>
         </div>
         {/* only show when toggle button is pushed */}
-        {displaySocialInputs && (
+        {/* {displaySocialInputs && (
           <Fragment>
             <div className='form-group social-input'>
               <i className='fab fa-twitter fa-2x'></i>
@@ -287,7 +313,7 @@ const CreateProfile = ({ createProfile, history }) => {
               />
             </div>
           </Fragment>
-        )}
+        )} */}
 
         <input type='submit' className='btn btn-primary my-1' />
         <Link className='btn btn-light my-1' to='/dashboard'>

@@ -45,9 +45,20 @@ router.post(
   [
     auth,
     [
-      check('status', 'Status is required').not().isEmpty(),
-      check('skills', 'Skills is required').not().isEmpty(),
+      check('gender', 'Gender is required').not().isEmpty(),
       check('day', 'Date of birth is required').not().isEmpty(),
+      check(
+        'interestedGender',
+        'Please specify the gender/s/ you are interested in.'
+      )
+        .not()
+        .isEmpty(),
+      check('bio', 'Please fill in Short Bio').not().isEmpty(),
+      check('tags', 'Enter a list of interests').not().isEmpty(),
+      check(
+        'bio',
+        'Please make sure your bio is less than 100 characters.'
+      ).isLength({ max: 200 }),
     ],
   ],
   async (req, res) => {
@@ -62,17 +73,20 @@ router.post(
       year,
       pre_latitude,
       pre_longitude,
-      company,
-      website,
+      gender,
+      interestedGender,
+      tags,
       bio,
-      skills,
-      status,
-      githubusername,
-      youtube,
-      twitter,
-      instagram,
-      linkedin,
-      facebook,
+      // company,
+      // website,
+      // skills,
+      // status,
+      // githubusername,
+      // youtube,
+      // twitter,
+      // instagram,
+      // linkedin,
+      // facebook,
     } = req.body;
 
     // //Build profile object
@@ -94,15 +108,21 @@ router.post(
 
     const profileFields = {
       user: req.user.id,
-      company,
-      // website: website === '' ? '' : normalize(website, { forceHttps: true }),
-      website: website === '' ? '' : website,
+      gender,
+      interestedGender,
       bio,
-      skills: Array.isArray(skills)
-        ? skills
-        : skills.split(',').map((skill) => ' ' + skill.trim()),
-      status,
-      githubusername,
+      tags: Array.isArray(tags)
+        ? tags
+        : tags.split(',').map((tag) => ' ' + tag.trim()),
+      // status,
+      // company,
+      // // website: website === '' ? '' : normalize(website, { forceHttps: true }),
+      // website: website === '' ? '' : website,
+      // skills: Array.isArray(skills)
+      //   ? skills
+      //   : skills.split(',').map((skill) => ' ' + skill.trim()),
+      // status,
+      // githubusername,
     };
 
     try {
@@ -120,15 +140,15 @@ router.post(
 
     // Build social, bday, location object
     // Initialize empty object to avoid errors
-    profileFields.social = {};
+    // profileFields.social = {};
     profileFields.bday = {};
     profileFields.location = {};
 
-    if (youtube) profileFields.social.youtube = youtube;
-    if (twitter) profileFields.social.twitter = twitter;
-    if (facebook) profileFields.social.facebook = facebook;
-    if (linkedin) profileFields.social.linkedin = linkedin;
-    if (instagram) profileFields.social.instagram = instagram;
+    // if (youtube) profileFields.social.youtube = youtube;
+    // if (twitter) profileFields.social.twitter = twitter;
+    // if (facebook) profileFields.social.facebook = facebook;
+    // if (linkedin) profileFields.social.linkedin = linkedin;
+    // if (instagram) profileFields.social.instagram = instagram;
     if (day) profileFields.bday.day = day;
     if (month) profileFields.bday.month = month;
     if (year) profileFields.bday.year = year;
