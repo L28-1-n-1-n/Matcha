@@ -10,14 +10,14 @@ const PostItem = ({
   removeLike,
   deletePost,
   auth,
-  post: { _id, text, name, avatar, user, likes, comments, date },
-  showActions
+  post: { _id, text, firstname, avatar, user, likes, comments, date },
+  showActions,
 }) => (
   <div className='post bg-white p-1 my-1'>
     <div>
       <Link to={`/profile/${user}`}>
         <img className='round-img' src={avatar} alt='' />
-        <h4>{name}</h4>
+        <h4>{firstname}</h4>
       </Link>
     </div>
     <div>
@@ -67,7 +67,7 @@ const PostItem = ({
 
 // default showActions to be true
 PostItem.defaultProps = {
-  showActions: true
+  showActions: true,
 };
 
 PostItem.propTypes = {
@@ -76,11 +76,11 @@ PostItem.propTypes = {
   addLike: PropTypes.func.isRequired,
   removeLike: PropTypes.func.isRequired,
   deletePost: PropTypes.func.isRequired,
-  showActions: PropTypes.bool
+  showActions: PropTypes.bool,
 };
 
-const mapStateToProps = state => ({
-  auth: state.auth
+const mapStateToProps = (state) => ({
+  auth: state.auth,
 });
 
 export default connect(mapStateToProps, { addLike, removeLike, deletePost })(

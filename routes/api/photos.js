@@ -78,7 +78,7 @@
 //         }
 //         // new Photo() is used to create new instance newPhoto from model Photo
 //         const newPhoto = new Photo({
-//           name: user.name,
+//           name: user.firstname,
 //           avatar: user.avatar,
 //           user: req.user.id,
 //           // text: req.body.text,
@@ -271,7 +271,7 @@
 
 //       const newComment = {
 //         text: req.body.text,
-//         name: user.name,
+//         name: user.firstname,
 //         avatar: user.avatar,
 //         user: req.user.id
 //       };
@@ -355,8 +355,26 @@ const storage = multer.diskStorage({
     cb(null, file.originlaname);
   },
 });
-const upload = multer({ storage });
-
+const upload = multer({
+  storage,
+  limits: { fileSize: 50 * 1000 * 1000 }, //5MB per photo
+  fileFilter: function (req, file, callback) {
+    validateFile(file, callback);
+  },
+});
+// unfortunately this does not work
+var validateFile = function (file, cb) {
+  allowedFileTypes = /jpeg|jpg|png/;
+  const extension = allowedFileTypes.test(
+    path.extname(file.originalname).toLowerCase()
+  );
+  const mimeType = allowedFileTypes.test(file.mimetype);
+  if (extension && mimeType) {
+    return cb(null, true);
+  } else {
+    cb('Invalid file type. Only JPEG, JPG and PNG file are allowed.');
+  }
+};
 // @route   GET api/photo
 // @desc    Get all photos
 // @access  Private
@@ -364,8 +382,6 @@ router.get('/', auth, async (req, res) => {
   try {
     const photos = await Photo.find().sort({ date: -1 }); // latest photo first
     res.json(photos);
-    // console.log('images are:');
-    // console.log(photos);
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server Error');
@@ -379,10 +395,10 @@ router.get('/me', auth, async (req, res) => {
   // endpoint is '/me', not '/'
   try {
     // find user by its objectid
-    // populate the user with name and avatar
+    // populate the user with firstname and avatar
     const photo = await Photo.find({
       user: req.user.id,
-      // }).populate('user', ['name', 'avatar']);
+      // }).populate('user', ['firstname', 'avatar']);
     });
     // console.log(photo);
     if (!photo) {
@@ -425,7 +441,7 @@ router.post('/', auth, upload.single('file'), async (req, res) => {
 
     // new Photo() is used to create new instance newPost from model Photo
     const newPhoto = new Photo({
-      name: user.name,
+      firstname: user.firstname,
       avatar: user.avatar,
       user: req.user.id,
       text: 'YOYOYO',
@@ -445,9 +461,8 @@ router.post('/', auth, upload.single('file'), async (req, res) => {
     //   socket.emit('message', newPhoto.fileName);
     // });
   });
-  console.log('text is ');
-  console.log(req.body);
 });
+
 // @route PUT api/photos/like/:id
 // @desc Like a post
 // @access Private

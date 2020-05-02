@@ -20,10 +20,10 @@ router.get('/me', auth, async (req, res) => {
   // endpoint is '/me', not '/'
   try {
     // find user by its objectid
-    // populate the user with name and avatar
+    // populate the user with firstname and avatar
     const profile = await Profile.findOne({
       user: req.user.id,
-    }).populate('user', ['name', 'avatar']);
+    }).populate('user', ['firstname', 'avatar']);
 
     if (!profile) {
       return res
@@ -167,7 +167,10 @@ router.post(
 
 router.get('/', async (req, res) => {
   try {
-    const profiles = await Profile.find().populate('user', ['name', 'avatar']);
+    const profiles = await Profile.find().populate('user', [
+      'firstname',
+      'avatar',
+    ]);
     res.json(profiles);
   } catch (err) {
     console.error(err.message);
@@ -183,7 +186,7 @@ router.get('/user/:user_id', async (req, res) => {
   try {
     const profile = await Profile.findOne({
       user: req.params.user_id,
-    }).populate('user', ['name', 'avatar']);
+    }).populate('user', ['firstname', 'avatar']);
     if (!profile)
       return res.status(400).json({ msg: 'There is no profile for this user' });
     res.json(profile);
@@ -378,14 +381,14 @@ router.delete('/education/:edu_id', auth, async (req, res) => {
   }
 });
 
-// @route   GET api/profile/github/:username
+// @route   GET api/profile/github/:gusername
 // @desc    Get user repos from Github
 // @access  Public
-router.get('/github/:username', (req, res) => {
+router.get('/github/:gusername', (req, res) => {
   try {
     const options = {
       uri: `https://api.github.com/users/${
-        req.params.username
+        req.params.gusername
       }/repos?per_page=5&sort=created:asc&client_id=${config.get(
         'githubClientId'
       )}&client_secret=${config.get('githubSecret')}`,

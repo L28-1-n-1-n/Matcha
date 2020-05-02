@@ -5,18 +5,18 @@ import PropTypes from 'prop-types';
 const ProfileItem = ({
   // pull them out so we can use these variables directly
   profile: {
-    user: { _id, name, avatar },
+    user: { _id, firstname, avatar },
     status,
     company,
     location,
-    skills
-  }
+    skills,
+  },
 }) => {
   return (
     <div className='profile bg-light'>
       <img src={avatar} alt='' className='round-img' />
       <div>
-        <h2>{name}</h2>
+        <h2>{firstname}</h2>
         {/* if company exists, display company */}
         <p>
           {status} {company && <span> at {company}</span>}
@@ -40,7 +40,7 @@ const ProfileItem = ({
 };
 
 ProfileItem.propTypes = {
-  profiles: PropTypes.object.isRequired
+  profiles: PropTypes.object.isRequired,
 };
 
 export default ProfileItem;

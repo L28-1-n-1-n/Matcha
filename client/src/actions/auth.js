@@ -14,8 +14,10 @@ import setAuthToken from '../utils/setAuthToken';
 
 // Load User
 export const loadUser = () => async (dispatch) => {
-  if (localStorage.token) {
-    setAuthToken(localStorage.token);
+  // if (localStorage.token) {
+  //   setAuthToken(localStorage.token);
+  if (sessionStorage.token) {
+    setAuthToken(sessionStorage.token);
   }
 
   try {
@@ -33,14 +35,26 @@ export const loadUser = () => async (dispatch) => {
 };
 
 // Register User
-export const register = ({ name, email, password }) => async (dispatch) => {
+export const register = ({
+  firstname,
+  lastname,
+  username,
+  email,
+  password,
+}) => async (dispatch) => {
   const config = {
     headers: {
       'Content-Type': 'application/json',
     },
   };
 
-  const body = JSON.stringify({ name, email, password });
+  const body = JSON.stringify({
+    firstname,
+    lastname,
+    username,
+    email,
+    password,
+  });
 
   try {
     const res = await axios.post('/api/users', body, config);
@@ -70,14 +84,14 @@ export const register = ({ name, email, password }) => async (dispatch) => {
 };
 
 // Login User
-export const login = (email, password) => async (dispatch) => {
+export const login = (username, password) => async (dispatch) => {
   const config = {
     headers: {
       'Content-Type': 'application/json',
     },
   };
 
-  const body = JSON.stringify({ email, password });
+  const body = JSON.stringify({ username, password });
 
   try {
     const res = await axios.post('/api/auth', body, config); // make POST request to /api/auth, sending body and config

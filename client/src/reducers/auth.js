@@ -10,7 +10,8 @@ import {
 } from '../actions/types';
 
 const initialState = {
-  token: localStorage.getItem('token'),
+  // token: localStorage.getItem('token'),
+  token: sessionStorage.getItem('token'),
   isAuthenticated: null,
   justRegistered: null,
   loading: true, // default true, once loaded, loading is set to false
@@ -26,11 +27,13 @@ export default function (state = initialState, action) {
         ...state,
         isAuthenticated: true,
         loading: false,
-        user: payload, // name, email, avatar... everything but the password
+        user: payload, // firstname, email, avatar... everything but the password
       };
     // case REGISTER_SUCCESS:
     case LOGIN_SUCCESS:
-      localStorage.setItem('token', payload.token); // set the token in local storage, payload is an object
+      // localStorage.setItem('token', payload.token); // set the token in local storage, payload is an object
+      sessionStorage.setItem('token', payload.token); // set the token in local storage, payload is an object
+
       return {
         ...state,
         ...payload,
@@ -38,7 +41,9 @@ export default function (state = initialState, action) {
         loading: false, // it's been loaded, so set to false
       };
     case REGISTER_SUCCESS:
-      localStorage.removeItem('token'); // Remove token completely from local storage
+      // localStorage.removeItem('token'); // Remove token completely from local storage
+      sessionStorage.removeItem('token'); // Remove token completely from local storage
+
       return {
         ...state,
         token: null,
@@ -47,7 +52,9 @@ export default function (state = initialState, action) {
         loading: false, // even though authentication failed, it is still done loading
       };
     case REGISTER_FAIL:
-      localStorage.removeItem('token'); // Remove token completely from local storage
+      // localStorage.removeItem('token'); // Remove token completely from local storage
+      sessionStorage.removeItem('token'); // Remove token completely from local storage
+
       return {
         ...state,
         token: null,
@@ -59,7 +66,8 @@ export default function (state = initialState, action) {
     case LOGIN_FAIL:
     case LOGOUT:
     case ACCOUNT_DELETED:
-      localStorage.removeItem('token'); // Remove token completely from local storage
+      // localStorage.removeItem('token'); // Remove token completely from local storage
+      sessionStorage.removeItem('token'); // Remove token completely from local storage
       return {
         ...state,
         token: null,

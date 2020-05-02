@@ -15,10 +15,10 @@ router.get('/me', auth, async (req, res) => {
   // endpoint is '/me', not '/'
   try {
     // find user by its objectid
-    // populate the user with name and avatar
+    // populate the user with firstname and avatar
     const profile = await Profile.findOne({
       user: req.user.id,
-    }).populate('user', ['name', 'avatar']);
+    }).populate('user', ['firstname', 'avatar']);
 
     if (!profile) {
       return res
@@ -38,7 +38,10 @@ router.get('/me', auth, async (req, res) => {
 
 router.get('/', async (req, res) => {
   try {
-    const profiles = await Profile.find().populate('user', ['name', 'avatar']);
+    const profiles = await Profile.find().populate('user', [
+      'firstname',
+      'avatar',
+    ]);
     res.json(profiles);
     console.log(profiles);
   } catch (err) {

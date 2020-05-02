@@ -39,7 +39,7 @@ router.get('/', auth, async (req, res) => {
 router.post(
   '/',
   [
-    check('email', 'Please include a valid email').isEmail(),
+    check('username', 'Please include a valid Username').exists(),
     check('password', 'Password is required').exists(),
   ],
   async (req, res) => {
@@ -48,9 +48,9 @@ router.post(
       return res.status(400).json({ errors: errors.array() }); // array of errors
     }
     // See if user exists
-    const { email, password } = req.body;
+    const { username, password } = req.body;
     try {
-      let user = await User.findOne({ email });
+      let user = await User.findOne({ username });
       if (!user) {
         return res
           .status(400)

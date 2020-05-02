@@ -7,15 +7,15 @@ import { deleteComment } from '../../actions/post';
 
 const CommentItem = ({
   postId,
-  comment: { _id, text, name, avatar, user, date },
+  comment: { _id, text, firstname, avatar, user, date },
   auth,
-  deleteComment
+  deleteComment,
 }) => (
   <div className='post bg-white p-1 my-1'>
     <div>
       <Link to={`/profile/${user}`}>
         <img className='round-img' src={avatar} alt='' />
-        <h4>{name}</h4>
+        <h4>{firstname}</h4>
       </Link>
     </div>
     <div>
@@ -40,11 +40,11 @@ CommentItem.propTypes = {
   postId: PropTypes.string.isRequired,
   comment: PropTypes.object.isRequired,
   auth: PropTypes.object.isRequired,
-  deleteComment: PropTypes.func.isRequired
+  deleteComment: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = state => ({
-  auth: state.auth
+const mapStateToProps = (state) => ({
+  auth: state.auth,
 });
 
 export default connect(mapStateToProps, { deleteComment })(CommentItem);

@@ -9,13 +9,13 @@ const Recuperation = ({ fpCheckEmail }) => {
     email: '',
   });
   const [showText, setShowText] = useState(false);
-  const { email } = formData; // pull variables out of formData so we don't have to do formData.name, etc
+  const { email } = formData; // pull variables out of formData so we don't have to do formData.firstname, etc
 
   const onChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
-  // call setFormData, ...formData makes a copy of hte object {name, email, passowrd, password2}
+  // call setFormData, ...formData makes a copy of the object {firstname, email, passowrd, password2}
   // change the name to the value of the input (e.target.value)
-  // [e.target.name] used instead of name since different fields have differnt names (name, email, password, etc).
+  // [e.target.name] used instead of name since different fields have differnt names (firstname, email, password, etc).
   // The "name" in e.target.name is a field
 
   const onSubmit = async (e) => {

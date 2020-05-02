@@ -46,7 +46,7 @@ const Chat = ({ getProfiles, profile: { profiles } }) => {
           <ul id='users'>
             {profiles.length > 0 ? (
               profiles.map((profile) => (
-                <li key={profile._id}>{profile.user.name} </li>
+                <li key={profile._id}>{profile.user.firstname} </li>
               ))
             ) : (
               <h4> No profiles found...</h4>

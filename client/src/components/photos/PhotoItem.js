@@ -21,7 +21,7 @@ const PhotoItem = ({
     _id,
     isProfilePic,
     text,
-    name,
+    firstname,
     avatar,
     user,
     likes,
@@ -36,7 +36,7 @@ const PhotoItem = ({
     {/* <div>
       <Link to={`/profile/${user}`}>
         <img className='round-img' src={avatar} alt='' />
-        <h4>{name}</h4>
+        <h4>{firstname}</h4>
       </Link>
     </div> */}
 

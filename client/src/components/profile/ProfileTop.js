@@ -8,13 +8,13 @@ const ProfileTop = ({
     location,
     website,
     social,
-    user: { name, avatar }
-  }
+    user: { firstname, avatar },
+  },
 }) => {
   return (
     <div className='profile-top bg-primary p-2'>
       <img className='round-img my-1' src={avatar} alt='' />
-      <h1 className='large'>{name}</h1>
+      <h1 className='large'>{firstname}</h1>
       <p className='lead'>
         {status} {company && <span> at {company}</span>}
       </p>
@@ -56,7 +56,7 @@ const ProfileTop = ({
 };
 
 ProfileTop.propTypes = {
-  profile: PropTypes.object.isRequired
+  profile: PropTypes.object.isRequired,
 };
 
 export default ProfileTop;

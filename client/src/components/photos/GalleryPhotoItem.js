@@ -21,7 +21,7 @@ const GalleryPhotoItem = ({
     _id,
     isProfilePic,
     text,
-    name,
+    firstname,
     avatar,
     user,
     likes,
@@ -36,7 +36,7 @@ const GalleryPhotoItem = ({
     {/* <div>
       <Link to={`/profile/${user}`}>
         <img className='round-img' src={avatar} alt='' />
-        <h4>{name}</h4>
+        <h4>{firstname}</h4>
       </Link>
     </div> */}
 
@@ -44,7 +44,7 @@ const GalleryPhotoItem = ({
       <Image data={data} />
     </div>
     <div>
-      <p className='my-1'>{name}</p>
+      <p className='my-1'>{firstname}</p>
       <p className='my-1'>{text}</p>
       {/* <img className='round-img' src={avatar} alt='' /> */}
 

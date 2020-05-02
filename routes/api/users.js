@@ -14,8 +14,22 @@ const User = require('../../models/User');
 router.post(
   '/',
   [
-    check('name', 'Name is required').not().isEmpty(),
+    check('firstname', 'Firstname is required').not().isEmpty(),
+    check('lastname', 'Lastname is required').not().isEmpty(),
+    check('username', 'Username is required').not().isEmpty(),
     check('email', 'Please include a valid email').isEmail(),
+    check(
+      'firstname',
+      'Please enter a firstname less than 15 characters'
+    ).isLength({ max: 15 }),
+    check(
+      'lastname',
+      'Please enter a lastname less than 15 characters'
+    ).isLength({ max: 15 }),
+    check(
+      'username',
+      'Please enter a username less than 15 characters'
+    ).isLength({ max: 15 }),
     check(
       'password',
       'Please enter a password with 6 or more characters'
@@ -28,13 +42,19 @@ router.post(
       return res.status(400).json({ errors: errors.array() }); // array of errors
     }
 
-    const { name, email, password } = req.body;
+    const { firstname, lastname, username, email, password } = req.body;
     try {
       let user = await User.findOne({ email });
       if (user) {
         return res
           .status(400)
           .json({ errors: [{ msg: 'User already exists' }] }); // array of errors
+      }
+      user = await User.findOne({ username });
+      if (user) {
+        return res.status(400).json({
+          errors: [{ msg: 'Username taken. Please choose another one.' }],
+        }); // array of errors
       }
       // See if user exists
 
@@ -47,13 +67,15 @@ router.post(
 
       // Create User
       user = new User({
-        name,
+        firstname,
+        lastname,
+        username,
         email,
         avatar,
         password,
       });
 
-      // Encrypt password
+      // Add randomness by genSalt using bcrypt, and then encrypt password
       const salt = await bcrypt.genSalt(10);
       user.password = await bcrypt.hash(password, salt);
 

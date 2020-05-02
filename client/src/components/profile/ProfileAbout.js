@@ -5,14 +5,14 @@ const ProfileAbout = ({
   profile: {
     bio,
     skills,
-    user: { name }
-  }
+    user: { firstname },
+  },
 }) => (
   <div className='profile-about bg-light p-2'>
     {bio && (
       <Fragment>
         {/* take First name only, not last name */}
-        <h2 className='text-primary'>{name.trim().split(' ')[0]}'s Bio</h2>
+        <h2 className='text-primary'>{firstname.trim().split(' ')[0]}'s Bio</h2>
         <p>{bio}</p>
         <div className='line'></div>
       </Fragment>
@@ -30,7 +30,7 @@ const ProfileAbout = ({
   </div>
 );
 ProfileAbout.propTypes = {
-  profile: PropTypes.object.isRequired
+  profile: PropTypes.object.isRequired,
 };
 
 export default ProfileAbout;

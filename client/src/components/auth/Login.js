@@ -5,11 +5,11 @@ import PropTypes from 'prop-types';
 import { login } from '../../actions/auth';
 const Login = ({ login, isAuthenticated }) => {
   const [formData, setFormData] = useState({
-    email: '',
+    username: '',
     password: '',
   });
 
-  const { email, password } = formData; // pull variables out of formData so we don't have to do formData.name, etc
+  const { username, password } = formData; // pull variables out of formData so we don't have to do formData.name, etc
 
   const onChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -20,7 +20,7 @@ const Login = ({ login, isAuthenticated }) => {
 
   const onSubmit = async (e) => {
     e.preventDefault();
-    login(email, password);
+    login(username, password);
   };
 
   // Redirect if logged in
@@ -37,10 +37,10 @@ const Login = ({ login, isAuthenticated }) => {
       <form className='form' onSubmit={(e) => onSubmit(e)}>
         <div className='form-group'>
           <input
-            type='email'
-            placeholder='Email Address'
-            name='email'
-            value={email}
+            type='text'
+            placeholder='Username'
+            name='username'
+            value={username}
             onChange={(e) => onChange(e)}
             required
           />

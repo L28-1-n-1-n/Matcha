@@ -8,31 +8,38 @@ import PropTypes from 'prop-types';
 // setAlert is pulled out of props
 const Register = ({ setAlert, register, isAuthenticated, justRegistered }) => {
   const [formData, setFormData] = useState({
-    name: '',
+    firstname: '',
+    lastname: '',
+    username: '',
     email: '',
     password: '',
     password2: '',
   });
 
-  const { name, email, password, password2 } = formData; // pull variables out of formData so we don't have to do formData.name, etc
+  const {
+    firstname,
+    lastname,
+    username,
+    email,
+    password,
+    password2,
+  } = formData; // pull variables out of formData so we don't have to do formData.name, etc
 
   const onChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
-  // call setFormData, ...formData makes a copy of hte object {name, email, passowrd, password2}
-  // change the name to the value of the input (e.target.value)
-  // [e.target.name] used instead of name since different fields have differnt names (name, email, password, etc).
-  // The "name" in e.target.name is a field
 
   const onSubmit = async (e) => {
     e.preventDefault();
     if (password !== password2) {
       setAlert('Passwords do not match', 'danger'); // alert type is danger
     } else {
-      register({ name, email, password });
+      register({ firstname, lastname, username, email, password });
 
       // console.log('Success!');
       //   const newUser = {
-      //     name,
+      //     firstname,
+      //     lastname,
+      //     username,
       //     email,
       //     password
       //   };
@@ -68,9 +75,29 @@ const Register = ({ setAlert, register, isAuthenticated, justRegistered }) => {
         <div className='form-group'>
           <input
             type='text'
-            placeholder='Name'
-            name='name'
-            value={name}
+            placeholder='First Name'
+            name='firstname'
+            value={firstname}
+            onChange={(e) => onChange(e)}
+            required
+          />
+        </div>
+        <div className='form-group'>
+          <input
+            type='text'
+            placeholder='Last Name'
+            name='lastname'
+            value={lastname}
+            onChange={(e) => onChange(e)}
+            required
+          />
+        </div>
+        <div className='form-group'>
+          <input
+            type='text'
+            placeholder='Username'
+            name='username'
+            value={username}
             onChange={(e) => onChange(e)}
             required
           />

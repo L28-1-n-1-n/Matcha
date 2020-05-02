@@ -13,7 +13,7 @@ const PhotoSchema = new Schema({
   text: {
     type: String,
   },
-  name: {
+  firstname: {
     type: String,
   },
   avatar: {
@@ -39,7 +39,7 @@ const PhotoSchema = new Schema({
   //         type: String,
   //         required: true
   //       },
-  //       name: {
+  //       firstname: {
   //         type: String
   //       },
   //       date: {
