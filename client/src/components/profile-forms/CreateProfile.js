@@ -1,5 +1,5 @@
 import React, { Fragment, useState, useEffect } from 'react';
-import { Link, withRouter } from 'react-router-dom';
+import { Link, withRouter, Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { detailedGeo, createProfile } from '../../actions/profile';
@@ -93,6 +93,11 @@ const CreateProfile = ({ auth: { user }, createProfile, history }) => {
     e.preventDefault();
     createProfile(formData, history);
   };
+
+  // if (justCreatedProfile) {
+  //   console.log('totoot');
+  //   return <Redirect to='/my-photos' />;
+  // }
   return (
     <Fragment>
       <h1 className='large text-primary'>Create Your Profile</h1>
@@ -187,10 +192,12 @@ CreateProfile.propTypes = {
   createProfile: PropTypes.func.isRequired,
   detailedGeo: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired,
+  // justCreatedProfile: PropTypes.bool,
 };
 
 const mapStateToProps = (state) => ({
   auth: state.auth,
+  // justCreatedProfile: state.auth.justCreatedProfile,
 });
 
 export default connect(mapStateToProps, { createProfile, detailedGeo })(

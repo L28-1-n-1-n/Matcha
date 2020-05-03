@@ -9,6 +9,7 @@ import {
   CLEAR_PROFILE,
   ACCOUNT_DELETED,
   GET_REPOS,
+  PROMPT_UPLOAD_PROFILE_PHOTO,
 } from './types';
 
 // Get current users profile
@@ -111,6 +112,10 @@ export const createProfile = (formData, history, edit = false) => async (
 
     if (!edit) {
       history.push('/dashboard');
+      console.log('yo we are here');
+      dispatch({
+        type: PROMPT_UPLOAD_PROFILE_PHOTO,
+      });
     }
   } catch (err) {
     const errors = err.response.data.errors;

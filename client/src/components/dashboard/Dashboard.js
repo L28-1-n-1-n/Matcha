@@ -1,11 +1,11 @@
 import React, { Fragment, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Spinner from '../layout/Spinner';
 import DashboardActions from './DashboardActions';
-import Experience from './Experience';
-import Education from './Education';
+// import Experience from './Experience';
+// import Education from './Education';
 import { getCurrentProfile, deleteAccount } from '../../actions/profile';
 
 // pull profile and loading state out of profile
@@ -14,10 +14,17 @@ const Dashboard = ({
   deleteAccount,
   auth: { user }, // pull user from auth
   profile: { profile, loading },
+  justCreatedProfile,
 }) => {
   useEffect(() => {
     getCurrentProfile();
   }, [getCurrentProfile]);
+
+  if (justCreatedProfile) {
+    console.log('totoot');
+    return <Redirect to='/my-photos' />;
+  }
+
   return loading && profile == null ? (
     <Spinner />
   ) : (
@@ -56,11 +63,13 @@ Dashboard.propTypes = {
   auth: PropTypes.object.isRequired,
   profile: PropTypes.object.isRequired,
   deleteAccount: PropTypes.func.isRequired,
+  justCreatedProfile: PropTypes.bool,
 };
 
 const mapStateToProps = (state) => ({
   auth: state.auth,
   profile: state.profile,
+  justCreatedProfile: state.auth.justCreatedProfile,
 });
 
 export default connect(mapStateToProps, { getCurrentProfile, deleteAccount })(

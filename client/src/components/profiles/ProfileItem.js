@@ -8,8 +8,8 @@ const ProfileItem = ({
     user: { _id, firstname, avatar },
     status,
     company,
-    location,
-    skills,
+    city,
+    tags,
   },
 }) => {
   return (
@@ -21,17 +21,17 @@ const ProfileItem = ({
         <p>
           {status} {company && <span> at {company}</span>}
         </p>
-        <p className='my-1'>{location && <span>{location}</span>}</p>
+        <p className='my-1'>{city && <span>{city}</span>}</p>
         <Link to={`/profile/${_id}`} className='btn btn-primary'>
           View Profile
         </Link>
       </div>
       <ul>
         {/* maximum of 4 skills */}
-        {skills.slice(0, 4).map((skill, index) => (
+        {tags.slice(0, 4).map((tag, index) => (
           <li key={index} className='text-primary'>
             <i className='fas fa-check'></i>
-            {skill}
+            {tag}
           </li>
         ))}
       </ul>

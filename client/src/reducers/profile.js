@@ -12,6 +12,7 @@ const initialState = {
   profiles: [],
   repos: [],
   loading: true,
+  justCreatedProfile: false,
   error: {},
 };
 
@@ -53,6 +54,7 @@ export default function (state = initialState, action) {
         repos: payload,
         loading: false,
       };
+
     default:
       return state;
   }

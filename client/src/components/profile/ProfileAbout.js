@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 const ProfileAbout = ({
   profile: {
     bio,
-    skills,
+    tags,
     user: { firstname },
   },
 }) => (
@@ -12,18 +12,18 @@ const ProfileAbout = ({
     {bio && (
       <Fragment>
         {/* take First name only, not last name */}
-        <h2 className='text-primary'>{firstname.trim().split(' ')[0]}'s Bio</h2>
+        <h2 className='text-primary'>{firstname}'s Bio</h2>
         <p>{bio}</p>
         <div className='line'></div>
       </Fragment>
     )}
 
     <h2 className='text-primary'>Skill Set</h2>
-    <div className='skills'>
-      {/* map skills array to individual item for each skill */}
-      {skills.map((skill, index) => (
+    <div className='tags'>
+      {/* map tags array to individual item for each skill */}
+      {tags.map((tag, index) => (
         <div key={index} className='p-1'>
-          <i className='fas fa-check'></i> {skill}
+          <i className='fas fa-check'></i> {tag}
         </div>
       ))}
     </div>

@@ -8,6 +8,7 @@ import {
   LOGOUT,
   ACCOUNT_DELETED,
   UPDATE_USER,
+  PROMPT_UPLOAD_PROFILE_PHOTO,
 } from '../actions/types';
 
 const initialState = {
@@ -15,6 +16,7 @@ const initialState = {
   token: sessionStorage.getItem('token'),
   isAuthenticated: null,
   justRegistered: null,
+  justCreatedProfile: false,
   loading: true, // default true, once loaded, loading is set to false
   user: null,
 };
@@ -29,6 +31,7 @@ export default function (state = initialState, action) {
         isAuthenticated: true,
         loading: false,
         user: payload, // firstname, email, avatar... everything but the password
+        justCreatedProfile: false,
       };
     // case REGISTER_SUCCESS:
     case LOGIN_SUCCESS:
@@ -40,6 +43,7 @@ export default function (state = initialState, action) {
         ...payload,
         isAuthenticated: true,
         loading: false, // it's been loaded, so set to false
+        justCreatedProfile: false,
       };
     case REGISTER_SUCCESS:
       // localStorage.removeItem('token'); // Remove token completely from local storage
@@ -62,6 +66,7 @@ export default function (state = initialState, action) {
         justRegistered: false,
         isAuthenticated: false,
         loading: false, // even though authentication failed, it is still done loading
+        justCreatedProfile: false,
       };
     case AUTH_ERROR:
     case LOGIN_FAIL:
@@ -80,6 +85,11 @@ export default function (state = initialState, action) {
         ...state,
         user: payload,
         loading: false,
+      };
+    case PROMPT_UPLOAD_PROFILE_PHOTO:
+      return {
+        ...state,
+        justCreatedProfile: true,
       };
     default:
       return state;
