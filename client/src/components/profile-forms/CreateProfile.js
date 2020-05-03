@@ -7,47 +7,19 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import moment from 'moment';
 
-const CreateProfile = ({ createProfile, history }) => {
+const CreateProfile = ({ auth: { user }, createProfile, history }) => {
   const [formData, setFormData] = useState({
     gender: '',
     interestedGender: '',
     bio: '',
     age: '',
     tags: '',
-    // company: '',
-    // website: '',
-    // status: '',
-    // githubusername: '',
-    // skills: '',
-    // twitter: '',
-    // facebook: '',
-    // linkedin: '',
-    // youtube: '',
-    // instagram: '',
   });
-  // const [displaySocialInputs, toggleSocialInputs] = useState(false);
-  const [startDate, setStartDate] = useState(new Date());
 
-  const {
-    gender,
-    interestedGender,
-    bio,
-    age,
-    tags,
-    // company,
-    // website,
-    // status,
-    // githubusername,
-    // skills,
-    // twitter,
-    // facebook,
-    // linkedin,
-    // youtube,
-    // instagram,
-  } = formData;
+  const [startDate, setStartDate] = useState('');
+
+  const { gender, interestedGender, bio, age, tags } = formData;
   useEffect(() => {
-    // var lat;
-    // var long;
     // pre-set latitude and longitude to an out-of-range value 200
     // Normally latitude and longitude are +/-90 and +/-180 respectively
     // This value (200) will be replaced by GPS values if navigator.geolocation is allowed by user
@@ -55,16 +27,17 @@ const CreateProfile = ({ createProfile, history }) => {
     // Please see below (towards the end of useEffect()) on arrangements for guessing geolocation by ip address
     setFormData({
       ...formData,
+      firstname: user.firstname,
+      lastname: user.lastname,
+      email: user.email,
       pre_latitude: 200,
       pre_longitude: 200,
     });
+    console.log(formData);
     // Replace error value with latitude and longitude obtained by GPS if user allows navigator.geolocation
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
-          // lat = position.coords.latitude;
-          // long = position.coords.longitude;
-
           setFormData({
             ...formData,
             pre_latitude: position.coords.latitude,
@@ -89,7 +62,7 @@ const CreateProfile = ({ createProfile, history }) => {
         }
       );
     }
-
+    console.log(formData);
     // In this project, the built-in method to obtina IP gets the server-side IP
     // This is because the client is localhost, so under the circumstances of this project, the user's physical location is given by the server IP
     // However, I've also built the code that would have gotten the client-side IP, although this was not incorporated into the database
@@ -104,9 +77,14 @@ const CreateProfile = ({ createProfile, history }) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
-      day: result[0],
-      month: result[1],
-      year: result[2],
+      bday: {
+        day: Number(result[0]),
+        month: Number(result[1]),
+        year: Number(result[2]),
+      },
+      firstname: user.firstname,
+      lastname: user.lastname,
+      email: user.email,
     });
     console.log(formData);
   };
@@ -125,9 +103,10 @@ const CreateProfile = ({ createProfile, history }) => {
       <form className='form' onSubmit={(e) => onSubmit(e)}>
         <div className='form-group'>
           <select name='gender' value={gender} onChange={(e) => onChange(e)}>
-            <option value='0'>* Select gender</option>
+            <option value='0'>* I identify as ...</option>
             <option value='Male'>Male</option>
             <option value='Female'>Female</option>
+            <option value='Non-Binary'>Non-Binary</option>
           </select>
         </div>
         <div className='form-group'>
@@ -139,10 +118,11 @@ const CreateProfile = ({ createProfile, history }) => {
 
               setFormData({
                 ...formData,
-
-                day: result[0],
-                month: result[1],
-                year: result[2],
+                bday: {
+                  day: Number(result[0]),
+                  month: Number(result[1]),
+                  year: Number(result[2]),
+                },
               });
 
               console.log('we are here');
@@ -194,127 +174,6 @@ const CreateProfile = ({ createProfile, history }) => {
           </small>
         </div>
 
-        {/* <div className='form-group'>
-          <input
-            type='text'
-            placeholder='Company'
-            name='company'
-            value={company}
-            onChange={(e) => onChange(e)}
-          />
-          <small className='form-text'>
-            Could be your own company or one you work for
-          </small>
-        </div>
-        <div className='form-group'>
-          <input
-            type='text'
-            placeholder='Website'
-            name='website'
-            value={website}
-            onChange={(e) => onChange(e)}
-          />
-          <small className='form-text'>
-            Could be your own or a company website
-          </small>
-        </div> */}
-        {/* 
-        <div className='form-group'>
-          <input
-            type='text'
-            placeholder='* Skills'
-            name='skills'
-            value={skills}
-            onChange={(e) => onChange(e)}
-          />
-          <small className='form-text'>
-            Please use comma separated values (eg. HTML,CSS,JavaScript,PHP)
-          </small>
-        </div> */}
-        {/* <div className='form-group'>
-          <input
-            type='text'
-            placeholder='Github Username'
-            name='githubusername'
-            value={githubusername}
-            onChange={(e) => onChange(e)}
-          />
-          <small className='form-text'>
-            If you want your latest repos and a Github link, include your
-            username
-          </small>
-        </div>
-
-        <div className='my-2'>
-          <button
-            onClick={() => toggleSocialInputs(!displaySocialInputs)}
-            type='button'
-            className='btn btn-light'
-          >
-            Add Social Network Links
-          </button>
-          <span>Optional</span>
-        </div>
-        {/* only show when toggle button is pushed */}
-        {/* {displaySocialInputs && (
-          <Fragment>
-            <div className='form-group social-input'>
-              <i className='fab fa-twitter fa-2x'></i>
-              <input
-                type='text'
-                placeholder='Twitter URL'
-                name='twitter'
-                value={twitter}
-                onChange={(e) => onChange(e)}
-              />
-            </div>
-
-            <div className='form-group social-input'>
-              <i className='fab fa-facebook fa-2x'></i>
-              <input
-                type='text'
-                placeholder='Facebook URL'
-                name='facebook'
-                value={facebook}
-                onChange={(e) => onChange(e)}
-              />
-            </div>
-
-            <div className='form-group social-input'>
-              <i className='fab fa-youtube fa-2x'></i>
-              <input
-                type='text'
-                placeholder='YouTube URL'
-                name='youtube'
-                value={youtube}
-                onChange={(e) => onChange(e)}
-              />
-            </div>
-
-            <div className='form-group social-input'>
-              <i className='fab fa-linkedin fa-2x'></i>
-              <input
-                type='text'
-                placeholder='Linkedin URL'
-                name='linkedin'
-                value={linkedin}
-                onChange={(e) => onChange(e)}
-              />
-            </div>
-
-            <div className='form-group social-input'>
-              <i className='fab fa-instagram fa-2x'></i>
-              <input
-                type='text'
-                placeholder='Instagram URL'
-                name='instagram'
-                value={instagram}
-                onChange={(e) => onChange(e)}
-              />
-            </div>
-          </Fragment>
-        )} */}
-
         <input type='submit' className='btn btn-primary my-1' />
         <Link className='btn btn-light my-1' to='/dashboard'>
           Go Back
@@ -327,9 +186,14 @@ const CreateProfile = ({ createProfile, history }) => {
 CreateProfile.propTypes = {
   createProfile: PropTypes.func.isRequired,
   detailedGeo: PropTypes.func.isRequired,
+  auth: PropTypes.object.isRequired,
 };
 
-export default connect(null, { createProfile, detailedGeo })(
+const mapStateToProps = (state) => ({
+  auth: state.auth,
+});
+
+export default connect(mapStateToProps, { createProfile, detailedGeo })(
   withRouter(CreateProfile, detailedGeo)
 );
 

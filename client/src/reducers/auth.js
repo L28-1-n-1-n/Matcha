@@ -7,6 +7,7 @@ import {
   LOGIN_FAIL,
   LOGOUT,
   ACCOUNT_DELETED,
+  UPDATE_USER,
 } from '../actions/types';
 
 const initialState = {
@@ -73,6 +74,12 @@ export default function (state = initialState, action) {
         token: null,
         isAuthenticated: false,
         loading: false, // even though authentication failed, it is still done loading
+      };
+    case UPDATE_USER:
+      return {
+        ...state,
+        user: payload,
+        loading: false,
       };
     default:
       return state;

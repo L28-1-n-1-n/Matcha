@@ -7,15 +7,15 @@ const ProfileSchema = new mongoose.Schema({
   },
   bday: {
     day: {
-      type: String,
+      type: Number,
       required: true,
     },
     month: {
-      type: String,
+      type: Number,
       required: true,
     },
     year: {
-      type: String,
+      type: Number,
       require: true,
     },
   },

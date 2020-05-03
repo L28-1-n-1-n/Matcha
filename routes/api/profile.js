@@ -45,20 +45,30 @@ router.post(
   [
     auth,
     [
-      check('gender', 'Gender is required').not().isEmpty(),
-      check('day', 'Date of birth is required').not().isEmpty(),
+      check('gender', 'Gender is required').isIn([
+        'Male',
+        'Female',
+        'Non-Binary',
+      ]),
+      check('bday', 'Date of birth is required').not().isEmpty(),
+      check('bday.day', 'Date of birth is required')
+        .not()
+        .isIn(['Invalid date', 'undefined', NaN]),
       check(
         'interestedGender',
         'Please specify the gender/s/ you are interested in.'
-      )
-        .not()
-        .isEmpty(),
+      ).isIn(['Male', 'Female', 'Both']),
       check('bio', 'Please fill in Short Bio').not().isEmpty(),
       check('tags', 'Enter a list of interests').not().isEmpty(),
       check(
         'bio',
         'Please make sure your bio is less than 100 characters.'
       ).isLength({ max: 200 }),
+      check('firstname', 'Please fill in first name').not().isEmpty(),
+      check('lastname', 'Please fill in last name').not().isEmpty(),
+      check('email', 'Please ensure email is in correct format').isEmail(),
+      check('firstname', 'First name is too long').isLength({ max: 15 }),
+      check('lastname', 'Last name is too long').isLength({ max: 15 }),
     ],
   ],
   async (req, res) => {
@@ -68,15 +78,19 @@ router.post(
     }
 
     const {
-      day,
-      month,
-      year,
+      // day,
+      // month,
+      // year,
+      bday,
       pre_latitude,
       pre_longitude,
       gender,
       interestedGender,
       tags,
       bio,
+      // firstname,
+      // lastname,
+      // email,
       // company,
       // website,
       // skills,
@@ -108,6 +122,7 @@ router.post(
 
     const profileFields = {
       user: req.user.id,
+      bday,
       gender,
       interestedGender,
       bio,
@@ -125,6 +140,12 @@ router.post(
       // githubusername,
     };
 
+    // const userFields = {
+    //   _id: req.user.id,
+    //   firstname: firstname,
+    //   lastname: lastname,
+    //   email: email,
+    // }
     try {
       // This only works if user has ipv4, not ipv6, as ipLocation only works with ipv4
       const ipresult = await publicIp.v4();
@@ -141,7 +162,7 @@ router.post(
     // Build social, bday, location object
     // Initialize empty object to avoid errors
     // profileFields.social = {};
-    profileFields.bday = {};
+    // profileFields.bday = {};
     profileFields.location = {};
 
     // if (youtube) profileFields.social.youtube = youtube;
@@ -149,9 +170,9 @@ router.post(
     // if (facebook) profileFields.social.facebook = facebook;
     // if (linkedin) profileFields.social.linkedin = linkedin;
     // if (instagram) profileFields.social.instagram = instagram;
-    if (day) profileFields.bday.day = day;
-    if (month) profileFields.bday.month = month;
-    if (year) profileFields.bday.year = year;
+    // if (day) profileFields.bday.day = day;
+    // if (month) profileFields.bday.month = month;
+    // if (year) profileFields.bday.year = year;
     if (latitude) profileFields.location.latitude = latitude;
     if (longitude) profileFields.location.longitude = longitude;
     if (city) profileFields.location.city = city;
@@ -159,15 +180,23 @@ router.post(
 
     try {
       let profile = await Profile.findOne({ user: req.user.id });
+      let user = await User.findOne({ user: req.user.id });
       if (profile) {
         profile = await Profile.findOneAndUpdate(
           { user: req.user.id },
           { $set: profileFields },
           { new: true }
         );
-
         return res.json(profile);
       }
+      // if (user) {
+      //   user = await User.findOneAndUpdate(
+      //     { _id: req.user.id },
+      //      { $set: userFields},
+      //      { new: true }
+      //   );
+      //   return res.json(user);
+      // }
 
       // If profile not found, create new one
       profile = new Profile(profileFields); // profile is an instance of the model Profile, profileFields is ProfileSchema

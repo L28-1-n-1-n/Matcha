@@ -4,6 +4,7 @@ const gravatar = require('gravatar');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const config = require('config');
+const auth = require('../../middleware/auth');
 const { check, validationResult } = require('express-validator');
 const transporter = require('../../mailer');
 const User = require('../../models/User');
@@ -135,4 +136,69 @@ router.post(
   }
 );
 
+// @route   POST api/users/:id
+// @desc    Create or update user's profile
+// @access  Private
+router.post(
+  '/:id',
+  [
+    auth,
+    [
+      check('firstname', 'Firstname is required').not().isEmpty(),
+      check('lastname', 'Lastname is required').not().isEmpty(),
+      check('email', 'Please include a valid email').isEmail(),
+      check('firstname', 'Firstname too long').isLength({ max: 15 }),
+      check('lastname', 'Lastname too long').isLength({ max: 15 }),
+      check('gender', 'Please select a gender').isIn([
+        'Male',
+        'Female',
+        'Non-Binary',
+      ]),
+      check('bday', 'Please enter your birthdate').not().isEmpty(),
+      check('bday.day', 'Please enter valid birthday')
+        .not()
+        .isIn(['Invalid date', 'undefined', NaN]),
+      check(
+        'interestedGender',
+        'Select the gender/s/ you are interested in'
+      ).isIn(['Male', 'Female', 'Both']),
+      check('bio', 'Please fill in Short Bio').not().isEmpty(),
+      check('tags', 'Please enter a list of interests separated by commas')
+        .not()
+        .isEmpty(),
+      check('bio', 'Bio too long').isLength({ max: 200 }),
+    ],
+  ],
+  async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+    const { firstname, lastname, email } = req.body;
+    const userFields = {
+      _id: req.user.id,
+      firstname: firstname,
+      lastname: lastname,
+      email: email,
+    };
+
+    try {
+      let user = await User.findOne({ _id: req.user.id }).select(
+        '-username -password'
+      );
+      console.log(user);
+      if (user) {
+        user = await User.findOneAndUpdate(
+          { _id: req.user.id },
+          { $set: userFields },
+          { new: true }
+        );
+        return res.json(user);
+      }
+    } catch (err) {
+      console.error(err.message);
+      res.status(500).send('Server Error');
+    }
+  }
+);
 module.exports = router;

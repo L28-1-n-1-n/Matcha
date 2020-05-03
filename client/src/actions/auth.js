@@ -9,6 +9,8 @@ import {
   LOGIN_FAIL,
   LOGOUT,
   CLEAR_PROFILE,
+  UPDATE_USER,
+  PROFILE_ERROR,
 } from './types';
 import setAuthToken from '../utils/setAuthToken';
 
@@ -119,4 +121,40 @@ export const login = (username, password) => async (dispatch) => {
 export const logout = () => (dispatch) => {
   dispatch({ type: CLEAR_PROFILE });
   dispatch({ type: LOGOUT });
+};
+
+// Update user
+export const updateUser = (formData, history, id) => async (dispatch) => {
+  console.log('update user is fired');
+  try {
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
+    console.log('formdata is');
+    console.log(formData);
+    const res = await axios.post(`/api/users/${id}`, formData, config);
+
+    dispatch({
+      type: UPDATE_USER,
+      payload: res.data,
+    });
+    console.log('res.data is');
+    console.log(res.data);
+    dispatch(setAlert('User Details Updated', 'success'));
+
+    history.push('/dashboard');
+  } catch (err) {
+    const errors = err.response.data.errors;
+
+    if (errors) {
+      errors.forEach((error) => dispatch(setAlert(error.msg, 'danger')));
+    }
+
+    dispatch({
+      type: PROFILE_ERROR,
+      payload: { msg: err.response.statusText, status: err.response.status },
+    });
+  }
 };
