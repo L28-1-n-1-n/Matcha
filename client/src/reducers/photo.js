@@ -9,6 +9,7 @@ import {
   ADD_COMMENT,
   REMOVE_COMMENT,
   MAKE_PROFILE_PIC,
+  GET_PROFILE_PIC_BY_ID,
 } from '../actions/types';
 
 const initialState = {
@@ -30,6 +31,7 @@ export default function (state = initialState, action) {
         loading: false,
       };
     case GET_MY_PHOTOS:
+    case GET_PROFILE_PIC_BY_ID:
       return {
         ...state,
         photos: payload,

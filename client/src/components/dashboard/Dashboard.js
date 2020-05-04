@@ -19,9 +19,8 @@ const Dashboard = ({
   useEffect(() => {
     getCurrentProfile();
   }, [getCurrentProfile]);
-
+  console.log(user);
   if (justCreatedProfile) {
-    console.log('totoot');
     return <Redirect to='/my-photos' />;
   }
 

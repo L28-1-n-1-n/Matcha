@@ -3,16 +3,17 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import Spinner from '../layout/Spinner';
-import ProfileTop from './ProfileTop';
-import ProfileAbout from './ProfileAbout';
-import ProfileExperience from './ProfileExperience';
-import ProfileEducation from './ProfileEducation';
-import ProfileGithub from './ProfileGithub';
+import ProfileTop from '../profile/ProfileTop';
+import ProfileAbout from '../profile/ProfileAbout';
+import ProfileExperience from '../profile/ProfileExperience';
+import ProfileEducation from '../profile/ProfileEducation';
+import ProfileGithub from '../profile/ProfileGithub';
 import { getProfileById } from '../../actions/profile';
+import { getCurrentProfile } from '../../actions/profile';
 import { getMyPhotos } from '../../actions/photo';
-
 const Profile = ({
   getMyPhotos,
+  getCurrentProfile,
   getProfileById,
   profile: { profile, loading },
   photo: { photos },
@@ -20,9 +21,11 @@ const Profile = ({
   match,
 }) => {
   useEffect(() => {
-    getProfileById(match.params.id);
+    //     getProfileById(match.params.id);
+    //   }, [getProfileById, match.params.id]);
     getMyPhotos();
-  }, [getProfileById, match.params.id, getMyPhotos]);
+    getCurrentProfile();
+  }, [getCurrentProfile, getMyPhotos]);
   // Runs immediately when profile mounts
   return (
     <Fragment>
@@ -89,6 +92,7 @@ const Profile = ({
 
 Profile.propTypes = {
   getProfileById: PropTypes.func.isRequired,
+  getCurrentProfile: PropTypes.func.isRequired,
   profile: PropTypes.object.isRequired,
   auth: PropTypes.object.isRequired,
   photo: PropTypes.object.isRequired,
@@ -100,6 +104,8 @@ const mapStateToProps = (state) => ({
   photo: state.photo,
 });
 
-export default connect(mapStateToProps, { getProfileById, getMyPhotos })(
-  Profile
-);
+export default connect(mapStateToProps, {
+  getCurrentProfile,
+  getProfileById,
+  getMyPhotos,
+})(Profile);

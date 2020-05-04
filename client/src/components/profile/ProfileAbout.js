@@ -1,7 +1,8 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useEffect } from 'react';
 import PropTypes from 'prop-types';
-
-const ProfileAbout = ({
+import { connect } from 'react-redux';
+import { getCurrentProfile } from '../../actions/profile';
+const MyProfile = ({
   profile: {
     bio,
     tags,
@@ -29,8 +30,8 @@ const ProfileAbout = ({
     </div>
   </div>
 );
-ProfileAbout.propTypes = {
+MyProfile.propTypes = {
   profile: PropTypes.object.isRequired,
 };
 
-export default ProfileAbout;
+export default MyProfile;

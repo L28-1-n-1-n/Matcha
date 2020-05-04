@@ -10,6 +10,7 @@ import {
   ADD_PHOTO,
   GET_PHOTO,
   MAKE_PROFILE_PIC,
+  GET_PROFILE_PIC_BY_ID,
   // ADD_COMMENT,
   // REMOVE_COMMENT
 } from './types';
@@ -39,6 +40,25 @@ export const getMyPhotos = () => async (dispatch) => {
 
     dispatch({
       type: GET_MY_PHOTOS,
+      payload: res.data,
+    });
+  } catch (err) {
+    dispatch({ type: CLEAR_MY_PHOTOS });
+    dispatch({
+      type: PHOTO_ERROR,
+      payload: { msg: err.response.statusText, status: err.response.status },
+    });
+  }
+};
+
+// Get photo by ID
+export const getProfilePicById = (userId) => async (dispatch) => {
+  try {
+    // make request to backend api/profile/user/${userId}/profilepic
+    const res = await axios.get(`/api/photos/${userId}/profilepic`);
+
+    dispatch({
+      type: GET_PROFILE_PIC_BY_ID,
       payload: res.data,
     });
   } catch (err) {

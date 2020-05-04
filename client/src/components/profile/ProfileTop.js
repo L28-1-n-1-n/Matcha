@@ -1,6 +1,8 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
-
+import { connect } from 'react-redux';
+import { getProfilePicById } from '../../actions/photo';
+import Image from '../Image';
 const ProfileTop = ({
   profile: {
     status,
@@ -8,12 +10,29 @@ const ProfileTop = ({
     city,
     website,
     social,
-    user: { firstname, avatar },
+    user: { _id, firstname, avatar },
   },
+  getProfilePicById,
+  photo: { photos },
+  match,
+  // getMyPhotos,
 }) => {
+  let myProfilePic;
+  // useEffect(() => {
+  //   getProfilePicById(_id);
+  // }, [getProfilePicById, myProfilePic]);
+
+  myProfilePic = photos.find((element) => element.isProfilePic == true);
+  console.log(myProfilePic);
+
   return (
     <div className='profile-top bg-primary p-2'>
-      <img className='round-img my-1' src={avatar} alt='' />
+      {/* <img className='round-img my-1' src={myProfilePic} alt='' /> */}
+      <div>
+        {myProfilePic && myProfilePic.data && (
+          <Image data={myProfilePic.data} />
+        )}
+      </div>
       <h1 className='large'>{firstname}</h1>
       <p className='lead'>
         {status} {company && <span> at {company}</span>}
@@ -57,6 +76,12 @@ const ProfileTop = ({
 
 ProfileTop.propTypes = {
   profile: PropTypes.object.isRequired,
+  photo: PropTypes.object.isRequired,
+  getProfilePicById: PropTypes.func.isRequired,
 };
 
-export default ProfileTop;
+const mapStateToProps = (state) => ({
+  photo: state.photo,
+});
+
+export default connect(mapStateToProps, { getProfilePicById })(ProfileTop);

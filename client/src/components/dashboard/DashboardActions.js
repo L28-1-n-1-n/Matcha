@@ -15,6 +15,9 @@ export const DashboardActions = () => {
       <Link to='/my-photos' className='btn btn-light'>
         <i className='fas fa-user-circle text-primary'></i> My Photos
       </Link>
+      <Link to={'my-profile'} className='btn btn-light'>
+        <i className='fas fa-user-circle text-primary'></i> View My Profile
+      </Link>
     </div>
   );
 };

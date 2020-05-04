@@ -1,14 +1,17 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { logout } from '../../actions/auth';
+export const Navbar = ({
+  auth: { isAuthenticated, loading },
 
-export const Navbar = ({ auth: { isAuthenticated, loading }, logout }) => {
+  logout,
+}) => {
   const authLinks = (
     <ul>
       <li>
-        <Link to='/profiles'>Developers</Link>
+        <Link to='/profiles'>All Profiles</Link>
       </li>
 
       <li>

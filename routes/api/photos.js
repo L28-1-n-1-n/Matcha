@@ -413,6 +413,32 @@ router.get('/me', auth, async (req, res) => {
   }
 });
 
+// @route   GET api/photo/${userId}/profilepic
+// @desc    Get current user's profile pic by his/her userid
+// @access  Private
+router.get('/:id/profilepic', auth, async (req, res) => {
+  // endpoint is '/me', not '/'
+  try {
+    // find user by its objectid
+    // populate the user with firstname and avatar
+    const photo = await Photo.find({
+      user: req.user.id,
+      isProfiePic: true,
+      // }).populate('user', ['firstname', 'avatar']);
+    });
+    console.log(photo);
+    if (!photo) {
+      return res
+        .status(400)
+        .json({ msg: ' No photos found. Try uploading some !' });
+    }
+    res.json(photo);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
+});
+
 // const io = require('../../server').io;
 router.post('/', auth, upload.single('file'), async (req, res) => {
   if (req.files === null) {

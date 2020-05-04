@@ -9,6 +9,7 @@ import EditProfile from '../profile-forms/EditProfile';
 import AddExperience from '../profile-forms/AddExperience';
 import AddEducation from '../profile-forms/AddEducation';
 import MyPhotos from '../profile-forms/MyPhotos';
+import MyProfile from '../profile-forms/MyProfile';
 import Profiles from '../profiles/Profiles';
 import Profile from '../profile/Profile';
 import Photos from '../photos/Photos';
@@ -21,6 +22,7 @@ import Recuperation from '../verification/Recuperation';
 import Reset from '../verification/Reset';
 import ChatLanding from '../chat/ChatLanding';
 import Chat from '../chat/Chat';
+
 const Routes = () => {
   return (
     <section className='container'>
@@ -30,12 +32,14 @@ const Routes = () => {
         <Route exact path='/login' component={Login} />
         <PrivateRoute exact path='/profiles' component={Profiles} />
         <PrivateRoute exact path='/profile/:id' component={Profile} />
+
         <PrivateRoute exact path='/dashboard' component={Dashboard} />
         <PrivateRoute exact path='/create-profile' component={CreateProfile} />
         <PrivateRoute exact path='/edit-profile' component={EditProfile} />
         <PrivateRoute exact path='/add-experience' component={AddExperience} />
         <PrivateRoute exact path='/add-education' component={AddEducation} />
         <PrivateRoute exact path='/my-photos' component={MyPhotos} />
+        <PrivateRoute exact path='/my-profile' component={MyProfile} />
         <PrivateRoute exact path='/posts' component={Posts} />
         <PrivateRoute exact path='/photos' component={Photos} />
         <PrivateRoute exact path='/posts/:id' component={Post} />
