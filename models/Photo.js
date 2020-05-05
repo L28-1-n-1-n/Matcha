@@ -4,7 +4,11 @@ const Schema = mongoose.Schema;
 const PhotoSchema = new Schema({
   user: {
     type: Schema.Types.ObjectId,
-    ref: 'users',
+    ref: 'user',
+  },
+  profile: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'profile',
   },
   isProfilePic: {
     type: Boolean,

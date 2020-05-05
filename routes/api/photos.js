@@ -380,8 +380,11 @@ var validateFile = function (file, cb) {
 // @access  Private
 router.get('/', auth, async (req, res) => {
   try {
-    const photos = await Photo.find().sort({ date: -1 }); // latest photo first
+    const photos = await Photo.find()
+      .populate('profile', ['location'])
+      .sort({ date: -1 }); // latest photo first
 
+    console.log(photos[0].profile.location.city);
     res.json(photos);
   } catch (err) {
     console.error(err.message);
@@ -448,6 +451,7 @@ router.post('/', auth, upload.single('file'), async (req, res) => {
 
   const user = await User.findById(req.user.id).select('-password');
   console.log(user);
+  let profile = await Profile.findOne({ user: req.user.id });
   const file = req.files.file;
   // console.log(req.files);
   const uploadsDir = path.join(
@@ -471,6 +475,7 @@ router.post('/', auth, upload.single('file'), async (req, res) => {
       firstname: user.firstname,
       avatar: user.avatar,
       user: req.user.id,
+      profile: profile.id,
       text: 'YOYOYO',
       fileName: file.name,
       filePath: `/uploads/${file.name}`,

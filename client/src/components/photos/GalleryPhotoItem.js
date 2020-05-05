@@ -17,6 +17,7 @@ const GalleryPhotoItem = ({
   deletePhoto,
   makeProfilePic,
   auth,
+  // profile,
   photo: {
     _id,
     isProfilePic,
@@ -28,6 +29,7 @@ const GalleryPhotoItem = ({
     comments,
     date,
     data,
+    profile,
   },
   showActions,
   history,
@@ -45,7 +47,9 @@ const GalleryPhotoItem = ({
     </div>
     <div>
       <p className='my-1'>{firstname}</p>
-      <p className='my-1'>{text}</p>
+      {profile && profile.location.city && (
+        <p className='my-1'>{profile.location.city}</p>
+      )}
       {/* <img className='round-img' src={avatar} alt='' /> */}
 
       <p className='photo-date'>
@@ -99,6 +103,7 @@ GalleryPhotoItem.propTypes = {
   deletePhoto: PropTypes.func.isRequired,
   showActions: PropTypes.bool,
   makeProfilePic: PropTypes.func.isRequired,
+  profile: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = (state) => ({
