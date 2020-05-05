@@ -182,8 +182,6 @@ const FileUpload = ({ addPhoto }) => {
     //   console.log(pair[0] + ', ' + pair[1]);
     // }
 
-    // console.log(file);
-
     try {
       const res = await axios.post(
         'http://localhost:5000/api/photos',

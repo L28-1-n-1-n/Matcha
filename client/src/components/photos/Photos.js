@@ -10,6 +10,12 @@ const Photos = ({ getPhotos, photo: { photos, loading } }) => {
   useEffect(() => {
     getPhotos();
   }, [getPhotos]);
+
+  let ProfilePics;
+  ProfilePics = photos.filter((photo) => photo.isProfilePic == true);
+  // console.log(photos);
+  // ProfilePics.push(photos.find((element) => element.isProfilePic == true));
+
   //   const [formData, setFormData] = useState({
   //     company: '',
   //     title: '',
@@ -30,9 +36,10 @@ const Photos = ({ getPhotos, photo: { photos, loading } }) => {
       </p>
       {/* <PhotoForm /> */}
       <div className='photo-collection'>
-        {photos.map((photo) => (
-          <GalleryPhotoItem key={photo._id} photo={photo} />
-        ))}
+        {ProfilePics &&
+          ProfilePics.map((photo) => (
+            <GalleryPhotoItem key={photo._id} photo={photo} />
+          ))}
       </div>
     </Fragment>
   );

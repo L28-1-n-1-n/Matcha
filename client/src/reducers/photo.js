@@ -15,7 +15,7 @@ import {
 const initialState = {
   photos: [],
   photo: null,
-  // reload: false,
+  isProfilePic: false,
   loading: true,
   error: {},
 };
@@ -42,7 +42,7 @@ export default function (state = initialState, action) {
         ...state,
         // copy existing photo array, add new photo to the top of the array
         photos: [payload, ...state.photos],
-        // photos: { reload : true},
+
         loading: false,
       };
     case DELETE_PHOTO:
@@ -56,9 +56,7 @@ export default function (state = initialState, action) {
       return {
         ...state,
         photos: state.photos.map((photo) =>
-          photo._id === payload.id
-            ? { ...photo, isProfilePic: true }
-            : { ...photo, isProfilePic: false }
+          photo._id === payload.id ? { ...photo, isProfilePic: true } : photo
         ),
         loading: false,
       };

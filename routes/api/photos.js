@@ -381,6 +381,7 @@ var validateFile = function (file, cb) {
 router.get('/', auth, async (req, res) => {
   try {
     const photos = await Photo.find().sort({ date: -1 }); // latest photo first
+
     res.json(photos);
   } catch (err) {
     console.error(err.message);
@@ -578,13 +579,15 @@ router.delete('/:id', auth, async (req, res) => {
 
 router.put('/isProfilePic/:id', auth, async (req, res) => {
   try {
-    const photos = await Photo.find();
-    // console.log(photo);
+    const photos = await Photo.find({
+      user: req.user.id,
+    });
     if (!photos) {
       return res
         .status(400)
         .json({ msg: ' No photos found. Try uploading some !' });
     }
+
     console.log('req.params.id is');
     console.log(req.params.id);
     photos.map(async (photo) => {
