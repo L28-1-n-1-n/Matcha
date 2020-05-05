@@ -158,6 +158,12 @@ router.post(
       check('bday.day', 'Please enter valid birthday')
         .not()
         .isIn(['Invalid date', 'undefined', NaN]),
+      // This doesn't work for some reason ...
+      // check('bday.year', 'You need to be 18 or above to continue').custom(
+      //   (value) => {
+      //     value <= Date.getUTCFullYear() - 18;
+      //   }
+      // ),
       check(
         'interestedGender',
         'Select the gender/s/ you are interested in'

@@ -5,6 +5,7 @@ import { getProfilePicById } from '../../actions/photo';
 import Image from '../Image';
 const ProfileTop = ({
   profile: {
+    bday,
     status,
     company,
     city,
@@ -21,10 +22,18 @@ const ProfileTop = ({
   // useEffect(() => {
   //   getProfilePicById(_id);
   // }, [getProfilePicById, myProfilePic]);
-
+  console.log(photos);
   myProfilePic = photos.find((element) => element.isProfilePic == true);
   console.log(myProfilePic);
 
+  var dateObj = new Date();
+
+  var age = dateObj.getUTCFullYear() - bday.year;
+  var month = dateObj.getUTCMonth() + 1 - bday.month; //months from 1-12
+  var day = dateObj.getUTCDate() - bday.day;
+  age = month < 0 ? age - 1 : day < 0 ? age - 1 : age;
+
+  console.log(age);
   return (
     <div className='profile-top bg-primary p-2'>
       {/* <img className='round-img my-1' src={myProfilePic} alt='' /> */}

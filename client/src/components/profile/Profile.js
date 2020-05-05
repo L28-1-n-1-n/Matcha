@@ -9,11 +9,12 @@ import ProfileExperience from './ProfileExperience';
 import ProfileEducation from './ProfileEducation';
 import ProfileGithub from './ProfileGithub';
 import { getProfileById } from '../../actions/profile';
-import { getMyPhotos } from '../../actions/photo';
+import { getMyPhotos, getProfilePicById } from '../../actions/photo';
 
 const Profile = ({
   getMyPhotos,
   getProfileById,
+  getProfilePicById,
   profile: { profile, loading },
   photo: { photos },
   auth,
@@ -21,8 +22,10 @@ const Profile = ({
 }) => {
   useEffect(() => {
     getProfileById(match.params.id);
-    getMyPhotos();
-  }, [getProfileById, match.params.id, getMyPhotos]);
+    getProfilePicById(match.params.id);
+    // getMyPhotos();
+    // }, [getProfileById, match.params.id, getMyPhotos]);
+  }, [getProfileById, match.params.id, getProfilePicById]);
   // Runs immediately when profile mounts
   return (
     <Fragment>
@@ -89,6 +92,7 @@ const Profile = ({
 
 Profile.propTypes = {
   getProfileById: PropTypes.func.isRequired,
+  getProfilePicById: PropTypes.func.isRequired,
   profile: PropTypes.object.isRequired,
   auth: PropTypes.object.isRequired,
   photo: PropTypes.object.isRequired,
@@ -100,6 +104,8 @@ const mapStateToProps = (state) => ({
   photo: state.photo,
 });
 
-export default connect(mapStateToProps, { getProfileById, getMyPhotos })(
-  Profile
-);
+export default connect(mapStateToProps, {
+  getProfileById,
+  getProfilePicById,
+  getMyPhotos,
+})(Profile);

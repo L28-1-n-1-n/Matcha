@@ -17,7 +17,6 @@ const GalleryPhotoItem = ({
   deletePhoto,
   makeProfilePic,
   auth,
-  // profile,
   photo: {
     _id,
     isProfilePic,
@@ -30,52 +29,63 @@ const GalleryPhotoItem = ({
     date,
     data,
     profile,
+    // bday,
   },
   showActions,
   history,
-}) => (
-  <div className='photo bg-white p-1 my-1'>
-    {/* <div>
-      <Link to={`/profile/${user}`}>
-        <img className='round-img' src={avatar} alt='' />
-        <h4>{firstname}</h4>
-      </Link>
-    </div> */}
+}) => {
+  let age;
 
-    <div>
-      <Image data={data} />
-    </div>
-    <div>
-      <p className='my-1'>{firstname}</p>
-      {profile && profile.location.city && (
-        <p className='my-1'>{profile.location.city}</p>
-      )}
-      {/* <img className='round-img' src={avatar} alt='' /> */}
+  const findAge = () => {
+    var dateObj = new Date();
+    age = dateObj.getUTCFullYear() - profile.bday.year;
+    var month = dateObj.getUTCMonth() + 1 - profile.bday.month; //months from 1-12
+    var day = dateObj.getUTCDate() - profile.bday.day;
+    return (age = month < 0 ? age - 1 : day < 0 ? age - 1 : age);
+  };
+  findAge();
+  console.log(age);
+  // console.log(profile);
+  return (
+    <div className='photo bg-white p-1 my-1'>
+      <div>
+        <Image data={data} />
+      </div>
+      <div>
+        <p className='my-1'>
+          {firstname}
+          {', '}
+          {age}
+        </p>
+        {profile && profile.location.city && (
+          <p className='my-1'>{profile.location.city}</p>
+        )}
+        {/* <img className='round-img' src={avatar} alt='' /> */}
 
-      <p className='photo-date'>
-        Posted on <Moment format='YYYY/MM/DD'>{date}</Moment>
-      </p>
+        <p className='photo-date'>
+          Posted on <Moment format='YYYY/MM/DD'>{date}</Moment>
+        </p>
 
-      {showActions && (
-        <Fragment>
-          <button
-            onClick={() => addLike(_id)}
-            type='button'
-            className='btn btn-light'
-          >
-            <i className='fas fa-thumbs-up' />{' '}
-            <span>{likes.length > 0 && <span>{likes.length}</span>}</span>
-          </button>
-          <button
-            onClick={() => removeLike(_id)}
-            type='button'
-            className='btn btn-light'
-          >
-            <i className='fas fa-thumbs-down' />
-          </button>
+        {showActions && (
+          <Fragment>
+            <button
+              onClick={() => addLike(_id)}
+              type='button'
+              className='btn btn-light'
+            >
+              <i className='fas fa-thumbs-up' />{' '}
+              <span>{likes.length > 0 && <span>{likes.length}</span>}</span>
+            </button>
+            <button
+              onClick={() => removeLike(_id)}
+              type='button'
+              className='btn btn-light'
+            >
+              <i className='fas fa-thumbs-down' />
+            </button>
 
-          {/* To tell whether the current user is owner of this photo, if yes then display delete button */}
-          {/* {!auth.loading && user === auth.user._id && (
+            {/* To tell whether the current user is owner of this photo, if yes then display delete button */}
+            {/* {!auth.loading && user === auth.user._id && (
             <button
               onClick={() => deletePhoto(_id)}
               type='button'
@@ -84,12 +94,12 @@ const GalleryPhotoItem = ({
               <i className='fas fa-times' />
             </button>
           )} */}
-        </Fragment>
-      )}
+          </Fragment>
+        )}
+      </div>
     </div>
-  </div>
-);
-
+  );
+};
 // default showActions to be true
 GalleryPhotoItem.defaultProps = {
   showActions: true,

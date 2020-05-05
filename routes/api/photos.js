@@ -381,7 +381,19 @@ var validateFile = function (file, cb) {
 router.get('/', auth, async (req, res) => {
   try {
     const photos = await Photo.find()
-      .populate('profile', ['location'])
+      .populate('profile', [
+        'location',
+        'bday',
+        'bio',
+        'gender',
+        'interestedGender',
+        'tags',
+        'fame',
+        'likes',
+        'likedBy',
+        'checkedOut',
+        'checkedOutBy',
+      ])
       .sort({ date: -1 }); // latest photo first
 
     console.log(photos[0].profile.location.city);
@@ -422,12 +434,13 @@ router.get('/me', auth, async (req, res) => {
 // @access  Private
 router.get('/:id/profilepic', auth, async (req, res) => {
   // endpoint is '/me', not '/'
+  console.log(req.params.id);
   try {
     // find user by its objectid
     // populate the user with firstname and avatar
     const photo = await Photo.find({
-      user: req.user.id,
-      isProfiePic: true,
+      user: req.params.id,
+      // isProfiePic: true,
       // }).populate('user', ['firstname', 'avatar']);
     });
     console.log(photo);
