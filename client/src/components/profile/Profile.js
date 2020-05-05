@@ -21,11 +21,13 @@ const Profile = ({
   match,
 }) => {
   useEffect(() => {
+    console.log(match.params.id);
     getProfileById(match.params.id);
     getProfilePicById(match.params.id);
     // getMyPhotos();
     // }, [getProfileById, match.params.id, getMyPhotos]);
   }, [getProfileById, match.params.id, getProfilePicById]);
+
   // Runs immediately when profile mounts
   return (
     <Fragment>
@@ -33,8 +35,8 @@ const Profile = ({
         <Spinner />
       ) : (
         <Fragment>
-          <Link to='/profiles' className='btn btn-light'>
-            Back to Profiles
+          <Link to='/photos' className='btn btn-light'>
+            Back to Matches
           </Link>
           {auth.isAuthenticated &&
             auth.loading === false &&
@@ -44,7 +46,7 @@ const Profile = ({
               </Link>
             )}
           <div className='profile-grid my-1'>
-            <ProfileTop profile={profile} />
+            <ProfileTop profile={profile} photo={photos} />
             <ProfileAbout profile={profile} />
             <div className='profile-exp bg-white p-2'>
               <h2 className='text-primary'>Experience</h2>

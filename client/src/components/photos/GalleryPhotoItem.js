@@ -29,27 +29,27 @@ const GalleryPhotoItem = ({
     date,
     data,
     profile,
-    // bday,
   },
   showActions,
   history,
 }) => {
   let age;
-
-  const findAge = () => {
-    var dateObj = new Date();
-    age = dateObj.getUTCFullYear() - profile.bday.year;
-    var month = dateObj.getUTCMonth() + 1 - profile.bday.month; //months from 1-12
-    var day = dateObj.getUTCDate() - profile.bday.day;
-    return (age = month < 0 ? age - 1 : day < 0 ? age - 1 : age);
-  };
-  findAge();
-  console.log(age);
-  // console.log(profile);
+  if (profile.bday) {
+    const findAge = () => {
+      var dateObj = new Date();
+      age = dateObj.getUTCFullYear() - profile.bday.year;
+      var month = dateObj.getUTCMonth() + 1 - profile.bday.month; //months from 1-12
+      var day = dateObj.getUTCDate() - profile.bday.day;
+      return (age = month < 0 ? age - 1 : day < 0 ? age - 1 : age);
+    };
+    findAge();
+  }
   return (
     <div className='photo bg-white p-1 my-1'>
       <div>
-        <Image data={data} />
+        <Link to={`/profile/${profile.user}`} className='btn btn-primary'>
+          <Image data={data} />
+        </Link>
       </div>
       <div>
         <p className='my-1'>
@@ -57,7 +57,7 @@ const GalleryPhotoItem = ({
           {', '}
           {age}
         </p>
-        {profile && profile.location.city && (
+        {profile && profile.location && (
           <p className='my-1'>{profile.location.city}</p>
         )}
         {/* <img className='round-img' src={avatar} alt='' /> */}

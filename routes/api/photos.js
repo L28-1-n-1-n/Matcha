@@ -382,6 +382,8 @@ router.get('/', auth, async (req, res) => {
   try {
     const photos = await Photo.find()
       .populate('profile', [
+        '_id',
+        'user',
         'location',
         'bday',
         'bio',
@@ -434,6 +436,7 @@ router.get('/me', auth, async (req, res) => {
 // @access  Private
 router.get('/:id/profilepic', auth, async (req, res) => {
   // endpoint is '/me', not '/'
+  console.log('here');
   console.log(req.params.id);
   try {
     // find user by its objectid

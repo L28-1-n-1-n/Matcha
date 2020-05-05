@@ -5,6 +5,8 @@ import {
   GET_MY_PHOTOS,
   PHOTO_ERROR,
   CLEAR_MY_PHOTOS,
+  CLEAR_PHOTOS,
+  CLEAR_PROFILE,
   UPDATE_LIKES,
   DELETE_PHOTO,
   ADD_PHOTO,
@@ -17,6 +19,8 @@ import {
 import io from 'socket.io-client';
 // Get photos
 export const getPhotos = () => async (dispatch) => {
+  dispatch({ type: CLEAR_PHOTOS });
+  // dispatch({ type: CLEAR_PROFILE });
   try {
     const res = await axios.get('/api/photos');
 
@@ -56,7 +60,7 @@ export const getProfilePicById = (userId) => async (dispatch) => {
   try {
     // make request to backend api/profile/user/${userId}/profilepic
     const res = await axios.get(`/api/photos/${userId}/profilepic`);
-
+    console.log(userId);
     dispatch({
       type: GET_PROFILE_PIC_BY_ID,
       payload: res.data,

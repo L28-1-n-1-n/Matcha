@@ -10,6 +10,7 @@ import {
   REMOVE_COMMENT,
   MAKE_PROFILE_PIC,
   GET_PROFILE_PIC_BY_ID,
+  CLEAR_PHOTOS,
 } from '../actions/types';
 
 const initialState = {
@@ -61,11 +62,13 @@ export default function (state = initialState, action) {
         loading: false,
       };
     case CLEAR_MY_PHOTOS:
+    case CLEAR_PHOTOS:
       return {
         ...state,
         photos: null,
         loading: false,
       };
+
     case PHOTO_ERROR:
       return {
         ...state,

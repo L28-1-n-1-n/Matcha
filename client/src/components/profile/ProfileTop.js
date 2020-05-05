@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { getProfilePicById } from '../../actions/photo';
+// import { useBeforeFirstRender } from '../../useBeforeFirstRender';
 import Image from '../Image';
 const ProfileTop = ({
   profile: {
@@ -19,9 +20,19 @@ const ProfileTop = ({
   // getMyPhotos,
 }) => {
   let myProfilePic;
-  // useEffect(() => {
+  // useBeforeFirstRender(() => {
+  //   console.log('Do stuff here');
   //   getProfilePicById(_id);
-  // }, [getProfilePicById, myProfilePic]);
+  // });
+  useEffect(() => {
+    console.log('_id is');
+    console.log(_id);
+    getProfilePicById(_id);
+    myProfilePic = photos.find(
+      (element) => element.isProfilePic == true && element.user == _id
+    );
+    console.log(myProfilePic);
+  }, [getProfilePicById, myProfilePic]);
   console.log(photos);
   myProfilePic = photos.find((element) => element.isProfilePic == true);
   console.log(myProfilePic);
@@ -91,6 +102,7 @@ ProfileTop.propTypes = {
 
 const mapStateToProps = (state) => ({
   photo: state.photo,
+  // profile: state.profile,
 });
 
 export default connect(mapStateToProps, { getProfilePicById })(ProfileTop);

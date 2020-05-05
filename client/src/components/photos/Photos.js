@@ -1,18 +1,24 @@
-import React, { Fragment, useEffect } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Spinner from '../layout/Spinner';
 import GalleryPhotoItem from './GalleryPhotoItem';
 // import PhotoForm from './PhotoForm';
 import { getPhotos } from '../../actions/photo';
-
+import { useBeforeFirstRender } from '../../useBeforeFirstRender';
 const Photos = ({ getPhotos, photo: { photos, loading } }) => {
+  // useBeforeFirstRender(() => {
+  //   console.log('Do stuff here');
+  //   getPhotos();
+  // });
   useEffect(() => {
     getPhotos();
   }, [getPhotos]);
 
   let ProfilePics;
-  ProfilePics = photos.filter((photo) => photo.isProfilePic == true);
+  if (photos) {
+    ProfilePics = photos.filter((photo) => photo.isProfilePic == true);
+  }
   // console.log(photos);
   // ProfilePics.push(photos.find((element) => element.isProfilePic == true));
 
@@ -25,22 +31,26 @@ const Photos = ({ getPhotos, photo: { photos, loading } }) => {
   //     current: false,
   //     description: '',
   //   });
-  return loading ? (
-    <Spinner />
-  ) : (
+  return (
     <Fragment>
-      <h1 className='large text-primary'>Matches</h1>
-      <p className='lead'>
-        <i className='fas fa-heartbeat' /> Based on your preferences, here are
-        your matches
-      </p>
-      {/* <PhotoForm /> */}
-      <div className='photo-collection'>
-        {ProfilePics &&
-          ProfilePics.map((photo) => (
-            <GalleryPhotoItem key={photo._id} photo={photo} />
-          ))}
-      </div>
+      {loading ? (
+        <Spinner />
+      ) : (
+        <Fragment>
+          <h1 className='large text-primary'>Matches</h1>
+          <p className='lead'>
+            <i className='fas fa-heartbeat' /> Based on your preferences, here
+            are your matches
+          </p>
+          {/* <PhotoForm /> */}
+          <div className='photo-collection'>
+            {ProfilePics &&
+              ProfilePics.map((photo) => (
+                <GalleryPhotoItem key={photo._id} photo={photo} />
+              ))}
+          </div>
+        </Fragment>
+      )}
     </Fragment>
   );
 };
