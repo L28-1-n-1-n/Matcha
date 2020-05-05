@@ -31,10 +31,15 @@ const ProfileTop = ({
     myProfilePic = photos.find(
       (element) => element.isProfilePic == true && element.user == _id
     );
+    console.log('in use effect');
     console.log(myProfilePic);
   }, [getProfilePicById, myProfilePic]);
+  console.log('photos are');
   console.log(photos);
-  myProfilePic = photos.find((element) => element.isProfilePic == true);
+  myProfilePic = photos.find(
+    (element) => element.isProfilePic == true && element.user == _id
+  );
+  console.log('myprofilepic is');
   console.log(myProfilePic);
 
   var dateObj = new Date();
