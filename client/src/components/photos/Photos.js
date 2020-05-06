@@ -5,22 +5,57 @@ import Spinner from '../layout/Spinner';
 import GalleryPhotoItem from './GalleryPhotoItem';
 // import PhotoForm from './PhotoForm';
 import { getPhotos } from '../../actions/photo';
-import { useBeforeFirstRender } from '../../useBeforeFirstRender';
-const Photos = ({ getPhotos, photo: { photos, loading } }) => {
+import { getCurrentProfile } from '../../actions/profile';
+import { addClickedBy } from '../../actions/photo';
+// import { useBeforeFirstRender } from '../../useBeforeFirstRender';
+const Photos = ({
+  getCurrentProfile,
+  getPhotos,
+  photo: { photos, loading },
+  profile: { profile },
+}) => {
   // useBeforeFirstRender(() => {
   //   console.log('Do stuff here');
+  //   getCurrentProfile();
   //   getPhotos();
   // });
-  useEffect(() => {
-    getPhotos();
-  }, [getPhotos]);
-
   let ProfilePics;
+  useEffect(() => {
+    getCurrentProfile();
+    getPhotos();
+  }, [getPhotos, getCurrentProfile]);
+
+  // let ProfilePics;
+  // Get profile pics of other users, excluding my own
   if (photos) {
-    ProfilePics = photos.filter((photo) => photo.isProfilePic == true);
+    ProfilePics = photos.filter((photo) => photo.profile);
   }
-  // console.log(photos);
-  // ProfilePics.push(photos.find((element) => element.isProfilePic == true));
+  if (ProfilePics && profile) {
+    ProfilePics = ProfilePics.filter(
+      (photo) =>
+        photo.profile &&
+        photo.isProfilePic == true &&
+        photo.profile._id !== profile._id
+    );
+  }
+
+  if (ProfilePics && profile) {
+    if (profile.interestedGender == 'Female') {
+      ProfilePics = ProfilePics.filter(
+        (photo) =>
+          photo.profile.gender !== 'Male' &&
+          (photo.profile.interestedGender == 'Both' ||
+            photo.profile.interestedGender == profile.gender)
+      );
+    } else if (profile.interestedGender == 'Male') {
+      ProfilePics = ProfilePics.filter(
+        (photo) =>
+          photo.profile.gender !== 'Female' &&
+          (photo.profile.interestedGender == 'Both' ||
+            photo.profile.interestedGender == profile.gender)
+      );
+    }
+  }
 
   //   const [formData, setFormData] = useState({
   //     company: '',
@@ -46,7 +81,11 @@ const Photos = ({ getPhotos, photo: { photos, loading } }) => {
           <div className='photo-collection'>
             {ProfilePics &&
               ProfilePics.map((photo) => (
-                <GalleryPhotoItem key={photo._id} photo={photo} />
+                <GalleryPhotoItem
+                  key={photo._id}
+                  photo={photo}
+                  myProfile={profile}
+                />
               ))}
           </div>
         </Fragment>
@@ -58,10 +97,14 @@ const Photos = ({ getPhotos, photo: { photos, loading } }) => {
 Photos.propTypes = {
   getPhotos: PropTypes.func.isRequired,
   photo: PropTypes.object.isRequired,
+  profile: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = (state) => ({
   photo: state.photo,
+  profile: state.profile,
 });
 
-export default connect(mapStateToProps, { getPhotos })(Photos);
+export default connect(mapStateToProps, { getPhotos, getCurrentProfile })(
+  Photos
+);

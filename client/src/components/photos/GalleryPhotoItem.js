@@ -2,20 +2,25 @@ import React, { Fragment, useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Link, withRouter } from 'react-router-dom';
 import Moment from 'react-moment';
+
 import { connect } from 'react-redux';
+
 import {
   addLike,
   removeLike,
   deletePhoto,
   makeProfilePic,
+  addClickedBy,
 } from '../../actions/photo';
 import Image from '../Image';
 
 const GalleryPhotoItem = ({
   addLike,
   removeLike,
+  myProfile,
   deletePhoto,
   makeProfilePic,
+  addClickedBy,
   auth,
   photo: {
     _id,
@@ -47,7 +52,16 @@ const GalleryPhotoItem = ({
   return (
     <div className='photo bg-white p-1 my-1'>
       <div>
-        <Link to={`/profile/${profile.user}`} className='btn btn-primary'>
+        <Link
+          to={`/profile/${profile.user}`}
+          className='btn btn-primary'
+          onClick={() => {
+            console.log('first on click');
+            console.log(profile._id);
+            console.log(myProfile.user._id);
+            addClickedBy(profile._id, myProfile.user._id);
+          }}
+        >
           <Image data={data} />
         </Link>
       </div>
@@ -111,6 +125,7 @@ GalleryPhotoItem.propTypes = {
   addLike: PropTypes.func.isRequired,
   removeLike: PropTypes.func.isRequired,
   deletePhoto: PropTypes.func.isRequired,
+  addClickedBy: PropTypes.func.isRequired,
   showActions: PropTypes.bool,
   makeProfilePic: PropTypes.func.isRequired,
   profile: PropTypes.object.isRequired,
@@ -126,6 +141,7 @@ export default connect(mapStateToProps, {
   removeLike,
   deletePhoto,
   makeProfilePic,
+  addClickedBy,
 })(GalleryPhotoItem);
 
 // export default connect(mapStateToProps, {

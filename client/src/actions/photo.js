@@ -14,6 +14,7 @@ import {
   MAKE_PROFILE_PIC,
   GET_PROFILE_PIC_BY_ID,
   GET_ALL_PHOTOS_BY_ID,
+  ADD_CLICKED_BY,
   // ADD_COMMENT,
   // REMOVE_COMMENT
 } from './types';
@@ -164,6 +165,26 @@ export const removeLike = (id) => async (dispatch) => {
     dispatch({
       type: PHOTO_ERROR,
       payload: { msg: err.response.statusText, status: err.response.status },
+    });
+  }
+};
+
+// Add Information that one user clicked the profile of another user
+export const addClickedBy = (targetProfileID, myUserID) => async (dispatch) => {
+  try {
+    const res = await axios.put(
+      `/api/photos/clicked/${targetProfileID}/${myUserID}`
+    );
+    console.log(res);
+    dispatch({
+      type: ADD_CLICKED_BY,
+      payload: { targetProfileID, myUserID, checkedOutBy: res.data },
+    });
+  } catch (err) {
+    dispatch({
+      type: PHOTO_ERROR,
+      // payload: { msg: err.response.statusText, status: err.response.status },
+      payload: { msg: 'server error', status: 500 },
     });
   }
 };
