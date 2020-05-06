@@ -7,49 +7,41 @@ import Image from '../Image';
 const ProfileTop = ({
   profile: {
     bday,
-    status,
-    company,
-    city,
-    website,
-    social,
-    user: { _id, firstname, avatar },
+    location: { city },
+    user: { _id, firstname, lastname },
   },
   getProfilePicById,
   photo: { photos },
-  match,
   // getMyPhotos,
 }) => {
   let myProfilePic;
+  let age;
+  if (bday) {
+    const findAge = () => {
+      var dateObj = new Date();
+      age = dateObj.getUTCFullYear() - bday.year;
+      var month = dateObj.getUTCMonth() + 1 - bday.month; //months from 1-12
+      var day = dateObj.getUTCDate() - bday.day;
+      return (age = month < 0 ? age - 1 : day < 0 ? age - 1 : age);
+    };
+    findAge();
+  }
   // useBeforeFirstRender(() => {
   //   console.log('Do stuff here');
   //   getProfilePicById(_id);
   // });
+
   useEffect(() => {
-    console.log('_id is');
-    console.log(_id);
     getProfilePicById(_id);
     myProfilePic = photos.find(
       (element) => element.isProfilePic == true && element.user == _id
     );
-    console.log('in use effect');
-    console.log(myProfilePic);
   }, [getProfilePicById, myProfilePic]);
-  console.log('photos are');
-  console.log(photos);
+
   myProfilePic = photos.find(
     (element) => element.isProfilePic == true && element.user == _id
   );
-  console.log('myprofilepic is');
-  console.log(myProfilePic);
 
-  var dateObj = new Date();
-
-  var age = dateObj.getUTCFullYear() - bday.year;
-  var month = dateObj.getUTCMonth() + 1 - bday.month; //months from 1-12
-  var day = dateObj.getUTCDate() - bday.day;
-  age = month < 0 ? age - 1 : day < 0 ? age - 1 : age;
-
-  console.log(age);
   return (
     <div className='profile-top bg-primary p-2'>
       {/* <img className='round-img my-1' src={myProfilePic} alt='' /> */}
@@ -58,12 +50,16 @@ const ProfileTop = ({
           <Image data={myProfilePic.data} />
         )}
       </div>
-      <h1 className='large'>{firstname}</h1>
-      <p className='lead'>
-        {status} {company && <span> at {company}</span>}
-      </p>
-      <p>{city && <span>{city}</span>}</p>
-      <div className='icons my-1'>
+      <h1 className='large'>
+        {firstname}
+        {'  '}
+        {lastname}
+        {',  '}
+        {age}
+      </h1>
+
+      <p className='lead'>{city && <span>{city}</span>}</p>
+      {/* <div className='icons my-1'>
         {website && (
           <a href={website} target='_blank' rel='noopener noreferrer'>
             <i className='fas fa-globe fa-2x'></i>
@@ -94,7 +90,7 @@ const ProfileTop = ({
             <i className='fab fa-instagram fa-2x'></i>
           </a>
         )}
-      </div>
+      </div> */}
     </div>
   );
 };

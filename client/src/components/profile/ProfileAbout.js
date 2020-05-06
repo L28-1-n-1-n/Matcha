@@ -19,7 +19,7 @@ const MyProfile = ({
       </Fragment>
     )}
 
-    <h2 className='text-primary'>Skill Set</h2>
+    <h2 className='text-primary'>Interests</h2>
     <div className='tags'>
       {/* map tags array to individual item for each skill */}
       {tags.map((tag, index) => (

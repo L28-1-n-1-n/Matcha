@@ -1,6 +1,8 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-export const DashboardActions = () => {
+import { Link, useRouteMatch } from 'react-router-dom';
+export const DashboardActions = ({ profile: { user: _id } }) => {
+  let userId = _id._id;
+
   return (
     <div className='dash-buttons'>
       <Link to='/edit-profile' className='btn btn-light'>
@@ -15,7 +17,8 @@ export const DashboardActions = () => {
       <Link to='/my-photos' className='btn btn-light'>
         <i className='fas fa-user-circle text-primary'></i> My Photos
       </Link>
-      <Link to={'my-profile'} className='btn btn-light'>
+      {/* <Link to={'my-profile'} className='btn btn-light'> */}
+      <Link to={`/profile/${userId}`} className='btn btn-light'>
         <i className='fas fa-user-circle text-primary'></i> View My Profile
       </Link>
     </div>

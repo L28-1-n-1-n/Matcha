@@ -431,13 +431,38 @@ router.get('/me', auth, async (req, res) => {
   }
 });
 
+// @route   GET api/photos/${userId}/all
+// @desc    Get current user's profile pic by his/her userid
+// @access  Private
+router.get('/:id/all', auth, async (req, res) => {
+  console.log('here we go');
+  console.log(req.params.id);
+  try {
+    // find user by its objectid
+    // populate the user with firstname and avatar
+    const photos = await Photo.find({
+      user: req.params.id,
+      // isProfiePic: true,
+      // }).populate('user', ['firstname', 'avatar']);
+    });
+    console.log(photos);
+    if (!photos) {
+      return res
+        .status(400)
+        .json({ msg: ' No photos found. Try uploading some !' });
+    }
+    res.json(photos);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
+});
+
 // @route   GET api/photo/${userId}/profilepic
 // @desc    Get current user's profile pic by his/her userid
 // @access  Private
 router.get('/:id/profilepic', auth, async (req, res) => {
   // endpoint is '/me', not '/'
-  console.log('here');
-  console.log(req.params.id);
   try {
     // find user by its objectid
     // populate the user with firstname and avatar

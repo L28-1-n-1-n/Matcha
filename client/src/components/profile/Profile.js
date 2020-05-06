@@ -5,16 +5,22 @@ import { connect } from 'react-redux';
 import Spinner from '../layout/Spinner';
 import ProfileTop from './ProfileTop';
 import ProfileAbout from './ProfileAbout';
-import ProfileExperience from './ProfileExperience';
-import ProfileEducation from './ProfileEducation';
-import ProfileGithub from './ProfileGithub';
+import ProfilePhotoItem from '../photos/ProfilePhotoItem';
+// import ProfileExperience from './ProfileExperience';
+// import ProfileEducation from './ProfileEducation';
+// import ProfileGithub from './ProfileGithub';
 import { getProfileById } from '../../actions/profile';
-import { getMyPhotos, getProfilePicById } from '../../actions/photo';
+import {
+  getMyPhotos,
+  getProfilePicById,
+  getAllPhotosById,
+} from '../../actions/photo';
 
 const Profile = ({
   getMyPhotos,
   getProfileById,
-  getProfilePicById,
+  // getProfilePicById,
+  getAllPhotosById,
   profile: { profile, loading },
   photo: { photos },
   auth,
@@ -23,11 +29,13 @@ const Profile = ({
   useEffect(() => {
     console.log(match.params.id);
     getProfileById(match.params.id);
-    getProfilePicById(match.params.id);
-    // getMyPhotos();
-    // }, [getProfileById, match.params.id, getMyPhotos]);
-  }, [getProfileById, match.params.id, getProfilePicById]);
-
+    // getProfilePicById(match.params.id);
+    getAllPhotosById(match.params.id);
+    // }, [getProfileById, match.params.id, getProfilePicById]);
+  }, [getProfileById, match.params.id, getAllPhotosById]);
+  let SquarePics = photos.filter((photo) => photo.isProfilePic == false);
+  console.log(photos);
+  console.log(profile);
   // Runs immediately when profile mounts
   return (
     <Fragment>
@@ -35,23 +43,30 @@ const Profile = ({
         <Spinner />
       ) : (
         <Fragment>
-          <Link to='/photos' className='btn btn-light'>
-            Back to Matches
-          </Link>
-          {auth.isAuthenticated &&
-            auth.loading === false &&
-            auth.user._id === profile.user._id && (
-              <Link to='/edit-profile' className='btn btn-dark'>
-                Edit Profile
-              </Link>
-            )}
           <div className='profile-grid my-1'>
             <ProfileTop profile={profile} photo={photos} />
             <ProfileAbout profile={profile} />
-            <div className='profile-exp bg-white p-2'>
-              <h2 className='text-primary'>Experience</h2>
-              {/* {(profile.experience & profile.experience.length > 0) ? ( */}
-              {profile.experience ? (
+            <div className='profile-photo-collection'>
+              {/* <div> */}
+              {SquarePics &&
+                SquarePics.map((photo) => (
+                  <ProfilePhotoItem key={photo._id} photo={photo} />
+                ))}
+            </div>
+            <Link to='/photos' className='btn btn-light'>
+              Back to Matches
+            </Link>
+            {auth.isAuthenticated &&
+              auth.loading === false &&
+              auth.user._id === profile.user._id && (
+                <Link to='/edit-profile' className='btn btn-dark'>
+                  Edit Profile
+                </Link>
+              )}
+            {/* <div className='profile-exp bg-white p-2'>
+              <h2 className='text-primary'>Experience</h2> */}
+            {/* {(profile.experience & profile.experience.length > 0) ? ( */}
+            {/* {profile.experience ? (
                 <Fragment>
                   {profile.experience.map((experience) => (
                     <ProfileExperience
@@ -62,11 +77,11 @@ const Profile = ({
                 </Fragment>
               ) : (
                 <h4>No experience credentials</h4>
-              )}
-            </div>
-            <div className='profile-edu bg-white p-2'>
+              )} */}
+            {/* </div> */}
+            {/* <div className='profile-edu bg-white p-2'>
               <h2 className='text-primary'>Education</h2>
-              {/* {profile.education & (profile.education.length > 0) ? ( */}
+              {profile.education & (profile.education.length > 0) ? (
               {profile.education ? (
                 <Fragment>
                   {profile.education.map((education) => (
@@ -82,7 +97,7 @@ const Profile = ({
             </div>
             {profile.githubusername && (
               <ProfileGithub gusername={profile.githubusername} />
-            )}
+            )} */}
           </div>
         </Fragment>
       )}
@@ -108,6 +123,7 @@ const mapStateToProps = (state) => ({
 
 export default connect(mapStateToProps, {
   getProfileById,
-  getProfilePicById,
+  getAllPhotosById,
+  // getProfilePicById,
   getMyPhotos,
 })(Profile);

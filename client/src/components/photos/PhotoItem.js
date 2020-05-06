@@ -33,19 +33,11 @@ const PhotoItem = ({
   history,
 }) => (
   <div className='photo bg-white p-1 my-1'>
-    {/* <div>
-      <Link to={`/profile/${user}`}>
-        <img className='round-img' src={avatar} alt='' />
-        <h4>{firstname}</h4>
-      </Link>
-    </div> */}
-
     <div>
       <Image data={data} />
     </div>
     <div>
       <p className='my-1'>{text}</p>
-      {/* <img className='round-img' src={avatar} alt='' /> */}
 
       <p className='photo-date'>
         Posted on <Moment format='YYYY/MM/DD'>{date}</Moment>

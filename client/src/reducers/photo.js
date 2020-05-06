@@ -10,6 +10,7 @@ import {
   REMOVE_COMMENT,
   MAKE_PROFILE_PIC,
   GET_PROFILE_PIC_BY_ID,
+  GET_ALL_PHOTOS_BY_ID,
   CLEAR_PHOTOS,
 } from '../actions/types';
 
@@ -32,6 +33,7 @@ export default function (state = initialState, action) {
         loading: false,
       };
     case GET_MY_PHOTOS:
+    case GET_ALL_PHOTOS_BY_ID:
     case GET_PROFILE_PIC_BY_ID:
       return {
         ...state,
