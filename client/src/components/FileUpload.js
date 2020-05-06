@@ -161,7 +161,7 @@ const FileUpload = ({ addPhoto }) => {
   const onChange = (e) => {
     // console.log(e.target.value);
     // setText(e.target.value);
-    if (e.target.files) {
+    if (e.target.files[0]) {
       setFile(e.target.files[0]);
 
       setFilename(e.target.files[0].name);

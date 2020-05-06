@@ -69,7 +69,7 @@ const EditProfile = ({
   };
   return (
     <Fragment>
-      <h1 className='large text-primary'>Edit Your Profile</h1>
+      <h1 className='large text-primary-T'>Edit Your Profile</h1>
       <p className='lead'>
         <i className='fas fa-user-cog'></i> Modify your information
       </p>

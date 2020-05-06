@@ -100,7 +100,7 @@ const CreateProfile = ({ auth: { user }, createProfile, history }) => {
   // }
   return (
     <Fragment>
-      <h1 className='large text-primary'>Create Your Profile</h1>
+      <h1 className='large text-primary-T'>Create Your Profile</h1>
       <p className='lead'>
         <i className='fas fa-user'></i>Tell us more about you
       </p>

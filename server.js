@@ -30,7 +30,7 @@ const io = socketio(server);
 // Run when client connects
 io.on('connection', (socket) => {
   console.log('New WS Connection ...');
-  socket.emit('message', 'Welcome LOLLLLL!');
+  socket.emit('message', 'Welcome!');
   // console.log(socket);
   // Broadcast to all clients except the current one
   // Broadcast when a user connects

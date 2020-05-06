@@ -6,16 +6,18 @@ import io from 'socket.io-client';
 
 const Chat = ({ getProfiles, profile: { profiles } }) => {
   const [msg, setMsg] = useState('');
+  const [messageList, setMessageList] = useState('');
   const socket = io.connect('http://localhost:5000');
   useEffect(() => {
     console.log(socket);
     //Message from server
     socket.on('message', (message) => {
       console.log(message);
+      setMessageList(messageList);
       // outputMessage(message);
     });
     getProfiles();
-  }, [getProfiles]);
+  }, [getProfiles, messageList]);
   const onSubmit = async (e) => {
     e.preventDefault();
     console.log(msg);
@@ -28,20 +30,13 @@ const Chat = ({ getProfiles, profile: { profiles } }) => {
     <div className='chat-container'>
       <header className='chat-header'>
         <h1>
-          <i className='fas fa-smile'></i> ChatCord
+          <i className='far fa-comments'></i> Instant Chat
         </h1>
-        <a href='index.html' className='btn'>
-          Leave Room
-        </a>
       </header>
       <main className='chat-main'>
         <div className='chat-sidebar'>
           <h3>
-            <i className='fas fa-comments'></i> Room Name:
-          </h3>
-          <h2 id='room-name'>JavaScript</h2>
-          <h3>
-            <i className='fas fa-users'></i> Users
+            Users <i class='fas fa-user-friends'></i>
           </h3>
           <ul id='users'>
             {profiles.length > 0 ? (
@@ -56,20 +51,20 @@ const Chat = ({ getProfiles, profile: { profiles } }) => {
         <div className='chat-messages'>
           <div className='message'>
             <p className='meta'>
-              Brad <span>9:12pm</span>
+              User 1 <span>7:22pm</span>
             </p>
             <p className='text'>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Eligendi,
-              repudiandae.
+              This is a sample chat in case I do not have time to complete this
+              function. {/* {messageList} */}
             </p>
           </div>
           <div className='message'>
             <p className='meta'>
-              Mary <span>9:15pm</span>
+              User 2 <span>7:55pm</span>
             </p>
             <p className='text'>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Eligendi,
-              repudiandae.
+              The box to write message below should still work and send messges
+              to the console.
             </p>
           </div>
         </div>

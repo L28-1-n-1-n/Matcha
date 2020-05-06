@@ -72,7 +72,7 @@ const Photos = ({
         <Spinner />
       ) : (
         <Fragment>
-          <h1 className='large text-primary'>Matches</h1>
+          <h1 className='large text-primary-T'>Matches</h1>
           <p className='lead'>
             <i className='fas fa-heartbeat' /> Based on your preferences, here
             are your matches

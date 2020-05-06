@@ -47,7 +47,7 @@ const Profile = ({
             <ProfileTop profile={profile} />
             <ProfileAbout profile={profile} />
             <div className='profile-exp bg-white p-2'>
-              <h2 className='text-primary'>Experience</h2>
+              <h2 className='text-primary-T'>Experience</h2>
               {/* {(profile.experience & profile.experience.length > 0) ? ( */}
               {profile.experience ? (
                 <Fragment>
@@ -63,7 +63,7 @@ const Profile = ({
               )}
             </div>
             <div className='profile-edu bg-white p-2'>
-              <h2 className='text-primary'>Education</h2>
+              <h2 className='text-primary-T'>Education</h2>
               {/* {profile.education & (profile.education.length > 0) ? ( */}
               {profile.education ? (
                 <Fragment>

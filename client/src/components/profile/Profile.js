@@ -33,9 +33,11 @@ const Profile = ({
     getAllPhotosById(match.params.id);
     // }, [getProfileById, match.params.id, getProfilePicById]);
   }, [getProfileById, match.params.id, getAllPhotosById]);
-  let SquarePics = photos.filter((photo) => photo.isProfilePic == false);
-  console.log(photos);
-  console.log(profile);
+  let SquarePics;
+  if (photos) {
+    SquarePics = photos.filter((photo) => photo.isProfilePic == false);
+  }
+
   // Runs immediately when profile mounts
   return (
     <Fragment>
@@ -64,7 +66,7 @@ const Profile = ({
                 </Link>
               )}
             {/* <div className='profile-exp bg-white p-2'>
-              <h2 className='text-primary'>Experience</h2> */}
+              <h2 className='text-primary-T'>Experience</h2> */}
             {/* {(profile.experience & profile.experience.length > 0) ? ( */}
             {/* {profile.experience ? (
                 <Fragment>
@@ -80,7 +82,7 @@ const Profile = ({
               )} */}
             {/* </div> */}
             {/* <div className='profile-edu bg-white p-2'>
-              <h2 className='text-primary'>Education</h2>
+              <h2 className='text-primary-T'>Education</h2>
               {profile.education & (profile.education.length > 0) ? (
               {profile.education ? (
                 <Fragment>

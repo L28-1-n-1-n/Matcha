@@ -27,6 +27,7 @@ const GalleryPhotoItem = ({
     isProfilePic,
     text,
     firstname,
+    gender,
     avatar,
     user,
     likes,
@@ -68,6 +69,8 @@ const GalleryPhotoItem = ({
       <div>
         <p className='my-1'>
           {firstname}
+          {', '}
+          {profile.gender}
           {', '}
           {age}
         </p>

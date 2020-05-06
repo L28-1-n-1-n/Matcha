@@ -6,7 +6,7 @@ export const DashboardActions = ({ profile: { user: _id } }) => {
   return (
     <div className='dash-buttons'>
       <Link to='/edit-profile' className='btn btn-light'>
-        <i className='fas fa-user-circle text-primary'></i> Edit Profile
+        <i className='fas fa-user-cog text-primary'></i> Edit Profile
       </Link>
       <Link to='/add-experience' className='btn btn-light'>
         <i className='fab fa-black-tie text-primary'></i> Add Experience
@@ -15,7 +15,7 @@ export const DashboardActions = ({ profile: { user: _id } }) => {
         <i className='fas fa-graduation-cap text-primary'></i> Add Education
       </Link>
       <Link to='/my-photos' className='btn btn-light'>
-        <i className='fas fa-user-circle text-primary'></i> My Photos
+        <i className='fas fa-images text-primary'></i> My Photos
       </Link>
       {/* <Link to={'my-profile'} className='btn btn-light'> */}
       <Link to={`/profile/${userId}`} className='btn btn-light'>

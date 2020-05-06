@@ -33,7 +33,7 @@ const Reset = ({ setAlert, fpReset, match }) => {
 
   return (
     <Fragment>
-      <h1 className='large text-primary'>Reset Passowrd</h1>
+      <h1 className='large text-primary-T'>Reset Passowrd</h1>
       <p className='lead'>
         <i className='fas fa-user'></i> Please put in a new password.
       </p>

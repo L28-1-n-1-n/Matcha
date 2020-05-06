@@ -9,6 +9,7 @@ import {
   ACCOUNT_DELETED,
   UPDATE_USER,
   PROMPT_UPLOAD_PROFILE_PHOTO,
+  FIRST_PHOTO_UPLOADED,
 } from '../actions/types';
 
 const initialState = {
@@ -90,6 +91,11 @@ export default function (state = initialState, action) {
       return {
         ...state,
         justCreatedProfile: true,
+      };
+    case FIRST_PHOTO_UPLOADED:
+      return {
+        ...state,
+        justCreatedProfile: false,
       };
     default:
       return state;

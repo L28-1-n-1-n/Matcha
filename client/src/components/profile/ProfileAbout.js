@@ -13,18 +13,18 @@ const MyProfile = ({
     {bio && (
       <Fragment>
         {/* take First name only, not last name */}
-        <h2 className='text-primary'>{firstname}'s Bio</h2>
+        <h2 className='text-primary-T'>{firstname}'s Bio</h2>
         <p>{bio}</p>
         <div className='line'></div>
       </Fragment>
     )}
 
-    <h2 className='text-primary'>Interests</h2>
+    <h2 className='text-primary-T'>Interests</h2>
     <div className='tags'>
       {/* map tags array to individual item for each skill */}
       {tags.map((tag, index) => (
         <div key={index} className='p-1'>
-          <i className='fas fa-check'></i> {tag}
+          <i className='fas fa-crosshairs'></i> {tag}
         </div>
       ))}
     </div>

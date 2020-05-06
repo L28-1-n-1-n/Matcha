@@ -15,23 +15,27 @@ export const Navbar = ({
       </li>
 
       <li>
-        <Link to='/photos'>Photos</Link>
+        <Link to='/photos'>
+          <i className='fas fa-user-plus'></i> Matches
+        </Link>
       </li>
       <li>
         <Link to='/posts'>Posts</Link>
       </li>
       <li>
-        <Link to='/chatlanding'>Chat</Link>
+        <Link to='/chat'>
+          <i className='far fa-comments'></i> Chat
+        </Link>
       </li>
       <li>
         <Link to='/dashboard'>
-          <i className='fas fa-user' />{' '}
+          <i className='fas fa-tools'></i>{' '}
           <span className='hide-sm'>Dashboard</span>
         </Link>
       </li>
       <li>
         <a onClick={logout} href='#!'>
-          <i className='fas fa-sign-out-alt'></i>{' '}
+          <i className='fas fa-door-open'></i>{' '}
           <span className='hide-sm'>Logout</span>
         </a>
       </li>
@@ -50,10 +54,10 @@ export const Navbar = ({
   );
 
   return (
-    <nav className='navbar bg-dark'>
+    <nav className='navbar bg-dark-T'>
       <h1>
         <Link to='/'>
-          <i className='fas fa-code'></i> DevConnector
+          <i className='fas fa-fire-alt'></i> Tindurr
         </Link>
       </h1>
       {!loading && (

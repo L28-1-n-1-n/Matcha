@@ -7,6 +7,7 @@ import Image from '../Image';
 const ProfileTop = ({
   profile: {
     bday,
+    gender,
     location: { city },
     user: { _id, firstname, lastname },
   },
@@ -43,7 +44,7 @@ const ProfileTop = ({
   );
 
   return (
-    <div className='profile-top bg-primary p-2'>
+    <div className='profile-top bg-primary-T p-2'>
       {/* <img className='round-img my-1' src={myProfilePic} alt='' /> */}
       <div>
         {myProfilePic && myProfilePic.data && (
@@ -54,6 +55,8 @@ const ProfileTop = ({
         {firstname}
         {'  '}
         {lastname}
+        {',  '}
+        {gender}
         {',  '}
         {age}
       </h1>

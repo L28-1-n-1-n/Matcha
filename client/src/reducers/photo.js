@@ -18,6 +18,7 @@ const initialState = {
   photos: [],
   photo: null,
   isProfilePic: false,
+  justCreatedProfile: false,
   loading: true,
   error: {},
 };

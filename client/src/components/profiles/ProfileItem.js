@@ -29,7 +29,7 @@ const ProfileItem = ({
       <ul>
         {/* maximum of 4 skills */}
         {tags.slice(0, 4).map((tag, index) => (
-          <li key={index} className='text-primary'>
+          <li key={index} className='text-primary-T'>
             <i className='fas fa-check'></i>
             {tag}
           </li>

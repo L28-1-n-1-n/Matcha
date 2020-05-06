@@ -37,8 +37,6 @@ const PhotoItem = ({
       <Image data={data} />
     </div>
     <div>
-      <p className='my-1'>{text}</p>
-
       <p className='photo-date'>
         Posted on <Moment format='YYYY/MM/DD'>{date}</Moment>
       </p>

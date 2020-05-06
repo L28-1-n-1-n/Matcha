@@ -15,6 +15,7 @@ import {
   GET_PROFILE_PIC_BY_ID,
   GET_ALL_PHOTOS_BY_ID,
   ADD_CLICKED_BY,
+  FIRST_PHOTO_UPLOADED,
   // ADD_COMMENT,
   // REMOVE_COMMENT
 } from './types';
@@ -249,6 +250,7 @@ export const addPhoto = () => (dispatch) => {
     //   // payload: { photo: photo, reload: true },
     // });
     dispatch(setAlert('Photo added', 'success'));
+    dispatch({ type: FIRST_PHOTO_UPLOADED });
   } catch (err) {
     dispatch({
       type: PHOTO_ERROR,
