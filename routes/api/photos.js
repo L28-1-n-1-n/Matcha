@@ -347,13 +347,61 @@ router.put(`/clicked/:targetProfileID/:myUserID`, auth, async (req, res) => {
       return res.status(400).json({ msg: 'Profile not found' });
     }
 
-    const my_profile = await User.findById(req.params.myUserID);
-    if (!my_profile) {
-      return res.status(400).json({ msg: 'Profile not found' });
+    if (
+      target_profile.checkedOutBy.filter(
+        (entry) => entry.user.toString() === req.params.myUserID
+      ).length === 0
+    ) {
+      target_profile.checkedOutBy.unshift({ user: req.params.myUserID });
+      console.log('new entry added');
+    } else {
+      console.log('already checked out');
     }
 
-    target_profile.checkedOutBy.unshift({ user: req.params.myUserID });
+    // const my_profile = await User.findById(req.params.myUserID);
+    // if (!my_profile) {
+    //   return res.status(400).json({ msg: 'Profile not found' });
+    // }
+    // const target_profile = await Profile.find({
+    //   _id: req.params.targetProfileID,
+    //   checkedOutBy: { $elemMatch: { user: req.params.myUserID } },
+    // });
+    // if (target_profile) {
+    //   console.log('Already checked out');
+    //   console.log(target_profile);
+    // } else {
+    //   const target_profile = await Profile.findById(req.params.targetProfileID);
+    //   if (!target_profile) {
+    //     return res.status(400).json({ msg: 'Profile not found' });
+    //   }
+    //   target_profile.checkedOutBy.unshift({ user: req.params.myUserID });
+    // }
 
+    // if (!target_profile.checkedOutBy.includes({ user: req.params.myUserID })) {
+    //   target_profile.checkedOutBy.unshift({ user: req.params.myUserID });
+    //   console.log('user not liked before');
+    //   console.log('current user is ');
+    //   console.log(my_profile.firstname);
+    // } else {
+    //   console.log('user liked before');
+    //   console.log('current user is ');
+    //   console.log(my_profile.firstname);
+    // }
+
+    // console.log(target_profile.checkedOutBy);
+    // const result = await target_profile.checkedOutBy.findOne({
+    //   user: req.params.myUserID,
+    // });
+    // if (!result) {
+    //   target_profile.checkedOutBy.unshift({ user: req.params.myUserID });
+    //   console.log('user not liked before');
+    //   console.log('current user is ');
+    //   console.log(my_profile.firstname);
+    // } else {
+    //   console.log('user liked before');
+    //   console.log('current user is ');
+    //   console.log(my_profile.firstname);
+    // }
     await target_profile.save();
     res.json(target_profile.checkedOutBy);
   } catch (err) {
