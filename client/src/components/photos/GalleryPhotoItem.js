@@ -7,6 +7,7 @@ import { connect } from 'react-redux';
 
 import {
   addLike,
+  addLikedBy,
   removeLike,
   deletePhoto,
   makeProfilePic,
@@ -16,6 +17,7 @@ import Image from '../Image';
 
 const GalleryPhotoItem = ({
   addLike,
+  addLikedBy,
   removeLike,
   myProfile,
   deletePhoto,
@@ -86,7 +88,10 @@ const GalleryPhotoItem = ({
         {showActions && (
           <Fragment>
             <button
-              onClick={() => addLike(_id)}
+              onClick={() => {
+                addLike(_id);
+                addLikedBy(_id);
+              }}
               type='button'
               className='btn btn-light'
             >
@@ -126,12 +131,12 @@ GalleryPhotoItem.propTypes = {
   photo: PropTypes.object.isRequired,
   auth: PropTypes.object.isRequired, // To tell whether the current user is owner of this photo, if yes then display delete button
   addLike: PropTypes.func.isRequired,
+  addLikedBy: PropTypes.func.isRequired,
   removeLike: PropTypes.func.isRequired,
   deletePhoto: PropTypes.func.isRequired,
   addClickedBy: PropTypes.func.isRequired,
   showActions: PropTypes.bool,
   makeProfilePic: PropTypes.func.isRequired,
-  profile: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = (state) => ({
@@ -141,6 +146,7 @@ const mapStateToProps = (state) => ({
 
 export default connect(mapStateToProps, {
   addLike,
+  addLikedBy,
   removeLike,
   deletePhoto,
   makeProfilePic,

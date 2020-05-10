@@ -8,6 +8,9 @@ export const DashboardActions = ({ profile: { user: _id } }) => {
       <Link to='/edit-profile' className='btn btn-light'>
         <i className='fas fa-user-cog text-primary'></i> Edit Profile
       </Link>
+      <Link to='/filters' className='btn btn-light'>
+        <i className='fas fa-images text-primary'></i> Matching Criteria
+      </Link>
       <Link to='/add-experience' className='btn btn-light'>
         <i className='fab fa-black-tie text-primary'></i> Add Experience
       </Link>

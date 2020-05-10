@@ -34,7 +34,7 @@ const ProfileSchema = new mongoose.Schema({
     },
   },
   age: {
-    type: String,
+    type: Number,
   },
   bio: {
     type: String,
@@ -112,6 +112,27 @@ const ProfileSchema = new mongoose.Schema({
       },
     },
   ],
+  ageStarts: {
+    type: Number,
+  },
+  ageEnds: {
+    type: Number,
+  },
+  preferredTags: {
+    type: [String],
+  },
+  preferredLocation: {
+    type: String,
+  },
+  preferredDistance: {
+    type: Number,
+  },
+  fameStarts: {
+    type: Number,
+  },
+  fameEnds: {
+    type: Number,
+  },
 });
 
 module.exports = Profile = mongoose.model('profile', ProfileSchema);

@@ -47,6 +47,7 @@ var validateFile = function (file, cb) {
     cb('Invalid file type. Only JPEG, JPG and PNG file are allowed.');
   }
 };
+
 // @route   GET api/photo
 // @desc    Get all photos
 // @access  Private
@@ -72,6 +73,83 @@ router.get('/', auth, async (req, res) => {
 
     console.log(photos[0].profile.location.city);
     res.json(photos);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
+});
+
+// @route   GET api/photo/filteredMatches
+// @desc    Get profile pics of profiles that fit the user's criteria
+// @access  Private
+router.get('/filteredMatches', auth, async (req, res) => {
+  try {
+    const photos = await Photo.find()
+      .populate('profile', [
+        '_id',
+        'user',
+        'location',
+        'bday',
+        'bio',
+        'gender',
+        'interestedGender',
+        'tags',
+        'fame',
+        'likes',
+        'likedBy',
+        'checkedOut',
+        'checkedOutBy',
+      ])
+      .sort({ date: -1 }); // latest photo first
+    const myProfile = await Profile.findOne({ user: req.user.id });
+    console.log(req.user.id);
+    console.log(myProfile.ageStarts);
+    console.log(myProfile.ageEnds);
+    if (!myProfile) {
+      return res.status(400).json({ msg: ' Profile not found' });
+    }
+
+    //     ageStarts: '',
+    // ageEnds: '',
+    // preferredTags: '',
+    // preferredLocation: '',
+    // preferredDistance: '',
+    // fameStarts: '',
+    // fameEnds: '',
+
+    const findAge = (photo) => {
+      let age;
+      var dateObj = new Date();
+      age = dateObj.getUTCFullYear() - photo.profile.bday.year;
+      var month = dateObj.getUTCMonth() + 1 - photo.profile.bday.month; //months from 1-12
+      var day = dateObj.getUTCDate() - photo.profile.bday.day;
+      return (age = month < 0 ? age - 1 : day < 0 ? age - 1 : age);
+    };
+
+    if (photos) {
+      ProfilePics = photos.filter((photo) => photo.profile);
+    }
+    console.log(ProfilePics.length);
+    if (ProfilePics && myProfile) {
+      ProfilePics = ProfilePics.filter(
+        (photo) =>
+          photo.profile &&
+          photo.isProfilePic == true &&
+          photo.profile._id !== myProfile._id
+      );
+    }
+    console.log(ProfilePics.length);
+    console.log(myProfile.ageStarts);
+    if (ProfilePics) {
+      ProfilePics = ProfilePics.filter(
+        (photo) =>
+          photo.profile.bday &&
+          findAge(photo) >= myProfile.ageStarts &&
+          findAge(photo) <= myProfile.ageEnds
+      );
+    }
+    console.log(ProfilePics);
+    res.json(ProfilePics);
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server Error');
@@ -212,9 +290,6 @@ router.post('/', auth, upload.single('file'), async (req, res) => {
 router.put('/like/:id', auth, async (req, res) => {
   try {
     const photo = await Photo.findById(req.params.id);
-    // Check if the post has already been liked by the login user
-    // .filter returns an array of strings where the username of the people who liked the post equals to the loggedin user
-    // if this length is not zero, the current logged in user has liked the post already
     if (
       photo.likes.filter((like) => like.user.toString() === req.user.id)
         .length > 0
@@ -226,6 +301,41 @@ router.put('/like/:id', auth, async (req, res) => {
 
     await photo.save();
     res.json(photo.likes);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
+});
+
+// @route PUT api/photos/likedby/:id
+// @desc Like a post
+// @access Private
+
+router.put('/likedby/:id', auth, async (req, res) => {
+  console.log('here');
+  try {
+    const photo = await Photo.findById(req.params.id);
+    const target_profile = await Profile.findById(photo.profile.toString());
+    if (!target_profile) {
+      return res.status(400).json({ msg: 'Profile not found' });
+    }
+    if (
+      photo.likes.filter((like) => like.user.toString() === req.user.id)
+        .length === 0 &&
+      target_profile.likedBy.filter(
+        (entry) => entry.user.toString() === req.user.id
+      ).length === 0
+    ) {
+      target_profile.likedBy.unshift({ user: req.user.id });
+      console.log('new entry added');
+    } else {
+      return res.status(400).json({ msg: 'Photo already liked' });
+    }
+
+    await target_profile.save();
+    // res.json(target_profile.checkedOutBy);
+
+    res.json(target_profile.likedBy);
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server Error');
@@ -278,7 +388,7 @@ router.delete('/:id', auth, async (req, res) => {
       return res.status(401).json({ msg: 'User not authorized' });
     }
     await photo.remove();
-    res.json({ msg: 'Post removed' });
+    res.json({ msg: 'Photo removed' });
   } catch (err) {
     console.error(err.message);
     if (err.kind === 'ObjectId') {
@@ -346,7 +456,6 @@ router.put(`/clicked/:targetProfileID/:myUserID`, auth, async (req, res) => {
     if (!target_profile) {
       return res.status(400).json({ msg: 'Profile not found' });
     }
-
     if (
       target_profile.checkedOutBy.filter(
         (entry) => entry.user.toString() === req.params.myUserID
@@ -354,54 +463,7 @@ router.put(`/clicked/:targetProfileID/:myUserID`, auth, async (req, res) => {
     ) {
       target_profile.checkedOutBy.unshift({ user: req.params.myUserID });
       console.log('new entry added');
-    } else {
-      console.log('already checked out');
     }
-
-    // const my_profile = await User.findById(req.params.myUserID);
-    // if (!my_profile) {
-    //   return res.status(400).json({ msg: 'Profile not found' });
-    // }
-    // const target_profile = await Profile.find({
-    //   _id: req.params.targetProfileID,
-    //   checkedOutBy: { $elemMatch: { user: req.params.myUserID } },
-    // });
-    // if (target_profile) {
-    //   console.log('Already checked out');
-    //   console.log(target_profile);
-    // } else {
-    //   const target_profile = await Profile.findById(req.params.targetProfileID);
-    //   if (!target_profile) {
-    //     return res.status(400).json({ msg: 'Profile not found' });
-    //   }
-    //   target_profile.checkedOutBy.unshift({ user: req.params.myUserID });
-    // }
-
-    // if (!target_profile.checkedOutBy.includes({ user: req.params.myUserID })) {
-    //   target_profile.checkedOutBy.unshift({ user: req.params.myUserID });
-    //   console.log('user not liked before');
-    //   console.log('current user is ');
-    //   console.log(my_profile.firstname);
-    // } else {
-    //   console.log('user liked before');
-    //   console.log('current user is ');
-    //   console.log(my_profile.firstname);
-    // }
-
-    // console.log(target_profile.checkedOutBy);
-    // const result = await target_profile.checkedOutBy.findOne({
-    //   user: req.params.myUserID,
-    // });
-    // if (!result) {
-    //   target_profile.checkedOutBy.unshift({ user: req.params.myUserID });
-    //   console.log('user not liked before');
-    //   console.log('current user is ');
-    //   console.log(my_profile.firstname);
-    // } else {
-    //   console.log('user liked before');
-    //   console.log('current user is ');
-    //   console.log(my_profile.firstname);
-    // }
     await target_profile.save();
     res.json(target_profile.checkedOutBy);
   } catch (err) {
@@ -409,4 +471,5 @@ router.put(`/clicked/:targetProfileID/:myUserID`, auth, async (req, res) => {
     res.status(500).send('Server Error');
   }
 });
+
 module.exports = router;

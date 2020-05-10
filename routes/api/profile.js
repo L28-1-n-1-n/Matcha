@@ -474,4 +474,91 @@ router.get('/github/:gusername', (req, res) => {
 //   }
 // });
 
+// @route   POST api/profile
+// @desc    Create or update user's profile
+// @access  Private
+router.post(
+  '/matchpreferences',
+  auth,
+  // [
+  //   auth,
+  //   [
+  //     check('gender', 'Gender is required').isIn([
+  //       'Male',
+  //       'Female',
+  //       'Non-Binary',
+  //     ]),
+  //     check('bday', 'Date of birth is required').not().isEmpty(),
+  //     check('bday.day', 'Date of birth is required')
+  //       .not()
+  //       .isIn(['Invalid date', 'undefined', NaN]),
+  //     check(
+  //       'interestedGender',
+  //       'Please specify the gender/s/ you are interested in.'
+  //     ).isIn(['Male', 'Female', 'Both']),
+  //     check('bio', 'Please fill in Short Bio').not().isEmpty(),
+  //     check('tags', 'Enter a list of interests').not().isEmpty(),
+  //     check(
+  //       'bio',
+  //       'Please make sure your bio is less than 100 characters.'
+  //     ).isLength({ max: 200 }),
+  //     check('firstname', 'Please fill in first name').not().isEmpty(),
+  //     check('lastname', 'Please fill in last name').not().isEmpty(),
+  //     check('email', 'Please ensure email is in correct format').isEmail(),
+  //     check('firstname', 'First name is too long').isLength({ max: 15 }),
+  //     check('lastname', 'Last name is too long').isLength({ max: 15 }),
+  //   ],
+  // ],
+  async (req, res) => {
+    // const errors = validationResult(req);
+    // if (!errors.isEmpty()) {
+    //   return res.status(400).json({ errors: errors.array() });
+    // }
+
+    const {
+      ageStarts,
+      ageEnds,
+      preferredTags,
+      preferredLocation,
+      preferredDistance,
+      fameStarts,
+      fameEnds,
+    } = req.body;
+
+    const preferenceFields = {
+      user: req.user.id,
+      ageStarts,
+      ageEnds,
+      preferredLocation,
+      preferredDistance,
+      fameStarts,
+      fameEnds,
+      preferredTags: Array.isArray(preferredTags)
+        ? preferredTags
+        : preferredTags.split(',').map((tag) => ' ' + tag.trim()),
+    };
+
+    try {
+      let profile = await Profile.findOne({ user: req.user.id });
+
+      if (profile) {
+        profile = await Profile.findOneAndUpdate(
+          { user: req.user.id },
+          { $set: preferenceFields },
+          { new: true }
+        );
+        return res.json(profile);
+      }
+
+      // If profile not found, create new one
+      profile = new Profile(preferenceFields);
+      await profile.save();
+      res.json(profile);
+    } catch (err) {
+      console.error(err.message);
+      res.status(500).send('Server Error');
+    }
+  }
+);
+
 module.exports = router;
