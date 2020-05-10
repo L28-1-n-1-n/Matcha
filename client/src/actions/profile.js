@@ -10,6 +10,7 @@ import {
   ACCOUNT_DELETED,
   GET_REPOS,
   PROMPT_UPLOAD_PROFILE_PHOTO,
+  ADD_MATCH_PREFERENCES,
 } from './types';
 
 // Get current users profile
@@ -272,5 +273,43 @@ export const detailedGeo = () => async (dispatch) => {
       console.log('Error', err.message);
     }
     console.log(err.config);
+  }
+};
+
+// Create or update profile
+export const editPreferences = (formData, history) => async (dispatch) => {
+  try {
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
+    console.log('formdata is');
+    console.log(formData);
+    const res = await axios.post(
+      '/api/profile/matchpreferences',
+      formData,
+      config
+    );
+
+    dispatch({
+      type: ADD_MATCH_PREFERENCES,
+      payload: res.data,
+    });
+    console.log('res.data is');
+    console.log(res.data);
+    dispatch(setAlert('Match Preferences Updated', 'success'));
+    history.push('/filters');
+  } catch (err) {
+    const errors = err.response.data.errors;
+
+    if (errors) {
+      errors.forEach((error) => dispatch(setAlert(error.msg, 'danger')));
+    }
+
+    dispatch({
+      type: PROFILE_ERROR,
+      payload: { msg: err.response.statusText, status: err.response.status },
+    });
   }
 };

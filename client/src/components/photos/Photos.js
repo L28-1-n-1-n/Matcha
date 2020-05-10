@@ -4,13 +4,15 @@ import { connect } from 'react-redux';
 import Spinner from '../layout/Spinner';
 import GalleryPhotoItem from './GalleryPhotoItem';
 // import PhotoForm from './PhotoForm';
-import { getPhotos } from '../../actions/photo';
+// import { getPhotos } from '../../actions/photo';
+import { getFilteredPhotos } from '../../actions/photo';
 import { getCurrentProfile } from '../../actions/profile';
 import { addClickedBy } from '../../actions/photo';
 // import { useBeforeFirstRender } from '../../useBeforeFirstRender';
 const Photos = ({
   getCurrentProfile,
-  getPhotos,
+  // getPhotos,
+  getFilteredPhotos,
   photo: { photos, loading },
   profile: { profile },
 }) => {
@@ -22,21 +24,15 @@ const Photos = ({
   let ProfilePics;
   useEffect(() => {
     getCurrentProfile();
-    getPhotos();
-  }, [getPhotos, getCurrentProfile]);
-
+    // getPhotos();
+    getFilteredPhotos();
+    // }, [getPhotos, getCurrentProfile]);
+  }, [getFilteredPhotos, getCurrentProfile]);
+  console.log(photos);
   // let ProfilePics;
   // Get profile pics of other users, excluding my own
   if (photos) {
     ProfilePics = photos.filter((photo) => photo.profile);
-  }
-  if (ProfilePics && profile) {
-    ProfilePics = ProfilePics.filter(
-      (photo) =>
-        photo.profile &&
-        photo.isProfilePic == true &&
-        photo.profile._id !== profile._id
-    );
   }
 
   if (ProfilePics && profile) {
@@ -57,15 +53,6 @@ const Photos = ({
     }
   }
 
-  //   const [formData, setFormData] = useState({
-  //     company: '',
-  //     title: '',
-  //     location: '',
-  //     from: '',
-  //     to: '',
-  //     current: false,
-  //     description: '',
-  //   });
   return (
     <Fragment>
       {loading ? (
@@ -95,7 +82,8 @@ const Photos = ({
 };
 
 Photos.propTypes = {
-  getPhotos: PropTypes.func.isRequired,
+  // getPhotos: PropTypes.func.isRequired,
+  getFilteredPhotos: PropTypes.func.isRequired,
   photo: PropTypes.object.isRequired,
   profile: PropTypes.object.isRequired,
 };
@@ -105,6 +93,7 @@ const mapStateToProps = (state) => ({
   profile: state.profile,
 });
 
-export default connect(mapStateToProps, { getPhotos, getCurrentProfile })(
-  Photos
-);
+export default connect(mapStateToProps, {
+  getFilteredPhotos,
+  getCurrentProfile,
+})(Photos);

@@ -11,6 +11,7 @@ import {
   MAKE_PROFILE_PIC,
   GET_PROFILE_PIC_BY_ID,
   GET_ALL_PHOTOS_BY_ID,
+  GET_FILTERED_PHOTOS,
   CLEAR_PHOTOS,
 } from '../actions/types';
 
@@ -36,6 +37,7 @@ export default function (state = initialState, action) {
     case GET_MY_PHOTOS:
     case GET_ALL_PHOTOS_BY_ID:
     case GET_PROFILE_PIC_BY_ID:
+    case GET_FILTERED_PHOTOS:
       return {
         ...state,
         photos: payload,

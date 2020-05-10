@@ -16,6 +16,8 @@ import {
   GET_ALL_PHOTOS_BY_ID,
   ADD_CLICKED_BY,
   FIRST_PHOTO_UPLOADED,
+  ADD_LIKED_BY,
+  GET_FILTERED_PHOTOS,
   // ADD_COMMENT,
   // REMOVE_COMMENT
 } from './types';
@@ -29,6 +31,25 @@ export const getPhotos = () => async (dispatch) => {
 
     dispatch({
       type: GET_PHOTOS,
+      payload: res.data,
+    });
+  } catch (err) {
+    dispatch({
+      type: PHOTO_ERROR,
+      payload: { msg: err.response.statusText, status: err.response.status },
+    });
+  }
+};
+
+// Get photos
+export const getFilteredPhotos = () => async (dispatch) => {
+  dispatch({ type: CLEAR_PHOTOS });
+  // dispatch({ type: CLEAR_PROFILE });
+  try {
+    const res = await axios.get('/api/photos/filteredMatches');
+    console.log(res);
+    dispatch({
+      type: GET_FILTERED_PHOTOS,
       payload: res.data,
     });
   } catch (err) {
@@ -143,6 +164,24 @@ export const addLike = (id) => async (dispatch) => {
     dispatch({
       type: UPDATE_LIKES,
       payload: { id, likes: res.data },
+    });
+  } catch (err) {
+    dispatch({
+      type: PHOTO_ERROR,
+      // payload: { msg: err.response.statusText, status: err.response.status },
+      payload: { msg: 'server error', status: 500 },
+    });
+  }
+};
+
+// Add LikedBy
+export const addLikedBy = (id) => async (dispatch) => {
+  try {
+    const res = await axios.put(`/api/photos/likedby/${id}`);
+    console.log(res);
+    dispatch({
+      type: ADD_LIKED_BY,
+      payload: { id, likedBy: res.data },
     });
   } catch (err) {
     dispatch({
