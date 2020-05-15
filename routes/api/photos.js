@@ -109,14 +109,11 @@ router.get('/filteredMatches', auth, async (req, res) => {
       return res.status(400).json({ msg: ' Profile not found' });
     }
 
-    //     ageStarts: '',
-    // ageEnds: '',
     // preferredTags: '',
     // preferredLocation: '',
     // preferredDistance: '',
-    // fameStarts: '',
-    // fameEnds: '',
 
+    //filter age
     const findAge = (photo) => {
       let age;
       var dateObj = new Date();
@@ -130,6 +127,7 @@ router.get('/filteredMatches', auth, async (req, res) => {
       ProfilePics = photos.filter((photo) => photo.profile);
     }
     console.log(ProfilePics.length);
+    // make sure the user's own profile does not show up in the matches
     if (ProfilePics && myProfile) {
       ProfilePics = ProfilePics.filter(
         (photo) =>
@@ -140,6 +138,7 @@ router.get('/filteredMatches', auth, async (req, res) => {
     }
     console.log(ProfilePics.length);
     console.log(myProfile.ageStarts);
+    // match age range
     if (ProfilePics) {
       ProfilePics = ProfilePics.filter(
         (photo) =>
@@ -148,6 +147,20 @@ router.get('/filteredMatches', auth, async (req, res) => {
           findAge(photo) <= myProfile.ageEnds
       );
     }
+
+    // match fame range
+    if (ProfilePics) {
+      ProfilePics = ProfilePics.filter(
+        (photo) =>
+          photo.profile.likedBy &&
+          photo.profile.checkedOutBy &&
+          photo.profile.likedBy.length + photo.profile.checkedOutBy.length >=
+            myProfile.fameStarts &&
+          photo.profile.likedBy.length + photo.profile.checkedOutBy.length <=
+            myProfile.fameEnds
+      );
+    }
+    console.log('finally');
     console.log(ProfilePics);
     res.json(ProfilePics);
   } catch (err) {
