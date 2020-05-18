@@ -9,6 +9,7 @@ const User = require('../../models/User');
 const Post = require('../../models/Post');
 const publicIp = require('public-ip');
 const ipLocation = require('iplocation');
+
 // for getting client-side ip, won't work here since it is localhost.
 // See router.get('/cip', auth, ... at the end of this file
 const requestIp = require('request-ip');
@@ -176,6 +177,7 @@ router.post(
     if (latitude) profileFields.location.latitude = latitude;
     if (longitude) profileFields.location.longitude = longitude;
     if (city) profileFields.location.city = city;
+
     if (country) profileFields.location.country = country;
 
     try {

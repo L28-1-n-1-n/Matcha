@@ -56,6 +56,14 @@ const ProfileSchema = new mongoose.Schema({
     type: Number,
     default: 0,
   },
+  distance: {
+    type: Number,
+    default: 0,
+  },
+  maxCommonTags: {
+    type: Number,
+    default: 0,
+  },
   likes: [
     // likes which users' photos
     {
