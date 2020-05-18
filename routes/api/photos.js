@@ -247,7 +247,7 @@ router.get('/filteredMatches', auth, async (req, res) => {
       });
       // sort by number of common tags from high to low
       filtered_array.sort((a, b) =>
-        a.profile.distance > b.profile.distance ? -1 : 1
+        a.profile.maxCommonTags > b.profile.maxCommonTags ? -1 : 1
       );
       return res.json(filtered_array);
     }

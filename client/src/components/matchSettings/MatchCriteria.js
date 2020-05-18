@@ -85,6 +85,7 @@ const MatchCriteria = ({
           />
           <small className='form-text'>Ending Age</small>
         </div>
+
         <div className='form-group'>
           <input
             type='number'
@@ -118,12 +119,12 @@ const MatchCriteria = ({
         <div className='form-group'>
           <input
             type='number'
-            placeholder='Preferred Distance'
+            placeholder='Preferred Distance in km'
             name='preferredDistance'
             value={preferredDistance}
             onChange={(e) => onChange(e)}
           />
-          <small className='form-text'>Preferred Distance</small>
+          <small className='form-text'>Preferred Distance in Kilometres</small>
         </div>
 
         <div className='form-group'>
