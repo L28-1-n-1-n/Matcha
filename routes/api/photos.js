@@ -11,7 +11,6 @@ const multer = require('multer');
 const fs = require('fs');
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    console.log(req.body);
     const uploadsDir = path.join(
       __dirname,
       '..',
@@ -71,7 +70,6 @@ router.get('/', auth, async (req, res) => {
       ])
       .sort({ date: -1 }); // latest photo first
 
-    console.log(photos[0].profile.location.city);
     res.json(photos);
   } catch (err) {
     console.error(err.message);
@@ -95,6 +93,8 @@ router.get('/filteredMatches', auth, async (req, res) => {
         'interestedGender',
         'tags',
         'fame',
+        'distance',
+        'maxCommonTags',
         'likes',
         'likedBy',
         'checkedOut',
@@ -102,16 +102,10 @@ router.get('/filteredMatches', auth, async (req, res) => {
       ])
       .sort({ date: -1 }); // latest photo first
     const myProfile = await Profile.findOne({ user: req.user.id });
-    console.log(req.user.id);
-    console.log(myProfile.ageStarts);
-    console.log(myProfile.ageEnds);
+
     if (!myProfile) {
       return res.status(400).json({ msg: ' Profile not found' });
     }
-
-    // preferredTags: '',
-    // preferredLocation: '',
-    // preferredDistance: '',
 
     //filter age
     const findAge = (photo) => {
@@ -137,31 +131,127 @@ router.get('/filteredMatches', auth, async (req, res) => {
       );
     }
     console.log(ProfilePics.length);
-    console.log(myProfile.ageStarts);
+
     // match age range
-    if (ProfilePics) {
+    if (ProfilePics && (myProfile.ageStarts || myProfile.ageEnds)) {
+      ProfilePics.forEach(function (photo) {
+        if (photo.profile.bday) {
+          photo.profile.age = findAge(photo);
+        }
+      });
+
       ProfilePics = ProfilePics.filter(
         (photo) =>
-          photo.profile.bday &&
-          findAge(photo) >= myProfile.ageStarts &&
-          findAge(photo) <= myProfile.ageEnds
+          photo.profile.age &&
+          photo.profile.age >= myProfile.ageStarts &&
+          photo.profile.age <= myProfile.ageEnds
       );
     }
 
+    // sort by age from young to old
+    ProfilePics.sort((a, b) => (a.profile.age > b.profile.age ? 1 : -1));
+
     // match fame range
-    if (ProfilePics) {
+    if (ProfilePics && (myProfile.fameStarts || myProfile.fameEnds)) {
+      ProfilePics.forEach(function (photo) {
+        if (photo.profile.likedBy && photo.profile.checkedOutBy) {
+          photo.profile.fame =
+            photo.profile.likedBy.length + photo.profile.checkedOutBy.length;
+        }
+      });
       ProfilePics = ProfilePics.filter(
         (photo) =>
-          photo.profile.likedBy &&
-          photo.profile.checkedOutBy &&
-          photo.profile.likedBy.length + photo.profile.checkedOutBy.length >=
-            myProfile.fameStarts &&
-          photo.profile.likedBy.length + photo.profile.checkedOutBy.length <=
-            myProfile.fameEnds
+          photo.profile.fame &&
+          photo.profile.fame >= myProfile.fameStarts &&
+          photo.profile.fame <= myProfile.fameEnds
       );
     }
-    console.log('finally');
+    // sort by fame from high to low
+    ProfilePics.sort((a, b) => (a.profile.fame > b.profile.fame ? -1 : 1));
+
+    // match location by name
+    if (ProfilePics && myProfile.preferredLocation) {
+      ProfilePics = ProfilePics.filter(
+        (photo) =>
+          photo.profile.location.city.replace(/\s/g, '').toLowerCase() ==
+          myProfile.preferredLocation.replace(/\s/g, '').toLowerCase()
+      );
+    }
+    function distance(lat1, lon1, lat2, lon2) {
+      var p = 0.017453292519943295; // Math.PI / 180
+      var c = Math.cos;
+      var a =
+        0.5 -
+        c((lat2 - lat1) * p) / 2 +
+        (c(lat1 * p) * c(lat2 * p) * (1 - c((lon2 - lon1) * p))) / 2;
+
+      return 12742 * Math.asin(Math.sqrt(a)); // 2 * R; R = 6371 km
+    }
+
+    // match desired distance
+
+    if (ProfilePics && myProfile.preferredDistance) {
+      ProfilePics.forEach(function (photo) {
+        if (
+          photo.profile.location.latitude &&
+          photo.profile.location.latitude
+        ) {
+          photo.profile.distance = distance(
+            myProfile.location.latitude,
+            myProfile.location.longitude,
+            photo.profile.location.latitude,
+            photo.profile.location.longitude
+          );
+        }
+      });
+      ProfilePics = ProfilePics.filter(
+        (photo) =>
+          photo.profile.distance &&
+          photo.profile.distance <= myProfile.preferredDistance
+      );
+    }
     console.log(ProfilePics);
+    // sort by distance from low to high
+    ProfilePics.sort((a, b) =>
+      a.profile.distance > b.profile.distance ? 1 : -1
+    );
+    console.log('after');
+    console.log(ProfilePics);
+    // ProfilePics.forEach(function (photo) {
+
+    //   console.log(
+    //     distance(
+    //       myProfile.location.latitude,
+    //       myProfile.location.longitude,
+    //       photo.profile.location.latitude,
+    //       photo.profile.location.longitude
+    //     )
+    //     // This is distance in kilometres
+    //   );
+    //   console.log('My location: ', myProfile.location.city);
+    //   console.log('target locaiton: ', photo.profile.location.city);
+
+    // });
+    console.log('length is');
+    // match Tags and return new array if tags match
+    if (myProfile.preferredTags.length !== 0) {
+      var filtered_array = [];
+      ProfilePics.forEach(function (photo) {
+        photo.profile.maxCommonTags = photo.profile.tags.filter((value) =>
+          myProfile.preferredTags.includes(value)
+        ).length;
+        if (photo.profile.maxCommonTags !== 0) {
+          console.log(photo.profile.maxCommonTags);
+          filtered_array.push(photo);
+        }
+      });
+      // sort by number of common tags from high to low
+      filtered_array.sort((a, b) =>
+        a.profile.distance > b.profile.distance ? -1 : 1
+      );
+      return res.json(filtered_array);
+    }
+
     res.json(ProfilePics);
   } catch (err) {
     console.error(err.message);
