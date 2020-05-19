@@ -192,7 +192,6 @@ router.get('/filteredMatches', auth, async (req, res) => {
           myProfile.preferredLocation.replace(/\s/g, '').toLowerCase()
       );
     }
-
     function distance(lat1, lon1, lat2, lon2) {
       var p = 0.017453292519943295; // Math.PI / 180
       var c = Math.cos;
@@ -225,12 +224,10 @@ router.get('/filteredMatches', auth, async (req, res) => {
           photo.profile.distance <= myProfile.preferredDistance
       );
     }
-
     // sort by distance from low to high
     ProfilePics.sort((a, b) =>
       a.profile.distance > b.profile.distance ? 1 : -1
     );
-
     // match Tags and return new array if tags match
     if (myProfile.preferredTags.length !== 0) {
       var filtered_array = [];
