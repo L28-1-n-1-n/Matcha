@@ -120,7 +120,23 @@ router.get('/filteredMatches', auth, async (req, res) => {
     if (photos) {
       ProfilePics = photos.filter((photo) => photo.profile);
     }
-    console.log(ProfilePics.length);
+    if (ProfilePics && myProfile) {
+      if (myProfile.interestedGender == 'Female') {
+        ProfilePics = ProfilePics.filter(
+          (photo) =>
+            photo.profile.gender !== 'Male' &&
+            (photo.profile.interestedGender == 'Both' ||
+              photo.profile.interestedGender == myProfile.gender)
+        );
+      } else if (myProfile.interestedGender == 'Male') {
+        ProfilePics = ProfilePics.filter(
+          (photo) =>
+            photo.profile.gender !== 'Female' &&
+            (photo.profile.interestedGender == 'Both' ||
+              photo.profile.interestedGender == myProfile.gender)
+        );
+      }
+    }
     // make sure the user's own profile does not show up in the matches
     if (ProfilePics && myProfile) {
       ProfilePics = ProfilePics.filter(
@@ -130,7 +146,6 @@ router.get('/filteredMatches', auth, async (req, res) => {
           photo.profile._id !== myProfile._id
       );
     }
-    console.log(ProfilePics.length);
 
     // match age range
     if (ProfilePics && (myProfile.ageStarts || myProfile.ageEnds)) {
@@ -177,6 +192,7 @@ router.get('/filteredMatches', auth, async (req, res) => {
           myProfile.preferredLocation.replace(/\s/g, '').toLowerCase()
       );
     }
+
     function distance(lat1, lon1, lat2, lon2) {
       var p = 0.017453292519943295; // Math.PI / 180
       var c = Math.cos;
@@ -189,7 +205,6 @@ router.get('/filteredMatches', auth, async (req, res) => {
     }
 
     // match desired distance
-
     if (ProfilePics && myProfile.preferredDistance) {
       ProfilePics.forEach(function (photo) {
         if (
@@ -210,29 +225,12 @@ router.get('/filteredMatches', auth, async (req, res) => {
           photo.profile.distance <= myProfile.preferredDistance
       );
     }
-    console.log(ProfilePics);
+
     // sort by distance from low to high
     ProfilePics.sort((a, b) =>
       a.profile.distance > b.profile.distance ? 1 : -1
     );
-    console.log('after');
-    console.log(ProfilePics);
-    // ProfilePics.forEach(function (photo) {
 
-    //   console.log(
-    //     distance(
-    //       myProfile.location.latitude,
-    //       myProfile.location.longitude,
-    //       photo.profile.location.latitude,
-    //       photo.profile.location.longitude
-    //     )
-    //     // This is distance in kilometres
-    //   );
-    //   console.log('My location: ', myProfile.location.city);
-    //   console.log('target locaiton: ', photo.profile.location.city);
-
-    // });
-    console.log('length is');
     // match Tags and return new array if tags match
     if (myProfile.preferredTags.length !== 0) {
       var filtered_array = [];
@@ -241,7 +239,6 @@ router.get('/filteredMatches', auth, async (req, res) => {
           myProfile.preferredTags.includes(value)
         ).length;
         if (photo.profile.maxCommonTags !== 0) {
-          console.log(photo.profile.maxCommonTags);
           filtered_array.push(photo);
         }
       });

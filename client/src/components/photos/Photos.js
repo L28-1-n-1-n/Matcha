@@ -13,7 +13,6 @@ import { max } from 'moment';
 // import { useBeforeFirstRender } from '../../useBeforeFirstRender';
 const Photos = ({
   getCurrentProfile,
-  // getPhotos,
   getFilteredPhotos,
   photo: { photos, loading },
   profile: { profile },
@@ -23,67 +22,103 @@ const Photos = ({
   //   getCurrentProfile();
   //   getPhotos();
   // });
-  let ProfilePics;
+  let ProfilePics = photos;
+  const [advancedMetrics, toggleAdvancedMetrics] = useState(false);
+  const [resetStates, toggleResetStates] = useState(false);
   const [rankAge, setRankAge] = useState('');
   const [rankFame, setRankFame] = useState('');
   const [rankDistance, setRankDistance] = useState('');
   const [rankMaxCommonTags, setRankMaxCommonTags] = useState('');
   useEffect(() => {
     getCurrentProfile();
-
     getFilteredPhotos();
   }, [
-    getFilteredPhotos,
-    getCurrentProfile,
+    // getFilteredPhotos,
+    // getCurrentProfile,
     rankAge,
     rankFame,
     rankDistance,
     rankMaxCommonTags,
+    // resetStates,
   ]);
   console.log(photos);
 
   // Get profile pics of other users, excluding my own
-  if (photos) {
-    ProfilePics = photos.filter((photo) => photo.profile);
-  }
 
-  if (ProfilePics && profile) {
-    if (profile.interestedGender == 'Female') {
-      ProfilePics = ProfilePics.filter(
-        (photo) =>
-          photo.profile.gender !== 'Male' &&
-          (photo.profile.interestedGender == 'Both' ||
-            photo.profile.interestedGender == profile.gender)
-      );
-    } else if (profile.interestedGender == 'Male') {
-      ProfilePics = ProfilePics.filter(
-        (photo) =>
-          photo.profile.gender !== 'Female' &&
-          (photo.profile.interestedGender == 'Both' ||
-            photo.profile.interestedGender == profile.gender)
-      );
-    }
-  }
   const ageOlder = () => {
     setRankAge('High');
+    setRankFame('Nomal');
+    setRankDistance('Normal');
+    setRankMaxCommonTags('Normal');
+    // toggleResetStates(!resetStates);
+  };
+  const ageYounger = () => {
+    setRankAge('Low');
+    setRankFame('Nomal');
+    setRankDistance('Normal');
+    setRankMaxCommonTags('Normal');
+    // toggleResetStates(!resetStates);
   };
   const fameLess = () => {
     setRankFame('Low');
+    setRankAge('Nomal');
+    setRankDistance('Normal');
+    setRankMaxCommonTags('Normal');
+    // toggleResetStates(!resetStates);
+  };
+  const fameHigher = () => {
+    setRankFame('High');
+    setRankAge('Nomal');
+    setRankDistance('Normal');
+    setRankMaxCommonTags('Normal');
+    // toggleResetStates(!resetStates);
   };
   const distanceHigher = () => {
     setRankDistance('High');
+    setRankFame('Nomal');
+    setRankAge('Normal');
+    setRankMaxCommonTags('Normal');
+    // toggleResetStates(!resetStates);
+  };
+  const distanceLower = () => {
+    setRankDistance('Low');
+    setRankFame('Nomal');
+    setRankAge('Normal');
+    setRankMaxCommonTags('Normal');
+    // toggleResetStates(!resetStates);
   };
   const maxCommonTagsLower = () => {
     setRankMaxCommonTags('Low');
+    setRankFame('Nomal');
+    setRankDistance('Normal');
+    setRankAge('Normal');
+    // toggleResetStates(!resetStates);
+  };
+  const maxCommonTagsHigher = () => {
+    setRankMaxCommonTags('High');
+    setRankFame('Nomal');
+    setRankDistance('Normal');
+    setRankAge('Normal');
+    // toggleResetStates(!resetStates);
   };
   if (rankAge == 'High') {
     if (ProfilePics) {
       ProfilePics.sort((a, b) => (a.profile.age > b.profile.age ? -1 : 1));
     }
   }
+  if (rankAge == 'Low') {
+    if (ProfilePics) {
+      ProfilePics.sort((a, b) => (a.profile.age > b.profile.age ? 1 : -1));
+    }
+  }
   if (rankFame == 'Low') {
     if (ProfilePics) {
       ProfilePics.sort((a, b) => (a.profile.fame > b.profile.fame ? 1 : -1));
+    }
+  }
+  if (rankFame == 'High') {
+    if (ProfilePics) {
+      ProfilePics.sort((a, b) => (a.profile.fame > b.profile.fame ? -1 : 1));
     }
   }
   if (rankDistance == 'High') {
@@ -93,10 +128,24 @@ const Photos = ({
       );
     }
   }
+  if (rankDistance == 'Low') {
+    if (ProfilePics) {
+      ProfilePics.sort((a, b) =>
+        a.profile.distance > b.profile.distance ? 1 : -1
+      );
+    }
+  }
   if (rankMaxCommonTags == 'Low') {
     if (ProfilePics) {
       ProfilePics.sort((a, b) =>
         a.profile.maxCommonTags > b.profile.maxCommonTags ? -1 : 1
+      );
+    }
+  }
+  if (rankMaxCommonTags == 'High') {
+    if (ProfilePics) {
+      ProfilePics.sort((a, b) =>
+        a.profile.maxCommonTags > b.profile.maxCommonTags ? 1 : -1
       );
     }
   }
@@ -111,29 +160,79 @@ const Photos = ({
             <i className='fas fa-heartbeat' /> Based on your preferences, here
             are your matches
           </p>
-          <div className='my-2'>
-            <button className='btn btn-light' onClick={() => ageOlder()}>
-              <i className='fas fa-user-minus'></i> Older First
-            </button>
-          </div>
-          <div className='my-2'>
-            <button className='btn btn-light' onClick={() => fameLess()}>
-              <i className='fas fa-user-minus'></i> Lower Fame First
-            </button>
-          </div>
-          <div className='my-2'>
-            <button className='btn btn-light' onClick={() => distanceHigher()}>
-              <i className='fas fa-user-minus'></i> Higher Distance First
-            </button>
-          </div>
+
           <div className='my-2'>
             <button
+              onClick={() => toggleAdvancedMetrics(!advancedMetrics)}
+              type='button'
               className='btn btn-light'
-              onClick={() => maxCommonTagsLower()}
             >
-              <i className='fas fa-user-minus'></i> Less Common Tags First
+              Advanced Ranking Options
             </button>
           </div>
+          {advancedMetrics && (
+            <Fragment>
+              <div className='my-2'>
+                <button className='btn btn-light' onClick={() => ageOlder()}>
+                  <i className='fas fa-plus'></i> Older First
+                </button>
+              </div>
+
+              <div className='my-2'>
+                <button className='btn btn-light' onClick={() => ageYounger()}>
+                  <i className='fas fa-minus'></i> Younger First
+                </button>
+              </div>
+
+              <div className='my-2'>
+                <button className='btn btn-light' onClick={() => fameLess()}>
+                  <i className='fas fa-minus'></i> Lower Fame First
+                </button>
+              </div>
+
+              <div className='my-2'>
+                <button className='btn btn-light' onClick={() => fameHigher()}>
+                  <i className='fas fa-plus'></i> Higher Fame First
+                </button>
+              </div>
+
+              <div className='my-2'>
+                <button
+                  className='btn btn-light'
+                  onClick={() => distanceLower()}
+                >
+                  <i className='fas fa-plus'></i> Futher First
+                </button>
+              </div>
+
+              <div className='my-2'>
+                <button
+                  className='btn btn-light'
+                  onClick={() => distanceHigher()}
+                >
+                  <i className='fas fa-minus'></i> Closer First
+                </button>
+              </div>
+
+              <div className='my-2'>
+                <button
+                  className='btn btn-light'
+                  onClick={() => maxCommonTagsLower()}
+                >
+                  <i className='fas fa-minus'></i> Less Common Tags First
+                </button>
+              </div>
+
+              <div className='my-2'>
+                <button
+                  className='btn btn-light'
+                  onClick={() => maxCommonTagsHigher()}
+                >
+                  <i className='fas fa-plus'></i> More Common Tags First
+                </button>
+              </div>
+            </Fragment>
+          )}
           <div className='photo-collection'>
             {ProfilePics &&
               ProfilePics.map((photo) => (
