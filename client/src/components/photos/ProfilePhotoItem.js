@@ -3,12 +3,18 @@ import PropTypes from 'prop-types';
 import { Link, withRouter } from 'react-router-dom';
 import Moment from 'react-moment';
 import { connect } from 'react-redux';
-import { addLike, removeLike, makeProfilePic } from '../../actions/photo';
+import {
+  addLike,
+  removeLike,
+  addLikedBy,
+  makeProfilePic,
+} from '../../actions/photo';
 import Image from '../Image';
 
 const ProfilePhotoItem = ({
   addLike,
   removeLike,
+  addLikedBy,
   photo: { _id, isProfilePic, firstname, user, likes, date, data, profile },
   showActions,
 }) => {
@@ -24,7 +30,10 @@ const ProfilePhotoItem = ({
         {showActions && (
           <Fragment>
             <button
-              onClick={() => addLike(_id)}
+              onClick={() => {
+                addLike(_id);
+                addLikedBy(_id);
+              }}
               type='button'
               className='btn btn-light'
             >
@@ -52,6 +61,7 @@ ProfilePhotoItem.defaultProps = {
 ProfilePhotoItem.propTypes = {
   photo: PropTypes.object.isRequired,
   addLike: PropTypes.func.isRequired,
+  addLikedBy: PropTypes.func.isRequired,
   removeLike: PropTypes.func.isRequired,
   showActions: PropTypes.bool,
   makeProfilePic: PropTypes.func.isRequired,
@@ -60,6 +70,7 @@ ProfilePhotoItem.propTypes = {
 
 export default connect(null, {
   addLike,
+  addLikedBy,
   removeLike,
   makeProfilePic,
 })(ProfilePhotoItem);

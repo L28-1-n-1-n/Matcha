@@ -416,9 +416,28 @@ router.put('/likedby/:id', auth, async (req, res) => {
   try {
     const photo = await Photo.findById(req.params.id);
     const target_profile = await Profile.findById(photo.profile.toString());
+    const target_user = await User.findById(photo.user.toString());
+    const likedBy_user = await User.findById(req.user.id);
     if (!target_profile) {
       return res.status(400).json({ msg: 'Profile not found' });
     }
+    if (!target_user || !likedBy_user) {
+      return res.status(400).json({ msg: 'User account not found' });
+    }
+
+    // target_user.notifications.unshift({
+    //   msg: `Your photo is liked by ${likedBy_user.firstname}`,
+    //   user: req.user.id,
+    // });
+    const notify_user = await target_user.updateOne({
+      $push: {
+        notifications: {
+          msg: `Your photo is liked by ${likedBy_user.firstname}`,
+          user: req.user.id,
+        },
+      },
+    });
+    console.log(target_user);
     if (
       photo.likes.filter((like) => like.user.toString() === req.user.id)
         .length === 0 &&
@@ -426,21 +445,57 @@ router.put('/likedby/:id', auth, async (req, res) => {
         (entry) => entry.user.toString() === req.user.id
       ).length === 0
     ) {
-      target_profile.likedBy.unshift({ user: req.user.id });
+      // target_profile.likedBy.unshift({ user: req.user.id });
+      const profile_liked_by = await target_profile.updateOne({
+        $push: {
+          likedBy: { user: req.user.id },
+        },
+      });
       console.log('new entry added');
+      return res.status(200).json({ profile_liked_by, notify_user });
     } else {
       return res.status(400).json({ msg: 'Photo already liked' });
     }
 
-    await target_profile.save();
+    // await target_profile.updateOne();
     // res.json(target_profile.checkedOutBy);
 
-    res.json(target_profile.likedBy);
+    // res.json(target_profile.likedBy);
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server Error');
   }
 });
+
+// // @route PUT api/photos/likedby/:id
+// // @desc Like a post
+// // @access Private
+
+// router.put('/notifylike/:id', auth, async (req, res) => {
+//   console.log('here');
+//   try {
+//     const photo = await Photo.findById(req.params.id);
+
+//     const target_user = await User.findById(photo.user.toString());
+//     const likedBy_user = await User.findById(req.user.id);
+
+//     if (!target_user || !likedBy_user) {
+//       return res.status(400).json({ msg: 'User account not found' });
+//     }
+
+//     target_user.notifications.unshift({
+//       msg: `Your photo is liked by ${likedBy_user.firstname}`,
+//       user: req.user.id,
+//     });
+//     await target_user.updateOne();
+//     console.log(target_user);
+
+//     res.json(target_user.notifications);
+//   } catch (err) {
+//     console.error(err.message);
+//     res.status(500).send('Server Error');
+//   }
+// });
 
 // @route PUT api/posts/unlike/:id
 // @desc Unlike a post

@@ -18,6 +18,7 @@ import {
   FIRST_PHOTO_UPLOADED,
   ADD_LIKED_BY,
   GET_FILTERED_PHOTOS,
+  ADD_NOTIFICATION_LIKE,
   // ADD_COMMENT,
   // REMOVE_COMMENT
 } from './types';
@@ -182,6 +183,24 @@ export const addLikedBy = (id) => async (dispatch) => {
     dispatch({
       type: ADD_LIKED_BY,
       payload: { id, likedBy: res.data },
+    });
+  } catch (err) {
+    dispatch({
+      type: PHOTO_ERROR,
+      // payload: { msg: err.response.statusText, status: err.response.status },
+      payload: { msg: 'server error', status: 500 },
+    });
+  }
+};
+
+// Add Notification
+export const addNotification = (id) => async (dispatch) => {
+  try {
+    const res = await axios.put(`/api/photos/notifylike/${id}`);
+    console.log(res);
+    dispatch({
+      type: ADD_NOTIFICATION_LIKE,
+      payload: { id, notifcations: res.data },
     });
   } catch (err) {
     dispatch({

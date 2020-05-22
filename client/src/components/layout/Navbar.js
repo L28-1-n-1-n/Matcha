@@ -4,16 +4,17 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { logout } from '../../actions/auth';
 export const Navbar = ({
-  auth: { isAuthenticated, loading },
-
+  auth: { isAuthenticated, loading, user },
   logout,
 }) => {
   const authLinks = (
     <ul>
       <li>
+        <i className='fas fa-bell'></i> Notifications
+      </li>
+      <li>
         <Link to='/profiles'>All Profiles</Link>
       </li>
-
       <li>
         <Link to='/photos'>
           <i className='fas fa-user-plus'></i> Matches
@@ -52,7 +53,7 @@ export const Navbar = ({
       </li>
     </ul>
   );
-
+  console.log(user);
   return (
     <nav className='navbar bg-dark-T'>
       <h1>

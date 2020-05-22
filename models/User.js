@@ -36,6 +36,20 @@ const UserSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
+  notifications: {
+    type: [String],
+  },
+  notifications: [
+    {
+      msg: {
+        type: String,
+      },
+      user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'user',
+      },
+    },
+  ],
 });
 
 module.exports = User = mongoose.model('user', UserSchema);
