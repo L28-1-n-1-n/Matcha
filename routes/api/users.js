@@ -207,4 +207,44 @@ router.post(
     }
   }
 );
+
+// @route DELETE api/users/notifications/:id
+// @desc Delete notifications after they are read
+// @access Private
+
+router.delete('/notifications/:id', auth, async (req, res) => {
+  console.log('server side');
+  try {
+    let user = await User.findById(req.params.id).select('-username -password');
+    console.log(user);
+    if (user) {
+      user = await User.findOneAndUpdate(
+        { _id: req.params.id },
+        { $set: { notifications: [] } },
+        function (err, affected) {
+          console.log('affected', affected);
+        }
+      );
+      return res.json(user);
+    }
+
+    // const notify_user = await target_user.updateOne({
+    //   $push: {
+    //     notifications: {
+    //       msg: `Your photo is liked by ${likedBy_user.firstname}`,
+    //       user: req.user.id,
+    //     },
+    //   },
+    // });
+
+    // await user.notifications.remove();
+    // res.json({ msg: 'Notifications removed' });
+  } catch (err) {
+    console.error(err.message);
+    if (err.kind === 'ObjectId') {
+      return res.status(404).json({ msg: 'Notifications not found ' });
+    }
+    res.status(500).send('Server Error');
+  }
+});
 module.exports = router;

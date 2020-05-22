@@ -10,6 +10,7 @@ import {
   UPDATE_USER,
   PROMPT_UPLOAD_PROFILE_PHOTO,
   FIRST_PHOTO_UPLOADED,
+  DELETE_NOTIFICATIONS,
 } from '../actions/types';
 
 const initialState = {
@@ -81,6 +82,19 @@ export default function (state = initialState, action) {
         isAuthenticated: false,
         loading: false, // even though authentication failed, it is still done loading
       };
+    case DELETE_NOTIFICATIONS:
+      return {
+        ...state,
+        user: payload,
+        loading: false,
+      };
+    // case DELETE_PHOTO:
+    //   return {
+    //     ...state,
+    //     // returns all photos except the one that got deleted (the one that matches the payload)
+    //     photos: state.photos.filter((photo) => photo._id !== payload),
+    //     loading: false,
+    //   };
     case UPDATE_USER:
       return {
         ...state,

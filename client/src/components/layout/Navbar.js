@@ -1,17 +1,60 @@
 import React, { Fragment, useEffect } from 'react';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { Link } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { logout } from '../../actions/auth';
+import { logout, removeNotifications } from '../../actions/auth';
 export const Navbar = ({
   auth: { isAuthenticated, loading, user },
+  removeNotifications,
   logout,
 }) => {
+  const MessageItem = ({ thread }) => {
+    return (
+      <NavLink to={`/profile/${thread.user}`} className='main-nav'>
+        {thread.msg}
+      </NavLink>
+    );
+  };
+  // all working but need to refresh page : (
+  // Also need to put number of notifications after bell
+  const notify = () => {
+    if (user.notifications && user.notifications.length > 0) {
+      user.notifications.forEach(function (thread) {
+        if (thread.msg && thread.user) {
+          console.log(thread.msg);
+          toast(<MessageItem key={thread._id} thread={thread} />, {
+            position: 'top-right',
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+          });
+        }
+      });
+      removeNotifications(user._id);
+    }
+  };
   const authLinks = (
     <ul>
-      <li>
+      <li onClick={notify}>
         <i className='fas fa-bell'></i> Notifications
       </li>
+      <ToastContainer
+        position='top-right'
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
       <li>
         <Link to='/profiles'>All Profiles</Link>
       </li>
@@ -73,10 +116,13 @@ export const Navbar = ({
 // equivalent to { !loading ? '' : null }
 Navbar.propTypes = {
   logout: PropTypes.func.isRequired,
+  removeNotifications: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = (state) => ({
   auth: state.auth,
 });
-export default connect(mapStateToProps, { logout })(Navbar);
+export default connect(mapStateToProps, { logout, removeNotifications })(
+  Navbar
+);

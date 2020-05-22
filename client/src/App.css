@@ -337,6 +337,10 @@ button {
 .navbar .welcome span {
   margin-right: 0.6rem;
 }
+.navbar .main-nav {
+  color: var(--dark-color);
+  font-family: 'Pacifico', sans-serif;
+}
 
 /* Landing Page */
 .landing {

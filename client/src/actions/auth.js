@@ -11,6 +11,8 @@ import {
   CLEAR_PROFILE,
   UPDATE_USER,
   PROFILE_ERROR,
+  NOTIFICATION_REMOVAL_ERROR,
+  DELETE_NOTIFICATIONS,
 } from './types';
 import setAuthToken from '../utils/setAuthToken';
 
@@ -32,6 +34,26 @@ export const loadUser = () => async (dispatch) => {
   } catch (err) {
     dispatch({
       type: AUTH_ERROR,
+    });
+  }
+};
+
+// Remove Notifications
+export const removeNotifications = (id) => async (dispatch) => {
+  console.log('yyooyoy');
+  try {
+    await axios.delete(`/api/users/notifications/${id}`);
+
+    dispatch({
+      type: DELETE_NOTIFICATIONS,
+      payload: id,
+    });
+
+    // dispatch(setAlert('Photo Removed', 'success'));
+  } catch (err) {
+    dispatch({
+      type: NOTIFICATION_REMOVAL_ERROR,
+      payload: { msg: err.response.statusText, status: err.response.status },
     });
   }
 };
