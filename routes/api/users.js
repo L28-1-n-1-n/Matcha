@@ -220,10 +220,7 @@ router.delete('/notifications/:id', auth, async (req, res) => {
     if (user) {
       user = await User.findOneAndUpdate(
         { _id: req.params.id },
-        { $set: { notifications: [] } },
-        function (err, affected) {
-          console.log('affected', affected);
-        }
+        { $set: { notifications: [] } }
       );
       return res.json(user);
     }

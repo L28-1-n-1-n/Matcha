@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Link } from 'react-router-dom';
@@ -21,7 +21,7 @@ export const Navbar = ({
   // all working but need to refresh page : (
   // Also need to put number of notifications after bell
   const notify = () => {
-    if (user.notifications && user.notifications.length > 0) {
+    if (user && user.notifications && user.notifications.length > 0) {
       user.notifications.forEach(function (thread) {
         if (thread.msg && thread.user) {
           console.log(thread.msg);
@@ -42,7 +42,12 @@ export const Navbar = ({
   const authLinks = (
     <ul>
       <li onClick={notify}>
-        <i className='fas fa-bell'></i> Notifications
+        <i className='fas fa-bell'></i>
+        <span>
+          {user && user.notifications && user.notifications.length > 0 && (
+            <span>{user.notifications.length}</span>
+          )}
+        </span>
       </li>
       <ToastContainer
         position='top-right'
@@ -114,6 +119,7 @@ export const Navbar = ({
 // it is set to false if we get an error or user has loggedin
 // if !loading, then show <Fragment />, else null
 // equivalent to { !loading ? '' : null }
+
 Navbar.propTypes = {
   logout: PropTypes.func.isRequired,
   removeNotifications: PropTypes.func.isRequired,
