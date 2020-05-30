@@ -33,6 +33,7 @@ const ProfileTop = ({
   // });
 
   useEffect(() => {
+    console.log('in top, user id is ', _id);
     getProfilePicById(_id);
     myProfilePic = photos.find(
       (element) => element.isProfilePic == true && element.user == _id

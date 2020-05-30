@@ -6,6 +6,7 @@ import { NavLink } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { logout, removeNotifications } from '../../actions/auth';
+import io from 'socket.io-client';
 export const Navbar = ({
   auth: { isAuthenticated, loading, user },
   removeNotifications,
@@ -18,6 +19,7 @@ export const Navbar = ({
       </NavLink>
     );
   };
+
   // all working but need to refresh page : (
   // Also need to put number of notifications after bell
   const notify = () => {

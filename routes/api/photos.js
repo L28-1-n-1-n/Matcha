@@ -260,12 +260,10 @@ router.get('/me', auth, async (req, res) => {
   // endpoint is '/me', not '/'
   try {
     // find user by its objectid
-    // populate the user with firstname and avatar
     const photo = await Photo.find({
       user: req.user.id,
-      // }).populate('user', ['firstname', 'avatar']);
     });
-    // console.log(photo);
+
     if (!photo) {
       return res
         .status(400)
@@ -284,11 +282,8 @@ router.get('/me', auth, async (req, res) => {
 router.get('/:id/all', auth, async (req, res) => {
   try {
     // find user by its objectid
-    // populate the user with firstname and avatar
     const photos = await Photo.find({
       user: req.params.id,
-      // isProfiePic: true,
-      // }).populate('user', ['firstname', 'avatar']);
     });
 
     if (!photos) {
@@ -310,11 +305,8 @@ router.get('/:id/profilepic', auth, async (req, res) => {
   // endpoint is '/me', not '/'
   try {
     // find user by its objectid
-    // populate the user with firstname and avatar
     const photo = await Photo.find({
       user: req.params.id,
-      // isProfiePic: true,
-      // }).populate('user', ['firstname', 'avatar']);
     });
 
     if (!photo) {
@@ -348,8 +340,8 @@ router.post('/', auth, upload.single('file'), async (req, res) => {
     'public',
     'uploads'
   );
-  console.log(uploadsDir);
-  console.log(path.resolve(uploadsDir, file.name));
+  // console.log(uploadsDir);
+  // console.log(path.resolve(uploadsDir, file.name));
   file.mv(path.resolve(uploadsDir, file.name), (err) => {
     if (err) {
       console.error(err);
@@ -394,9 +386,41 @@ router.put('/like/:id', auth, async (req, res) => {
       return res.status(400).json({ msg: 'Photo already liked' });
     }
     // if the logged in user has not liked the post, add the user to the top of the list of people who have liked the post
-    photo.likes.unshift({ user: req.user.id });
+    const addLikeToPhoto = photo.likes.unshift({ user: req.user.id });
 
     await photo.save();
+
+    const myProfile = await Profile.findOne({ user: req.user.id });
+
+    // myProfile.likes.forEach(function (entry) {
+    //   console.log(entry.user);
+    //   console.log(entry.user.toString());
+    //   console.log(photo.user._id);
+    //   console.log(entry.user.toString() == photo.user._id);
+    // });
+
+    if (myProfile.likes.length == 0) {
+      const thisUserLikes = await myProfile.updateOne({
+        $push: {
+          likes: { user: photo.user._id },
+        },
+      });
+
+      return res.json(photo.likes);
+    } else if (
+      myProfile.likes.filter((entry) => entry.user.toString() == photo.user._id)
+        .length == 0
+    ) {
+      const thisUserLikes = await myProfile.updateOne({
+        $push: {
+          likes: { user: photo.user._id },
+        },
+      });
+
+      return res.json(photo.likes);
+    }
+
+    // we are not done yet, need to write this into I've checkedout Array
     res.json(photo.likes);
   } catch (err) {
     console.error(err.message);
@@ -409,7 +433,6 @@ router.put('/like/:id', auth, async (req, res) => {
 // @access Private
 
 router.put('/likedby/:id', auth, async (req, res) => {
-  console.log('here');
   try {
     const photo = await Photo.findById(req.params.id);
     const target_profile = await Profile.findById(photo.profile.toString());
@@ -422,10 +445,6 @@ router.put('/likedby/:id', auth, async (req, res) => {
       return res.status(400).json({ msg: 'User account not found' });
     }
 
-    // target_user.notifications.unshift({
-    //   msg: `Your photo is liked by ${likedBy_user.firstname}`,
-    //   user: req.user.id,
-    // });
     const notify_user = await target_user.updateOne({
       $push: {
         notifications: {
@@ -434,7 +453,7 @@ router.put('/likedby/:id', auth, async (req, res) => {
         },
       },
     });
-    console.log(target_user);
+
     if (
       photo.likes.filter((like) => like.user.toString() === req.user.id)
         .length === 0 &&
@@ -442,19 +461,17 @@ router.put('/likedby/:id', auth, async (req, res) => {
         (entry) => entry.user.toString() === req.user.id
       ).length === 0
     ) {
-      // target_profile.likedBy.unshift({ user: req.user.id });
       const profile_liked_by = await target_profile.updateOne({
         $push: {
           likedBy: { user: req.user.id },
         },
       });
-      console.log('new entry added');
+
       return res.status(200).json({ profile_liked_by, notify_user });
     } else {
       return res.status(400).json({ msg: 'Photo already liked' });
     }
 
-    // await target_profile.updateOne();
     // res.json(target_profile.checkedOutBy);
 
     // res.json(target_profile.likedBy);
@@ -463,36 +480,6 @@ router.put('/likedby/:id', auth, async (req, res) => {
     res.status(500).send('Server Error');
   }
 });
-
-// // @route PUT api/photos/likedby/:id
-// // @desc Like a post
-// // @access Private
-
-// router.put('/notifylike/:id', auth, async (req, res) => {
-//   console.log('here');
-//   try {
-//     const photo = await Photo.findById(req.params.id);
-
-//     const target_user = await User.findById(photo.user.toString());
-//     const likedBy_user = await User.findById(req.user.id);
-
-//     if (!target_user || !likedBy_user) {
-//       return res.status(400).json({ msg: 'User account not found' });
-//     }
-
-//     target_user.notifications.unshift({
-//       msg: `Your photo is liked by ${likedBy_user.firstname}`,
-//       user: req.user.id,
-//     });
-//     await target_user.updateOne();
-//     console.log(target_user);
-
-//     res.json(target_user.notifications);
-//   } catch (err) {
-//     console.error(err.message);
-//     res.status(500).send('Server Error');
-//   }
-// });
 
 // @route PUT api/posts/unlike/:id
 // @desc Unlike a post
@@ -565,34 +552,13 @@ router.put('/isProfilePic/:id', auth, async (req, res) => {
         .json({ msg: ' No photos found. Try uploading some !' });
     }
 
-    console.log('req.params.id is');
-    console.log(req.params.id);
     photos.map(async (photo) => {
-      console.log(photo._id);
-      console.log(req.params.id);
       photo._id == req.params.id
         ? (photo.isProfilePic = true)
         : (photo.isProfilePic = false);
-
       await photo.save();
-
       res.json(photo.isProfiePic);
     });
-
-    // Check if the post has already been liked by the login user
-    // .filter returns an array of strings where the username of the people who liked the post equals to the loggedin user
-    // if this length is not zero, the current logged in user has liked the post already
-    // if (
-    //   photo.likes.filter((like) => like.user.toString() === req.user.id)
-    //     .length > 0
-    // ) {
-    //   return res.status(400).json({ msg: 'Photo already liked' });
-    // }
-    // if the logged in user has not liked the post, add the user to the top of the list of people who have liked the post
-    // photo.isProfilePic = true;
-
-    // await photo.save();
-    // res.json(photo.isProfilePic);
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server Error');
@@ -605,19 +571,68 @@ router.put('/isProfilePic/:id', auth, async (req, res) => {
 router.put(`/clicked/:targetProfileID/:myUserID`, auth, async (req, res) => {
   try {
     const target_profile = await Profile.findById(req.params.targetProfileID);
-    if (!target_profile) {
+    const thisProfileChecks = await Profile.findOne({
+      user: req.params.myUserID,
+    });
+
+    if (!target_profile || !thisProfileChecks) {
       return res.status(400).json({ msg: 'Profile not found' });
     }
-    if (
+
+    const target_user = await User.findById(target_profile.user.toString());
+    const checkedOutBy_user = await User.findById(req.params.myUserID);
+
+    if (!target_user || !checkedOutBy_user) {
+      return res.status(400).json({ msg: 'User account not found' });
+    }
+
+    if (thisProfileChecks.checkedOut.length == 0) {
+      const thisUserChecksOut = await thisProfileChecks.updateOne({
+        $push: {
+          checkedOut: { user: target_user._id },
+        },
+      });
+    } else if (
+      thisProfileChecks.checkedOut.filter(
+        (entry) => entry.user.toString() == target_user._id
+      ).length == 0
+    ) {
+      const thisUserChecksOut = await thisProfileChecks.updateOne({
+        $push: {
+          checkedOut: { user: target_user._id },
+        },
+      });
+    }
+
+    const notify_user = await target_user.updateOne({
+      $push: {
+        notifications: {
+          msg: `${checkedOutBy_user.firstname} checked out your profile.`,
+          user: req.user.id,
+        },
+      },
+    });
+
+    if (target_profile.checkedOutBy.length == 0) {
+      const profile_checkedOutBy = await target_profile.updateOne({
+        $push: {
+          checkedOutBy: { user: req.params.myUserID },
+        },
+      });
+      return res.status(200).json({ profile_checkedOutBy, notify_user });
+    } else if (
       target_profile.checkedOutBy.filter(
         (entry) => entry.user.toString() === req.params.myUserID
       ).length === 0
     ) {
-      target_profile.checkedOutBy.unshift({ user: req.params.myUserID });
-      console.log('new entry added');
+      const profile_checkedOutBy = await target_profile.updateOne({
+        $push: {
+          checkedOutBy: { user: req.params.myUserID },
+        },
+      });
+      return res.status(200).json({ profile_checkedOutBy, notify_user });
     }
-    await target_profile.save();
-    res.json(target_profile.checkedOutBy);
+    res.json(notify_user);
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server Error');

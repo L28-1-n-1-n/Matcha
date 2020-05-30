@@ -161,7 +161,8 @@ export const getProfilePicById = (userId) => async (dispatch) => {
 export const addLike = (id) => async (dispatch) => {
   try {
     const res = await axios.put(`/api/photos/like/${id}`);
-    console.log(res);
+    console.log('res.data is');
+    console.log(res.data);
     dispatch({
       type: UPDATE_LIKES,
       payload: { id, likes: res.data },

@@ -12,7 +12,7 @@ import ProfilePhotoItem from '../photos/ProfilePhotoItem';
 import { getProfileById } from '../../actions/profile';
 import {
   getMyPhotos,
-  getProfilePicById,
+  // getProfilePicById,
   getAllPhotosById,
 } from '../../actions/photo';
 
@@ -111,7 +111,7 @@ const Profile = ({
 
 Profile.propTypes = {
   getProfileById: PropTypes.func.isRequired,
-  getProfilePicById: PropTypes.func.isRequired,
+  // getProfilePicById: PropTypes.func.isRequired,
   profile: PropTypes.object.isRequired,
   auth: PropTypes.object.isRequired,
   photo: PropTypes.object.isRequired,
