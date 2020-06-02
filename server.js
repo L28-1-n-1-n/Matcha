@@ -26,20 +26,44 @@ const http = require('http');
 const server = http.createServer(app);
 const socketio = require('socket.io');
 const io = socketio(server);
-
+const getApiAndEmit = (socket) => {
+  const response = new Date();
+  socket.emit('FromAPI', response);
+};
 // Run when client connects
+let interval;
+var UserList = require('./config/userlist');
+userlist = UserList.userlist;
 io.on('connection', (socket) => {
   console.log('New WS Connection ...');
+  // console.log(socket);
+  console.log(socket.id);
+  if (interval) {
+    clearInterval(interval);
+  }
+  interval = setInterval(() => getApiAndEmit(socket), 1000);
+
   socket.emit('message', 'Welcome!');
+  socket.emit('message', socket.id);
   // console.log(socket);
   // Broadcast to all clients except the current one
   // Broadcast when a user connects
   socket.broadcast.emit('messsage', 'A user has joined the chat');
   // io.emit(); will emit to ALL clients
-
+  console.log('before, userlist is ');
+  console.log(userlist);
+  socket.on('lol', (m) => {
+    console.log(m);
+    if (!userlist.includes(m)) {
+      userlist.push(m);
+    }
+    console.log('userlist is ');
+    console.log(userlist);
+  });
   // Runs when client disconnects
   socket.on('disconnect', () => {
     io.emit('message', 'A user has left the chat');
+    clearInterval(interval);
   });
   // Listen for newChatMessage
   socket.on('newChatMessage', (msg) => {
@@ -94,18 +118,18 @@ console.log('we are here');
 //   //=> 'fe80::200:f8ff:fe21:67cf'
 // })();
 
-const publicIp = require('public-ip');
-const ipLocation = require('iplocation');
+// const publicIp = require('public-ip');
+// const ipLocation = require('iplocation');
 
-(async () => {
-  // console.log(await ipLocation('172.217.167.78'));
-  const result = await publicIp.v4();
-  console.log(result);
-  // console.log(await publicIp.v6());
-  console.log(await ipLocation(result));
-  // console.log(await ipLocation('::1'));
-  //=> { latitude: -33.8591, longitude: 151.2002, region: { name: "New South Wales" ... } ... }
-})();
+// (async () => {
+//   // console.log(await ipLocation('172.217.167.78'));
+//   const result = await publicIp.v4();
+//   console.log(result);
+//   // console.log(await publicIp.v6());
+//   console.log(await ipLocation(result));
+//   // console.log(await ipLocation('::1'));
+//   //=> { latitude: -33.8591, longitude: 151.2002, region: { name: "New South Wales" ... } ... }
+// })();
 
 // const requestIp = require('request-ip');
 // app.use(requestIp.mw());

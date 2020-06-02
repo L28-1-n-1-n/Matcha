@@ -1,22 +1,18 @@
 const mongoose = require('mongoose');
 
 const ConversationSchema = new mongoose.Schema({
-  conversation: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'user',
-  },
   user1: {
-    type: Schema.Types.ObjectId,
+    type: mongoose.Schema.Types.ObjectId,
     ref: 'user1',
   },
   user2: {
-    type: Schema.Types.ObjectId,
+    type: mongoose.Schema.Types.ObjectId,
     ref: 'user2',
   },
   messages: [
     {
       fromUser: {
-        type: Schema.Types.ObjectId,
+        type: Number, //One stands for User1, Two stands for User2
         ref: 'fromUser',
       },
       text: {

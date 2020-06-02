@@ -110,13 +110,12 @@ const ProfileSchema = new mongoose.Schema({
   ],
   correspondances: [
     {
-      conversation: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'conversation',
-      },
       user: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'user',
+      },
+      name: {
+        type: String,
       },
     },
   ],

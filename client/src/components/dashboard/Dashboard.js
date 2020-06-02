@@ -7,7 +7,7 @@ import DashboardActions from './DashboardActions';
 // import Experience from './Experience';
 // import Education from './Education';
 import { getCurrentProfile, deleteAccount } from '../../actions/profile';
-
+// import io from 'socket.io-client';
 // pull profile and loading state out of profile
 const Dashboard = ({
   getCurrentProfile,
@@ -16,8 +16,16 @@ const Dashboard = ({
   profile: { profile, loading },
   justCreatedProfile,
 }) => {
+  // const socket = io.connect('http://localhost:5000');
   useEffect(() => {
     getCurrentProfile();
+    // console.log(socket.id);
+    //Message from server
+    // socket.on('message', (message) => {
+    // console.log(message);
+    // setMessageList(messageList);
+    // outputMessage(message);
+    // });
   }, [getCurrentProfile]);
   console.log(user);
   if (justCreatedProfile) {

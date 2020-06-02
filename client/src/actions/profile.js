@@ -11,6 +11,7 @@ import {
   GET_REPOS,
   PROMPT_UPLOAD_PROFILE_PHOTO,
   ADD_MATCH_PREFERENCES,
+  GET_CHAT_LIST,
 } from './types';
 
 // Get current users profile
@@ -313,3 +314,25 @@ export const editPreferences = (formData, history) => async (dispatch) => {
     });
   }
 };
+
+// get Chat users first names
+
+// // Get current users profile
+// export const getChatNames = () => async (dispatch) => {
+//   console.log('front reached');
+//   try {
+//     // make request to backend api/profile/me
+//     const res = await axios.get('/api/profile/my_correspondances');
+
+//     dispatch({
+//       type: GET_CHAT_LIST,
+//       payload: res.data,
+//     });
+//   } catch (err) {
+//     dispatch({ type: CLEAR_PROFILE });
+//     dispatch({
+//       type: PROFILE_ERROR,
+//       payload: { msg: err.response.statusText, status: err.response.status },
+//     });
+//   }
+// };

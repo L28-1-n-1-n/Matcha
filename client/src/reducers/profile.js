@@ -5,11 +5,13 @@ import {
   UPDATE_PROFILE,
   GET_PROFILES,
   GET_REPOS,
+  // GET_CHAT_LIST,
 } from '../actions/types';
 
 const initialState = {
   profile: null,
   profiles: [],
+  // userlist: [],
   repos: [],
   loading: true,
   justCreatedProfile: false,
@@ -27,7 +29,12 @@ export default function (state = initialState, action) {
         profile: payload,
         loading: false,
       };
-
+    // case GET_CHAT_LIST:
+    //   return {
+    //     ...state,
+    //     userlist: payload,
+    //     loading: false,
+    //   };
     case GET_PROFILES:
       return {
         ...state,

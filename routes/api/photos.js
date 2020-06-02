@@ -438,7 +438,8 @@ router.put('/likedby/:id', auth, async (req, res) => {
     const target_profile = await Profile.findById(photo.profile.toString());
     const target_user = await User.findById(photo.user.toString());
     const likedBy_user = await User.findById(req.user.id);
-    if (!target_profile) {
+    const myProfile = await Profile.findOne({ user: req.user.id });
+    if (!target_profile || !myProfile) {
       return res.status(400).json({ msg: 'Profile not found' });
     }
     if (!target_user || !likedBy_user) {
@@ -467,14 +468,41 @@ router.put('/likedby/:id', auth, async (req, res) => {
         },
       });
 
+      if (
+        target_profile.likes.filter(
+          (like) => like.user.toString() === req.user.id
+        ).length !== 0
+      ) {
+        if (
+          target_profile.correspondances.filter(
+            (item) => item.user.toString() === req.user.id
+          ).length === 0
+        ) {
+          await target_profile.updateOne({
+            $push: {
+              correspondances: {
+                user: req.user.id,
+                name: likedBy_user.firstname,
+              },
+            },
+          });
+          console.log('correspondances');
+          console.log(likedBy_user.firstname);
+          console.log(target_user.firstname);
+          await myProfile.updateOne({
+            $push: {
+              correspondances: {
+                user: target_user._id,
+                name: target_user.firstname,
+              },
+            },
+          });
+        }
+      }
       return res.status(200).json({ profile_liked_by, notify_user });
     } else {
       return res.status(400).json({ msg: 'Photo already liked' });
     }
-
-    // res.json(target_profile.checkedOutBy);
-
-    // res.json(target_profile.likedBy);
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server Error');

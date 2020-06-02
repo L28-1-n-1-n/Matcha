@@ -9,7 +9,8 @@ const User = require('../../models/User');
 const Post = require('../../models/Post');
 const publicIp = require('public-ip');
 const ipLocation = require('iplocation');
-
+var UserList = require('../../config/userlist');
+var userlist = UserList.userlist;
 // for getting client-side ip, won't work here since it is localhost.
 // See router.get('/cip', auth, ... at the end of this file
 const requestIp = require('request-ip');
@@ -25,7 +26,8 @@ router.get('/me', auth, async (req, res) => {
     const profile = await Profile.findOne({
       user: req.user.id,
     }).populate('user', ['firstname', 'lastname', 'avatar']);
-
+    console.log('USERLIST');
+    console.log(userlist);
     if (!profile) {
       return res
         .status(400)
@@ -563,4 +565,37 @@ router.post(
   }
 );
 
+// // @route   GET api/profile/my_correspondances
+// // @desc    Get the list of names
+// // @access  Private
+// router.get('/my_correspondances', auth, async (req, res) => {
+//   console.log('back reached');
+//   console.log(req.user.id);
+//   try {
+//     // find user by its objectid
+//     // populate the user with firstname and avatar
+//     const profile = await Profile.findOne({
+//       user: req.user.id,
+//     });
+//     if (!profile) {
+//       return res
+//         .status(400)
+//         .json({ msg: ' There is no profile for this user' });
+//     }
+//     console.log(profile.correspondances);
+//     var userlist = [];
+//     profile.correspondances.forEach(function (entry) {
+//       const member = User.findById(entry.user.toString()).select(
+//         'id firstname'
+//       );
+//       console.log(member);
+//       userlist.push({ no: id, name: firstname });
+//     });
+
+//     res.json(userlist);
+//   } catch (err) {
+//     console.error(err.message);
+//     res.status(500).send('Server Error');
+//   }
+// });
 module.exports = router;

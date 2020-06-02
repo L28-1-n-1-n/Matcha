@@ -7,6 +7,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { logout, removeNotifications } from '../../actions/auth';
 import io from 'socket.io-client';
+
 export const Navbar = ({
   auth: { isAuthenticated, loading, user },
   removeNotifications,
@@ -41,6 +42,29 @@ export const Navbar = ({
       removeNotifications(user._id);
     }
   };
+  // const socket = io.connect('http://localhost:5000');
+  const [response, setResponse] = useState('');
+  useEffect(() => {
+    const socket = io.connect('http://localhost:5000');
+
+    console.log(socket.id);
+    console.log('user is');
+    console.log(user);
+    if (user) {
+      socket.emit('lol', user._id);
+    }
+    console.log(user);
+    //Message from server
+    socket.on('message', (message) => {
+      console.log(message);
+
+      // setMessageList(messageList);
+      // outputMessage(message);
+    });
+    socket.on('FromAPI', (data) => {
+      setResponse(data);
+    });
+  }, [user]);
   const authLinks = (
     <ul>
       <li onClick={notify}>
@@ -103,7 +127,7 @@ export const Navbar = ({
       </li>
     </ul>
   );
-  console.log(user);
+
   return (
     <nav className='navbar bg-dark-T'>
       <h1>
@@ -111,6 +135,9 @@ export const Navbar = ({
           <i className='fas fa-fire-alt'></i> Tindurr
         </Link>
       </h1>
+      <p>
+        <time dateTime={response}>{response}</time>
+      </p>
       {!loading && (
         <Fragment>{isAuthenticated ? authLinks : guestLinks}</Fragment>
       )}
