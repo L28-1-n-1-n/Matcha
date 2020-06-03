@@ -91,7 +91,7 @@ const Chat = ({
           <ul id='users'>
             {correspondances.length > 0 ? (
               correspondances.map((connection) => (
-                <li key={connection._id}>{connection.user.toString()} </li>
+                <li key={connection._id}>{connection.name.toString()} </li>
               ))
             ) : (
               <h4> No profiles found...</h4>

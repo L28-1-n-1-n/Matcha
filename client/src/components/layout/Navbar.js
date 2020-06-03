@@ -44,27 +44,45 @@ export const Navbar = ({
   };
   // const socket = io.connect('http://localhost:5000');
   const [response, setResponse] = useState('');
+  var socid;
+  // const [socid, setSocid] = useState('');
   useEffect(() => {
     const socket = io.connect('http://localhost:5000');
 
+    var connDetails;
     console.log(socket.id);
     console.log('user is');
     console.log(user);
-    if (user) {
-      socket.emit('lol', user._id);
-    }
-    console.log(user);
-    //Message from server
-    socket.on('message', (message) => {
-      console.log(message);
 
+    console.log('socid one', socid);
+
+    //Message from server
+    socket.on('logchannel', (message) => {
+      console.log(message);
+      socid = message;
+      console.log('socid five', socid);
+
+      if (user && socid) {
+        connDetails = { user: user._id, sid: socid };
+        console.log(connDetails);
+        socket.emit('lol', connDetails);
+      }
       // setMessageList(messageList);
       // outputMessage(message);
     });
+    console.log('socid two', socid);
     socket.on('FromAPI', (data) => {
       setResponse(data);
     });
-  }, [user]);
+    console.log('socid three', socid);
+
+    if (user && socid) {
+      connDetails = { user: user._id, sid: socid };
+      console.log(connDetails);
+      socket.emit('lol', connDetails);
+    }
+    console.log('socid four', socid);
+  }, [user, socid]);
   const authLinks = (
     <ul>
       <li onClick={notify}>

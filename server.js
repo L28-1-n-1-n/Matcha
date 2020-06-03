@@ -44,7 +44,7 @@ io.on('connection', (socket) => {
   interval = setInterval(() => getApiAndEmit(socket), 1000);
 
   socket.emit('message', 'Welcome!');
-  socket.emit('message', socket.id);
+  socket.emit('logchannel', socket.id);
   // console.log(socket);
   // Broadcast to all clients except the current one
   // Broadcast when a user connects
@@ -53,12 +53,15 @@ io.on('connection', (socket) => {
   console.log('before, userlist is ');
   console.log(userlist);
   socket.on('lol', (m) => {
-    console.log(m);
-    if (!userlist.includes(m)) {
+    let tmp = userlist.findIndex((x) => x.user === m.user);
+
+    if (tmp !== -1) {
+      userlist[tmp].sid = m.sid;
+
+      console.log(userlist);
+    } else {
       userlist.push(m);
     }
-    console.log('userlist is ');
-    console.log(userlist);
   });
   // Runs when client disconnects
   socket.on('disconnect', () => {
