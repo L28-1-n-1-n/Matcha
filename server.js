@@ -57,7 +57,6 @@ io.on('connection', (socket) => {
 
     if (tmp !== -1) {
       userlist[tmp].sid = m.sid;
-
       console.log(userlist);
     } else {
       userlist.push(m);
@@ -66,6 +65,12 @@ io.on('connection', (socket) => {
   // Runs when client disconnects
   socket.on('disconnect', () => {
     io.emit('message', 'A user has left the chat');
+    console.log('disconnected user is', socket.id);
+    let tmp = userlist.findIndex((x) => x.sid === socket.id);
+    if (tmp !== -1) {
+      userlist.splice(tmp, 1);
+      console.log(userlist);
+    }
     clearInterval(interval);
   });
   // Listen for newChatMessage
@@ -86,9 +91,7 @@ module.exports = {
 // Init Middleware
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-
 app.use(express.json({ extended: false }));
-// app.use(methodOverride('_method'));
 
 // Working code using fileUpload
 app.use(fileUpload());

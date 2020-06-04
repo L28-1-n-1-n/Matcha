@@ -1,122 +1,3 @@
-// import React, { Fragment, useState } from 'react';
-// import UploadAlertMessage from './UploadAlertMessage';
-// import Progress from './Progress';
-// import axios from 'axios';
-
-// const FileUpload = () => {
-//   const [file, setFile] = useState('');
-//   const [filename, setFilename] = useState('Choose File');
-//   const [uploadedFile, setUploadedFile] = useState({});
-//   const [uamessage, setUAMessage] = useState('');
-//   const [uploadPercentage, setUploadPercentage] = useState(0);
-
-//   const onChange = (e) => {
-//     setFile(e.target.files[0]);
-//     setFilename(e.target.files[0].name);
-//   };
-
-//   const onSubmit = async (e) => {
-//     e.preventDefault();
-//     const formData = new FormData();
-//     formData.append('file', file);
-//     // addPhoto(formData, setUploadedFile, setUploadPercentage, setUAMessage);
-
-//     try {
-//       const res = await axios.post(
-//         'http://localhost:5000/api/photos',
-//         // '/upload',
-//         formData,
-//         {
-//           headers: {
-//             'Content-Type':
-//               'multipart/form-data; boundary=${formData._boundary}',
-//           },
-//           onUploadProgress: (progressEvent) => {
-//             setUploadPercentage(
-//               parseInt(
-//                 Math.round((progressEvent.loaded * 100) / progressEvent.total)
-//               )
-//             );
-
-//             // Clear percentage
-//             setTimeout(() => setUploadPercentage(0), 10000);
-//           },
-//         }
-//       );
-
-//       console.log(res.data.file);
-//       const { fileName, filePath } = res.data;
-
-//       setUploadedFile({ fileName, filePath });
-
-//       setUAMessage('File Uploaded');
-//     } catch (err) {
-//       if (err.response.status === 500) {
-//         setUAMessage('There was a problem with the server');
-//       } else {
-//         setUAMessage(err.response.data.msg);
-//       }
-//     }
-//   };
-
-//   return (
-//     <Fragment>
-//       {uamessage ? <UploadAlertMessage msg={uamessage} /> : null}
-//       <form onSubmit={onSubmit}>
-//         <div className='custom-file mb-4'>
-//           <input
-//             type='file'
-//             className='custom-file-input'
-//             id='file'
-//             name='file'
-//             onChange={onChange}
-//           />
-//           <label className='custom-file-label' htmlFor='customFile'>
-//             {filename}
-//           </label>
-//         </div>
-//         {/*
-//         <form action='/upload' method='POST' enctype='multipart/form-data'>
-//           <div className='custom-file mb-3'>
-//             <input
-//               type='file'
-//               name='file'
-//               id='file'
-//               className='custom-file-input'
-//             />
-//             <label for='file' className='custom-file-label'>
-//               Choose File
-//             </label>
-//           </div>
-//           <input
-//             type='submit'
-//             value='Submit'
-//             className='btn btn-primary btn-block'
-//           />
-//         </form> */}
-
-//         <Progress percentage={uploadPercentage} />
-
-//         <input
-//           type='submit'
-//           value='Upload'
-//           className='btn btn-primary btn-block mt-4'
-//         />
-//       </form>
-//       {uploadedFile ? (
-//         <div className='row mt-5'>
-//           <div className='col-md-6 m-auto'>
-//             <h3 className='text-center'>{uploadedFile.fileName}</h3>
-//             <img style={{ width: '100%' }} src={uploadedFile.filePath} alt='' />
-//           </div>
-//         </div>
-//       ) : null}
-//     </Fragment>
-//   );
-// };
-
-// export default FileUpload;
-
 import React, { Fragment, useState, useEffect } from 'react';
 import UploadAlertMessage from './UploadAlertMessage';
 import Progress from './Progress';
@@ -125,24 +6,9 @@ import axios from 'axios';
 
 import { connect } from 'react-redux';
 import { addPhoto } from '../actions/photo';
-import { ADD_PHOTO } from '../actions/types';
-import { Link, Redirect } from 'react-router-dom';
-
-// import io from 'socket.io-client';
-
-// const onSubmit = async (e) => {
-//   e.preventDefault();
-//   console.log(msg);
-//   // Emit message to server
-//   socket.emit('newChatMessage', msg);
-//   setMsg('');
-// };
 
 const FileUpload = ({ addPhoto }) => {
   const [file, setFile] = useState('');
-  // const [text, setText] = useState({
-  //   text: '',
-  // });
   const [text, setText] = useState('');
   const [filename, setFilename] = useState('Choose File');
   const [uploadedFile, setUploadedFile] = useState({});
@@ -172,9 +38,6 @@ const FileUpload = ({ addPhoto }) => {
   const onSubmit = async (e) => {
     e.preventDefault();
     const formData = new FormData();
-    // formData.append('text', text);
-    // console.log('text is');
-    // console.log(text);
     formData.append('file', file);
 
     // Get the form data from the event object
@@ -245,7 +108,6 @@ const FileUpload = ({ addPhoto }) => {
               id='file'
               name='file'
               onChange={(e) => onChange(e)}
-              // onChange={onChange}
             />
 
             <label className='custom-file-label' htmlFor='customFile'>
