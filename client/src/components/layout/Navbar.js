@@ -63,7 +63,7 @@ export const Navbar = ({
       console.log('socid five', socid);
 
       if (user && socid) {
-        connDetails = { user: user._id, sid: socid };
+        connDetails = { user: user._id, name: user.firstname, sid: socid };
         console.log(connDetails);
         socket.emit('lol', connDetails);
       }

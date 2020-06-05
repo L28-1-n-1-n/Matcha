@@ -8,11 +8,15 @@ import { socket } from '../../actions/socClient';
 
 const Chat = ({
   getCurrentProfile,
-
   profile: {
     profile: { user, correspondances },
   },
 }) => {
+  const [inputMsg, setInputMsg] = useState('');
+  const [messageList, setMessageList] = useState([]);
+  const [targetSoc, setTargetSoc] = useState({});
+  const [userList, setUserList] = useState([]);
+
   const MessageItem = ({ item }) => {
     return (
       <div className='message'>
@@ -21,24 +25,16 @@ const Chat = ({
         </p>
         <p className='text'>{item.chatMsg}</p>
       </div>
-      // <NavLink to={`/profile/${thread.user}`} className='main-nav'>
-      //   {thread.msg}
-      // </NavLink>
     );
   };
 
-  const [inputMsg, setInputMsg] = useState('');
-  const [messageList, setMessageList] = useState([]);
-  const [targetSoc, setTargetSoc] = useState('');
-  const [userList, setUserList] = useState([]);
-  // const socket = io.connect('http://localhost:5000');
-  // const findTargetSoc = (userID) => {
-  //   let tmp = userlist.findIndex((x) => x.user === userID);
-  //   if (tmp !== -1) {
-  //     setTargetSoc(userlist[tmp].sid);
-  //     console.log('targetSoc is ', targetSoc);
-  //   }
-  // };
+  const findTargetSoc = (userID) => {
+    let tmp = userList.findIndex((x) => x.user === userID);
+    if (tmp !== -1) {
+      setTargetSoc(userList[tmp]);
+      console.log('targetSoc is ', targetSoc);
+    }
+  };
   const getInit = () => {
     socket.emit('initialList', userList);
     socket.on('listupdate', (list) => {
@@ -53,21 +49,33 @@ const Chat = ({
     });
     socket.on('message', (message) => {
       console.log(message);
-      var now = new moment();
+
       setMessageList((prevState) => [
         ...prevState,
-        { name: user.firstname, time: now.format('LLL'), chatMsg: message },
+        // { name: user.firstname, time: now.format('LLL'), chatMsg: message },
+        message,
       ]);
+
       // outputMessage(message);
     });
 
     getCurrentProfile();
-  }, [getCurrentProfile, messageList]);
+  }, [getCurrentProfile]);
   const onSubmit = async (e) => {
     e.preventDefault();
     console.log(inputMsg);
+    var now = new moment();
+    var transMsg = {
+      userid: user._id,
+      name: user.firstname,
+      timestamp: now.valueOf(),
+      time: now.format('LLL'),
+      chatMsg: inputMsg,
+    };
     // Emit message to server
-    socket.emit('newChatMessage', inputMsg);
+    if (targetSoc) {
+      socket.emit('newChatMessage', transMsg, targetSoc.sid);
+    }
     setInputMsg('');
   };
 
@@ -87,7 +95,7 @@ const Chat = ({
             {correspondances.length > 0 ? (
               correspondances.map((connection) => (
                 <li
-                  // onClick={() => findTargetSoc(connection.user)}
+                  onClick={() => findTargetSoc(connection.user)}
                   key={connection._id}
                 >
                   {connection.name.toString()}{' '}
@@ -98,31 +106,11 @@ const Chat = ({
             )}
           </ul>
         </div>
-        {/* <div className='chat-messages'>
-          <div className='message'>
-            <p className='meta'>
-              User 1 <span>7:22pm</span>
-            </p>
-            <p className='text'>
-              This is a sample chat in case I do not have time to complete this
-              function. 
-            </p>
-          </div>
-          <div className='message'>
-            <p className='meta'>
-              User 2 <span>7:55pm</span>
-            </p>
-            <p className='text'>
-              The box to write message below should still work and send messges
-              to the console.
-            </p>
-          </div>
-        </div>  */}
 
         <div className='chat-messages'>
           {messageList &&
             messageList.map((item) => (
-              <MessageItem key={item.time} item={item} />
+              <MessageItem key={item.timestamp} item={item} />
             ))}
         </div>
       </main>
