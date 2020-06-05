@@ -7,7 +7,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { logout, removeNotifications } from '../../actions/auth';
 import io from 'socket.io-client';
-
+import { socket } from '../../actions/socClient';
 export const Navbar = ({
   auth: { isAuthenticated, loading, user },
   removeNotifications,
@@ -42,12 +42,12 @@ export const Navbar = ({
       removeNotifications(user._id);
     }
   };
-  // const socket = io.connect('http://localhost:5000');
+
   const [response, setResponse] = useState('');
   var socid;
   // const [socid, setSocid] = useState('');
   useEffect(() => {
-    const socket = io.connect('http://localhost:5000');
+    // const socket = io.connect('http://localhost:5000');
 
     var connDetails;
     console.log(socket.id);

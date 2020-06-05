@@ -58,9 +58,10 @@ io.on('connection', (socket) => {
     if (tmp !== -1) {
       userlist[tmp].sid = m.sid;
       console.log(userlist);
-    } else {
+    } else if (m.user && m.sid) {
       userlist.push(m);
     }
+    io.emit('listupdate', userlist);
   });
   // Runs when client disconnects
   socket.on('disconnect', () => {
@@ -77,6 +78,10 @@ io.on('connection', (socket) => {
   socket.on('newChatMessage', (msg) => {
     console.log(msg);
     io.emit('message', msg);
+  });
+  socket.on('initialList', () => {
+    io.emit('listupdate', userlist);
+    console.log('userlist passed on', userlist);
   });
 });
 

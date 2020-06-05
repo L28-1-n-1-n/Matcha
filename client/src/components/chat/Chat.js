@@ -2,7 +2,9 @@ import React, { Fragment, useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { getCurrentProfile } from '../../actions/profile';
-// import io from 'socket.io-client';
+import moment from 'moment';
+import io from 'socket.io-client';
+import { socket } from '../../actions/socClient';
 
 const Chat = ({
   getCurrentProfile,
@@ -10,70 +12,63 @@ const Chat = ({
   profile: {
     profile: { user, correspondances },
   },
-  userlist,
 }) => {
-  console.log(correspondances);
-  console.log(userlist);
-  // const MessageItem = ({ item }) => {
-  //   return (
-  //     <div className='message'>
-  //           <p className='meta'>
-  //             User 1 <span>7:22pm</span>
-  //           </p>
-  //           <p className='text'>
-  //             This is a sample chat in case I do not have time to complete this
-  //             function. {/* {messageList} */}
-  //           </p>
-  //         </div>
-  //     <NavLink to={`/profile/${thread.user}`} className='main-nav'>
-  //       {thread.msg}
-  //     </NavLink>
-  //   );
-  // };
+  const MessageItem = ({ item }) => {
+    return (
+      <div className='message'>
+        <p className='meta'>
+          {item.name} <span>{item.time}</span>
+        </p>
+        <p className='text'>{item.chatMsg}</p>
+      </div>
+      // <NavLink to={`/profile/${thread.user}`} className='main-nav'>
+      //   {thread.msg}
+      // </NavLink>
+    );
+  };
 
-  // // all working but need to refresh page : (
-  // // Also need to put number of notifications after bell
-  // const outputMessage = (item) => {
-  //   if (user && user.notifications && user.notifications.length > 0) {
-  //     user.notifications.forEach(function (thread) {
-  //       if (thread.msg && thread.user) {
-  //         console.log(thread.msg);
-  //         toast(<MessageItem key={thread._id} thread={thread} />, {
-  //           position: 'top-right',
-  //           autoClose: 5000,
-  //           hideProgressBar: false,
-  //           closeOnClick: true,
-  //           pauseOnHover: true,
-  //           draggable: true,
-  //           progress: undefined,
-  //         });
-  //       }
-  //     });
-  //     removeNotifications(user._id);
+  const [inputMsg, setInputMsg] = useState('');
+  const [messageList, setMessageList] = useState([]);
+  const [targetSoc, setTargetSoc] = useState('');
+  const [userList, setUserList] = useState([]);
+  // const socket = io.connect('http://localhost:5000');
+  // const findTargetSoc = (userID) => {
+  //   let tmp = userlist.findIndex((x) => x.user === userID);
+  //   if (tmp !== -1) {
+  //     setTargetSoc(userlist[tmp].sid);
+  //     console.log('targetSoc is ', targetSoc);
   //   }
   // };
-
-  const [msg, setMsg] = useState('');
-  const [messageList, setMessageList] = useState('');
-  // const socket = io.connect('http://localhost:5000');
+  const getInit = () => {
+    socket.emit('initialList', userList);
+    socket.on('listupdate', (list) => {
+      setUserList(list);
+    });
+  };
   useEffect(() => {
-    // console.log(socket);
-    // //Message from server
-    // socket.on('message', (message) => {
-    //   console.log(message);
-    //   setMessageList(messageList);
-    //   // outputMessage(message);
-    // });
-    getCurrentProfile();
+    getInit();
+    //Message from server
+    socket.on('listupdate', (list) => {
+      setUserList(list);
+    });
+    socket.on('message', (message) => {
+      console.log(message);
+      var now = new moment();
+      setMessageList((prevState) => [
+        ...prevState,
+        { name: user.firstname, time: now.format('LLL'), chatMsg: message },
+      ]);
+      // outputMessage(message);
+    });
 
-    console.log(correspondances);
+    getCurrentProfile();
   }, [getCurrentProfile, messageList]);
   const onSubmit = async (e) => {
     e.preventDefault();
-    console.log(msg);
+    console.log(inputMsg);
     // Emit message to server
-    // socket.emit('newChatMessage', msg);
-    setMsg('');
+    socket.emit('newChatMessage', inputMsg);
+    setInputMsg('');
   };
 
   return (
@@ -91,21 +86,26 @@ const Chat = ({
           <ul id='users'>
             {correspondances.length > 0 ? (
               correspondances.map((connection) => (
-                <li key={connection._id}>{connection.name.toString()} </li>
+                <li
+                  // onClick={() => findTargetSoc(connection.user)}
+                  key={connection._id}
+                >
+                  {connection.name.toString()}{' '}
+                </li>
               ))
             ) : (
               <h4> No profiles found...</h4>
             )}
           </ul>
         </div>
-        <div className='chat-messages'>
+        {/* <div className='chat-messages'>
           <div className='message'>
             <p className='meta'>
               User 1 <span>7:22pm</span>
             </p>
             <p className='text'>
               This is a sample chat in case I do not have time to complete this
-              function. {/* {messageList} */}
+              function. 
             </p>
           </div>
           <div className='message'>
@@ -117,16 +117,13 @@ const Chat = ({
               to the console.
             </p>
           </div>
-          {/* <div className='photo-collection'>
-            {messageList &&
-              messageList.map((item) => (
-                <MessageItem
-                  key={photo._id}
-                  photo={photo}
-                  myProfile={profile}
-                />
-              ))}
-          </div> */}
+        </div>  */}
+
+        <div className='chat-messages'>
+          {messageList &&
+            messageList.map((item) => (
+              <MessageItem key={item.time} item={item} />
+            ))}
         </div>
       </main>
       <div className='chat-form-container'>
@@ -136,8 +133,8 @@ const Chat = ({
             name='message'
             type='text'
             placeholder='Enter Message'
-            value={msg}
-            onChange={(e) => setMsg(e.target.value)}
+            value={inputMsg}
+            onChange={(e) => setInputMsg(e.target.value)}
             required
             autoComplete='off'
           />
@@ -155,11 +152,9 @@ Chat.propTypes = {
   getCurrentProfile: PropTypes.func.isRequired,
 
   profile: PropTypes.object.isRequired,
-  userlist: PropTypes.object.isRequired,
 };
 const mapStateToProps = (state) => ({
   profile: state.profile,
-  userlist: state.userlist,
 });
 
 export default connect(mapStateToProps, { getCurrentProfile })(Chat);
