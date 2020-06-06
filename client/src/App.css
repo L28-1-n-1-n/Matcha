@@ -690,6 +690,8 @@ button {
 :root {
   --dark-color-a: #667aff;
   --dark-color-b: #7386ff;
+  --dark-color-c: #7dd5ebe5;
+
   --light-color: #e6e9ff;
   --success-color: #5cb85c;
   --error-color: #d9534f;
@@ -735,8 +737,10 @@ a {
 }
 
 .chat-header {
-  background: var(--dark-color-a);
-  color: #fff;
+  background: var(--dark-color-c);
+  opacity: 0.5;
+  /* color: #fff; */
+  color: blue;
   border-top-left-radius: 5px;
   border-top-right-radius: 5px;
   padding: 15px;
@@ -751,9 +755,10 @@ a {
 }
 
 .chat-sidebar {
-  background: var(--dark-color-b);
+  background: var(--light-color);
   color: #fff;
   padding: 20px 20px 60px;
+
   overflow-y: scroll;
 }
 
@@ -762,14 +767,25 @@ a {
   background: rgba(0, 0, 0, 0.1);
   padding: 10px;
   margin-bottom: 20px;
+  color: var(--dark-color-a);
 }
 
 .chat-sidebar h3 {
   margin-bottom: 15px;
+  color: blue;
 }
 
 .chat-sidebar ul li {
   padding: 10px 0;
+  color: var(--dark-color-a);
+}
+
+.chat-sidebar ul li:hover {
+  padding: 10px 0;
+  font-size: 30px;
+  opacity: 0.8;
+  color: var(--primary-color);
+  cursor: pointer;
 }
 
 .chat-messages {
@@ -799,7 +815,8 @@ a {
 
 .chat-form-container {
   padding: 20px 30px;
-  background-color: var(--dark-color-a);
+  background-color: var(--dark-color-c);
+  opacity: 0.5;
 }
 
 .chat-form-container form {

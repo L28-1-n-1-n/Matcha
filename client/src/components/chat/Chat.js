@@ -1,5 +1,6 @@
 import React, { Fragment, useEffect, useState } from 'react';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { getCurrentProfile } from '../../actions/profile';
 import moment from 'moment';
@@ -35,6 +36,14 @@ const Chat = ({
       console.log('targetSoc is ', targetSoc);
     }
   };
+
+  const isUserOnline = (userID) => {
+    if (userList.findIndex((x) => x.user === userID) !== -1) {
+      return 1;
+    } else {
+      return 0;
+    }
+  };
   const getInit = () => {
     socket.emit('initialList', userList);
     socket.on('listupdate', (list) => {
@@ -60,6 +69,7 @@ const Chat = ({
     });
 
     getCurrentProfile();
+    console.log(targetSoc);
   }, [getCurrentProfile]);
   const onSubmit = async (e) => {
     e.preventDefault();
@@ -89,7 +99,7 @@ const Chat = ({
       <main className='chat-main'>
         <div className='chat-sidebar'>
           <h3>
-            Users <i className='fas fa-user-friends'></i>
+            Connected Users <i className='fas fa-user-friends'></i>
           </h3>
           <ul id='users'>
             {correspondances.length > 0 ? (
@@ -98,6 +108,15 @@ const Chat = ({
                   onClick={() => findTargetSoc(connection.user)}
                   key={connection._id}
                 >
+                  {' '}
+                  {isUserOnline(connection.user) ? (
+                    <i
+                      className='fas fa-circle'
+                      style={{ color: 'chartreuse' }}
+                    ></i>
+                  ) : (
+                    <i className='fas fa-circle' style={{ color: 'red' }}></i>
+                  )}{' '}
                   {connection.name.toString()}{' '}
                 </li>
               ))
@@ -106,13 +125,21 @@ const Chat = ({
             )}
           </ul>
         </div>
-
-        <div className='chat-messages'>
-          {messageList &&
-            messageList.map((item) => (
-              <MessageItem key={item.timestamp} item={item} />
-            ))}
-        </div>
+        {targetSoc.sid ? (
+          <div className='chat-messages'>
+            {messageList &&
+              messageList.map((item) => (
+                <MessageItem key={item.timestamp} item={item} />
+              ))}
+          </div>
+        ) : (
+          <div className='chat-messages'>
+            <h3>
+              <i class='far fa-hand-point-left' aria-hidden='true'></i>
+              &nbsp;Please pick a user
+            </h3>
+          </div>
+        )}
       </main>
       <div className='chat-form-container'>
         <form id='chat-form' onSubmit={(e) => onSubmit(e)}>

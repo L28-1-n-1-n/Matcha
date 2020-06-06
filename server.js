@@ -42,7 +42,7 @@ io.on('connection', (socket) => {
     clearInterval(interval);
   }
   interval = setInterval(() => getApiAndEmit(socket), 1000);
-
+  console.log('here');
   socket.emit('message', 'Welcome!');
   socket.emit('logchannel', socket.id);
   // console.log(socket);
