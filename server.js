@@ -65,7 +65,7 @@ io.on('connection', (socket) => {
   });
   // Runs when client disconnects
   socket.on('disconnect', () => {
-    io.emit('message', 'A user has left the chat');
+    // io.emit('message', 'A user has left the chat');
     console.log('disconnected user is', socket.id);
     let tmp = userlist.findIndex((x) => x.sid === socket.id);
     if (tmp !== -1) {
@@ -114,7 +114,7 @@ app.use('/api/photos', require('./routes/api/photos'));
 app.use('/api/confirmation', require('./routes/api/confirmation'));
 app.use('/api/recuperation', require('./routes/api/recuperation'));
 app.use('/api/reset', require('./routes/api/reset'));
-
+app.use('/api/conversation', require('./routes/api/conversation'));
 // app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
 // () => is the callback part
 

@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from 'react';
+import React, { Fragment, useEffect, useState, useRef } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
@@ -6,9 +6,10 @@ import { getCurrentProfile } from '../../actions/profile';
 import moment from 'moment';
 import io from 'socket.io-client';
 import { socket } from '../../actions/socClient';
-
+import { postConversation } from '../../actions/conversation';
 const Chat = ({
   getCurrentProfile,
+  postConversation,
   profile: {
     profile: { user, correspondances },
   },
@@ -17,23 +18,41 @@ const Chat = ({
   const [messageList, setMessageList] = useState([]);
   const [targetSoc, setTargetSoc] = useState({});
   const [userList, setUserList] = useState([]);
+  const [targetUserID, setTargetUserID] = useState('');
+  const chatMessages = document.querySelector('.chat-messages');
 
+  const messagesEndRef = useRef(null);
+  const scrollToBottom = () => {
+    messagesEndRef.current.scrollIntoView({ behaviour: 'smooth' });
+  };
   const MessageItem = ({ item }) => {
     return (
       <div className='message'>
-        <p className='meta'>
-          {item.name} <span>{item.time}</span>
-        </p>
-        <p className='text'>{item.chatMsg}</p>
+        {item.name && item.chatMsg && (
+          <Fragment>
+            <p className='meta'>
+              {item.name} <span>{item.time}</span>
+            </p>
+            <p className='text'>{item.chatMsg}</p>
+          </Fragment>
+        )}
       </div>
     );
   };
 
   const findTargetSoc = (userID) => {
+    console.log(userID);
     let tmp = userList.findIndex((x) => x.user === userID);
+    // If user is online
     if (tmp !== -1) {
       setTargetSoc(userList[tmp]);
       console.log('targetSoc is ', targetSoc);
+    }
+    if (userID) {
+      console.log('setting userid');
+      console.log(userID);
+      setTargetUserID(userID);
+      console.log(targetUserID);
     }
   };
 
@@ -58,13 +77,14 @@ const Chat = ({
     });
     socket.on('message', (message) => {
       console.log(message);
-
       setMessageList((prevState) => [
         ...prevState,
         // { name: user.firstname, time: now.format('LLL'), chatMsg: message },
         message,
       ]);
-
+      // Scroll down automatically as messages accumulate
+      // chatMessages.scrollTop = chatMessages.scrollHeight;
+      scrollToBottom();
       // outputMessage(message);
     });
 
@@ -85,6 +105,11 @@ const Chat = ({
     // Emit message to server
     if (targetSoc) {
       socket.emit('newChatMessage', transMsg, targetSoc.sid);
+    }
+    if (targetUserID) {
+      console.log('targetUserID is ');
+      console.log(targetUserID);
+      postConversation(targetUserID, transMsg);
     }
     setInputMsg('');
   };
@@ -131,11 +156,12 @@ const Chat = ({
               messageList.map((item) => (
                 <MessageItem key={item.timestamp} item={item} />
               ))}
+            <div ref={messagesEndRef} />
           </div>
         ) : (
           <div className='chat-messages'>
             <h3>
-              <i class='far fa-hand-point-left' aria-hidden='true'></i>
+              <i className='far fa-hand-point-left' aria-hidden='true'></i>
               &nbsp;Please pick a user
             </h3>
           </div>
@@ -165,13 +191,16 @@ const Chat = ({
 
 Chat.propTypes = {
   getCurrentProfile: PropTypes.func.isRequired,
-
+  postConversation: PropTypes.func.isRequired,
   profile: PropTypes.object.isRequired,
 };
 const mapStateToProps = (state) => ({
   profile: state.profile,
 });
 
-export default connect(mapStateToProps, { getCurrentProfile })(Chat);
+export default connect(mapStateToProps, {
+  getCurrentProfile,
+  postConversation,
+})(Chat);
 
 // export default Chat;

@@ -11,17 +11,14 @@ const ConversationSchema = new mongoose.Schema({
   },
   messages: [
     {
-      fromUser: {
-        type: Number, //One stands for User1, Two stands for User2
-        ref: 'fromUser',
-      },
-      text: {
+      name: {
         type: String,
-        required: true,
       },
-      date: {
+      time: {
         type: Date,
-        default: Date.now,
+      },
+      chatMsg: {
+        type: String,
       },
     },
   ],
