@@ -61,4 +61,35 @@ router.post('/:targetUserID', auth, async (req, res) => {
     res.status(500).send('Server Error');
   }
 });
+
+// @route GET api/conversation/history/${userID}
+// @desc Get message history between 2 users
+// @access Private
+router.get('/history/:userID', auth, async (req, res) => {
+  try {
+    var m_history = await Conversation.findOne({
+      user1: req.user.id.toString(),
+      user2: req.params.userID.toString(),
+    });
+    console.log('history one', m_history);
+    if (!m_history) {
+      m_history = await Conversation.findOne({
+        user1: req.params.userID.toString(),
+        user2: req.user.id.toString(),
+      });
+    }
+    console.log('history two', m_history);
+    if (!m_history) {
+      return;
+    }
+    return res.json(m_history);
+  } catch (err) {
+    // console.error(err.message);
+    console.log(err);
+    if (err.kind === 'ObjectId') {
+      return res.status(404).json({ msg: 'Post not found2' });
+    }
+    res.status(500).send('Server Error');
+  }
+});
 module.exports = router;

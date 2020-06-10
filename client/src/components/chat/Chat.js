@@ -6,21 +6,24 @@ import { getCurrentProfile } from '../../actions/profile';
 import moment from 'moment';
 import io from 'socket.io-client';
 import { socket } from '../../actions/socClient';
-import { postConversation } from '../../actions/conversation';
+import {
+  postConversation,
+  getMessageHistory,
+} from '../../actions/conversation';
 const Chat = ({
   getCurrentProfile,
   postConversation,
+  getMessageHistory,
   profile: {
     profile: { user, correspondances },
   },
+  conversation: { conversations },
 }) => {
   const [inputMsg, setInputMsg] = useState('');
   const [messageList, setMessageList] = useState([]);
   const [targetSoc, setTargetSoc] = useState({});
   const [userList, setUserList] = useState([]);
   const [targetUserID, setTargetUserID] = useState('');
-  const chatMessages = document.querySelector('.chat-messages');
-
   const messagesEndRef = useRef(null);
   const scrollToBottom = () => {
     messagesEndRef.current.scrollIntoView({ behaviour: 'smooth' });
@@ -46,16 +49,13 @@ const Chat = ({
     // If user is online
     if (tmp !== -1) {
       setTargetSoc(userList[tmp]);
-      console.log('targetSoc is ', targetSoc);
+      getMessageHistory(userID);
     }
     if (userID) {
-      console.log('setting userid');
-      console.log(userID);
       setTargetUserID(userID);
-      console.log(targetUserID);
     }
   };
-
+  console.log('conversations is', conversations);
   const isUserOnline = (userID) => {
     if (userList.findIndex((x) => x.user === userID) !== -1) {
       return 1;
@@ -77,20 +77,22 @@ const Chat = ({
     });
     socket.on('message', (message) => {
       console.log(message);
+
       setMessageList((prevState) => [
         ...prevState,
         // { name: user.firstname, time: now.format('LLL'), chatMsg: message },
         message,
       ]);
       // Scroll down automatically as messages accumulate
-      // chatMessages.scrollTop = chatMessages.scrollHeight;
       scrollToBottom();
-      // outputMessage(message);
     });
 
     getCurrentProfile();
     console.log(targetSoc);
-  }, [getCurrentProfile]);
+    if (targetUserID) {
+      getMessageHistory(targetUserID);
+    }
+  }, [getCurrentProfile, getMessageHistory]);
   const onSubmit = async (e) => {
     e.preventDefault();
     console.log(inputMsg);
@@ -107,8 +109,6 @@ const Chat = ({
       socket.emit('newChatMessage', transMsg, targetSoc.sid);
     }
     if (targetUserID) {
-      console.log('targetUserID is ');
-      console.log(targetUserID);
       postConversation(targetUserID, transMsg);
     }
     setInputMsg('');
@@ -150,22 +150,33 @@ const Chat = ({
             )}
           </ul>
         </div>
-        {targetSoc.sid ? (
-          <div className='chat-messages'>
-            {messageList &&
-              messageList.map((item) => (
-                <MessageItem key={item.timestamp} item={item} />
-              ))}
-            <div ref={messagesEndRef} />
-          </div>
-        ) : (
-          <div className='chat-messages'>
-            <h3>
-              <i className='far fa-hand-point-left' aria-hidden='true'></i>
-              &nbsp;Please pick a user
-            </h3>
-          </div>
-        )}
+        <div className='chat-messages'>
+          {targetUserID && conversations && (
+            <div>
+              {conversations &&
+                conversations.map((item) => (
+                  <MessageItem key={item._id} item={item} />
+                ))}
+              <div ref={messagesEndRef} />
+            </div>
+          )}
+          {targetSoc.sid ? (
+            <div>
+              {messageList &&
+                messageList.map((item) => (
+                  <MessageItem key={item.timestamp} item={item} />
+                ))}
+              <div ref={messagesEndRef} />
+            </div>
+          ) : (
+            <div>
+              <h3>
+                <i className='far fa-hand-point-left' aria-hidden='true'></i>
+                &nbsp;Please pick a user
+              </h3>
+            </div>
+          )}
+        </div>
       </main>
       <div className='chat-form-container'>
         <form id='chat-form' onSubmit={(e) => onSubmit(e)}>
@@ -180,9 +191,6 @@ const Chat = ({
             autoComplete='off'
           />
           <input type='submit' className='btn btn-primary' value='Send' />
-          {/* <button className='btn'>
-            <i className='fas fa-paper-plane'></i> Send
-          </button> */}
         </form>
       </div>
     </div>
@@ -192,15 +200,19 @@ const Chat = ({
 Chat.propTypes = {
   getCurrentProfile: PropTypes.func.isRequired,
   postConversation: PropTypes.func.isRequired,
+  getMessageHistory: PropTypes.func.isRequired,
   profile: PropTypes.object.isRequired,
+  conversation: PropTypes.object.isRequired,
 };
 const mapStateToProps = (state) => ({
   profile: state.profile,
+  conversation: state.conversation,
 });
 
 export default connect(mapStateToProps, {
   getCurrentProfile,
   postConversation,
+  getMessageHistory,
 })(Chat);
 
 // export default Chat;

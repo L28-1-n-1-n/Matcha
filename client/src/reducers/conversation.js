@@ -1,4 +1,8 @@
-import { POST_CONVERSATION, RETRIVAL_ERROR } from '../actions/types';
+import {
+  POST_CONVERSATION,
+  RETRIVAL_ERROR,
+  GET_MESSAGE_HISTORY,
+} from '../actions/types';
 
 const initialState = {
   conversations: [],
@@ -10,12 +14,11 @@ export default function (state = initialState, action) {
   const { type, payload } = action;
 
   switch (type) {
-    //   case GET_POSTS:
-    //     return {
-    //       ...state,
-    //       posts: payload,
-    //       loading: false
-    //     };
+    case GET_MESSAGE_HISTORY:
+      return {
+        ...state,
+        conversations: payload,
+      };
     //   case GET_POST:
     //     return {
     //       ...state,

@@ -7,6 +7,7 @@ import {
   CLEAR_PROFILE,
   POST_CONVERSATION,
   RETRIVAL_ERROR,
+  GET_MESSAGE_HISTORY,
 } from './types';
 
 // Get all profiles
@@ -57,6 +58,27 @@ export const postConversation = (targetUserID, transMsg) => async (
     dispatch({
       type: RETRIVAL_ERROR,
       payload: { msg: err.response.statusText, status: err.response.status },
+    });
+  }
+};
+
+// Get Message History
+export const getMessageHistory = (userID) => async (dispatch) => {
+  try {
+    const res = await axios.get(`/api/conversation/history/${userID}`);
+    console.log(res);
+    dispatch({
+      type: GET_MESSAGE_HISTORY,
+      payload: res.data.messages,
+    });
+    // return res.data.messages;
+  } catch (err) {
+    dispatch({
+      type: RETRIVAL_ERROR,
+      payload: {
+        msg: err.response.statusText,
+        status: err.response.status,
+      },
     });
   }
 };
