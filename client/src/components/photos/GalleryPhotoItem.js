@@ -2,7 +2,7 @@ import React, { Fragment, useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Link, withRouter } from 'react-router-dom';
 import Moment from 'react-moment';
-
+import { forceRefresh } from '../../actions/socClient';
 import { connect } from 'react-redux';
 
 import {
@@ -25,6 +25,7 @@ const GalleryPhotoItem = ({
   deletePhoto,
   makeProfilePic,
   addClickedBy,
+  forceRefresh,
   auth,
   photo: {
     _id,
@@ -92,6 +93,8 @@ const GalleryPhotoItem = ({
               onClick={() => {
                 addLike(_id);
                 addLikedBy(_id);
+
+                forceRefresh(profile.user);
                 // addNotification(_id);
               }}
               type='button'
@@ -140,6 +143,7 @@ GalleryPhotoItem.propTypes = {
   addClickedBy: PropTypes.func.isRequired,
   showActions: PropTypes.bool,
   makeProfilePic: PropTypes.func.isRequired,
+  forceRefresh: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
@@ -155,6 +159,7 @@ export default connect(mapStateToProps, {
   deletePhoto,
   makeProfilePic,
   addClickedBy,
+  forceRefresh,
 })(GalleryPhotoItem);
 
 // export default connect(mapStateToProps, {

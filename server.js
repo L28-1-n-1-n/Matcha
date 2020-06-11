@@ -79,9 +79,13 @@ io.on('connection', (socket) => {
     console.log(msg);
     io.emit('message', msg);
   });
+  socket.on('initiateRefresh', (target_ID) => {
+    console.log(target_ID);
+    io.emit('refreshTarget', target_ID);
+  });
   socket.on('initialList', () => {
     io.emit('listupdate', userlist);
-    console.log('userlist passed on', userlist);
+    console.log('userlist passed on lalaala', userlist);
   });
 });
 

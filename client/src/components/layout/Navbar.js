@@ -13,6 +13,11 @@ export const Navbar = ({
   removeNotifications,
   logout,
 }) => {
+  const refreshPage = () => {
+    console.log('we are refreshing');
+    window.location.reload();
+  };
+
   const MessageItem = ({ thread }) => {
     return (
       <NavLink to={`/profile/${thread.user}`} className='main-nav'>
@@ -82,6 +87,14 @@ export const Navbar = ({
       socket.emit('lol', connDetails);
     }
     console.log('socid four', socid);
+    socket.on('refreshTarget', (target_ID) => {
+      console.log(target_ID);
+
+      if (user && target_ID == user._id) {
+        console.log('we will refresh');
+        refreshPage();
+      }
+    });
   }, [user, socid]);
   const authLinks = (
     <ul>
