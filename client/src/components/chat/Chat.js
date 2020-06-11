@@ -49,9 +49,9 @@ const Chat = ({
     // If user is online
     if (tmp !== -1) {
       setTargetSoc(userList[tmp]);
-      getMessageHistory(userID);
     }
     if (userID) {
+      getMessageHistory(userID);
       setTargetUserID(userID);
     }
   };
@@ -86,7 +86,6 @@ const Chat = ({
       // Scroll down automatically as messages accumulate
       scrollToBottom();
     });
-
     getCurrentProfile();
     console.log(targetSoc);
     if (targetUserID) {
@@ -160,7 +159,7 @@ const Chat = ({
               <div ref={messagesEndRef} />
             </div>
           )}
-          {targetSoc.sid ? (
+          {targetUserID ? (
             <div>
               {messageList &&
                 messageList.map((item) => (
