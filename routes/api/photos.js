@@ -493,9 +493,27 @@ router.put('/likedby/:id', auth, async (req, res) => {
               },
             },
           });
+
+          await target_user.updateOne({
+            $push: {
+              notifications: {
+                msg: `Your connected with ${likedBy_user.firstname}`,
+                user: req.user.id,
+              },
+            },
+          });
+          //   await target_user.updateOne({
+          //     $push: {
+          //       notifications: {
+          //         msg: `Your photo is liked by ${likedBy_user.firstname}`,
+          //         user: req.user.id,
+          //       },
+          //     },
+          //   });
         }
       }
-      return res.status(200).json({ profile_liked_by, notify_user });
+      return res.status(200).json({ profile_liked_by });
+      // return res.status(200).json({ profile_liked_by, notify_user });
     } else if (
       photo.likes.filter((like) => like.user.toString() === req.user.id)
         .length === 0 &&
@@ -538,9 +556,33 @@ router.put('/likedby/:id', auth, async (req, res) => {
               },
             },
           });
+          await likedBy_user.updateOne({
+            $push: {
+              notifications: {
+                msg: `Your connected with ${target_user.firstname}`,
+                user: req.user.id,
+              },
+            },
+          });
+          await target_user.updateOne({
+            $push: {
+              notifications: [
+                {
+                  msg: `Your connected with ${likedBy_user.firstname}`,
+                  user: req.user.id,
+                },
+                // {
+                //   msg: `Your photo is liked by ${likedBy_user.firstname}`,
+                //   user: req.user.id,
+                // },
+              ],
+            },
+          });
         }
       }
-      return res.status(200).json({ profile_liked_by, notify_user });
+      return res.status(200).json({ profile_liked_by });
+
+      // return res.status(200).json({ profile_liked_by, notify_user });
     }
   } catch (err) {
     console.error(err.message);
