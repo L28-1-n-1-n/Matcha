@@ -54,6 +54,7 @@ const GalleryPhotoItem = ({
     };
     findAge();
   }
+  console.log('fame is ', profile);
   return (
     <div className='photo bg-white p-1 my-1'>
       <div>
@@ -82,6 +83,16 @@ const GalleryPhotoItem = ({
         {profile && profile.location && (
           <p className='my-1'>{profile.location.city}</p>
         )}
+        <button type='button' className='btn btn-light'>
+          <i className='fas fa-fire-alt' />{' '}
+          <span>
+            {profile.checkedOutBy.length + profile.likedBy.length > 0 && (
+              <span>
+                {profile.checkedOutBy.length + profile.likedBy.length}
+              </span>
+            )}
+          </span>
+        </button>
         {/* <img className='round-img' src={avatar} alt='' /> */}
 
         <p className='photo-date'>

@@ -3,6 +3,8 @@ const router = express.Router();
 const auth = require('../../middleware/auth');
 const { check, validationResult } = require('express-validator');
 const Conversation = require('../../models/Conversation');
+var UserList = require('../../config/userlist');
+var userlist = UserList.userlist;
 
 // @route   POST api/conversation
 // @desc    Find relevant conversation
@@ -12,6 +14,28 @@ router.post('/:targetUserID', auth, async (req, res) => {
   console.log(req.params);
   console.log(req.params.targetUserID);
   console.log(req.body);
+
+  var notify_user = '';
+
+  if (userlist.findIndex((x) => x.user === req.params.targetUserID) == -1) {
+    const target_user = await User.findById(req.params.targetUserID);
+    const sender = await User.findById(req.user.id);
+
+    if (!target_user || !sender) {
+      return res.status(400).json({ msg: 'User account not found' });
+    }
+
+    notify_user = await target_user.updateOne({
+      $push: {
+        notifications: {
+          msg: `${sender.firstname} sent you a message.`,
+          user: req.user.id,
+        },
+      },
+    });
+    console.log(target_user);
+  }
+
   try {
     console.log(req.params.targetUserID);
 
@@ -41,7 +65,11 @@ router.post('/:targetUserID', auth, async (req, res) => {
       newConversation.messages.push(newMessage);
       console.log(newConversation);
       await newConversation.save();
-      return res.json(newConversation);
+      if (notify_user) {
+        return res.json({ newConversation, notify_user });
+      } else {
+        return res.json(newConversation);
+      }
     }
 
     const push_new_message = await converse.updateOne({
@@ -55,7 +83,13 @@ router.post('/:targetUserID', auth, async (req, res) => {
     });
 
     console.log('extended conversation', converse);
-    return res.json(push_new_message);
+    if (notify_user) {
+      console.log('pushing new message');
+      console.log(notify_user);
+      return res.json({ push_new_message, notify_user });
+    } else {
+      return res.json(push_new_message);
+    }
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server Error');
