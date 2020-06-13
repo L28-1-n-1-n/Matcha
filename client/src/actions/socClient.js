@@ -18,13 +18,9 @@ export const forceRefresh = (userID) => async () => {
         socket.emit('initiateRefresh', userID, list[tmp].sid);
       }
     });
+
+    // socket.broadcast.emit('initiateRefresh', 'A user has joined the chat');
     console.log('here, userList is ', userList);
-    //   const res = await axios.get('/api/posts');
-    //   console.log(res);
-    //   dispatch({
-    //     type: GET_POSTS,
-    //     payload: res.data,
-    //   });
   } catch (err) {
     console.log(err);
   }

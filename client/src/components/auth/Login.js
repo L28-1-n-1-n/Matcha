@@ -21,6 +21,11 @@ const Login = ({ login, isAuthenticated }) => {
   const onSubmit = async (e) => {
     e.preventDefault();
     login(username, password);
+    var begin_timestamp = new Date();
+    var refresh = window.localStorage.getItem('refresh');
+
+    window.localStorage.setItem('refresh', begin_timestamp.getTime().valueOf());
+    console.log('beginning time', refresh);
   };
 
   // Redirect if logged in

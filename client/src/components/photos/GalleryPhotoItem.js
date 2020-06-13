@@ -65,6 +65,7 @@ const GalleryPhotoItem = ({
             console.log(profile._id);
             console.log(myProfile.user._id);
             addClickedBy(profile._id, myProfile.user._id);
+            forceRefresh(profile.user);
           }}
         >
           <Image data={data} />
