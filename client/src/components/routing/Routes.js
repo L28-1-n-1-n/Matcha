@@ -22,7 +22,8 @@ import Recuperation from '../verification/Recuperation';
 import Reset from '../verification/Reset';
 import MatchCriteria from '../matchSettings/MatchCriteria';
 import Chat from '../chat/Chat';
-
+import RecentProfiles from '../photos/RecentProfiles';
+import ConnectedUsers from '../photos/ConnectedUsers';
 const Routes = () => {
   return (
     <section className='container'>
@@ -44,6 +45,16 @@ const Routes = () => {
         <PrivateRoute exact path='/photos' component={Photos} />
         <PrivateRoute exact path='/posts/:id' component={Post} />
         <PrivateRoute exact path='/filters' component={MatchCriteria} />
+        <PrivateRoute
+          exact
+          path='/recent-profiles'
+          component={RecentProfiles}
+        />
+        <PrivateRoute
+          exact
+          path='/connected-users'
+          component={ConnectedUsers}
+        />
         <PrivateRoute exact path='/chat' component={Chat} />
         <Route
           exact

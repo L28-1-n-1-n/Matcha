@@ -47,7 +47,7 @@ var validateFile = function (file, cb) {
   }
 };
 
-// @route   GET api/photo
+// @route   GET api/photos
 // @desc    Get all photos
 // @access  Private
 router.get('/', auth, async (req, res) => {
@@ -77,7 +77,7 @@ router.get('/', auth, async (req, res) => {
   }
 });
 
-// @route   GET api/photo/filteredMatches
+// @route   GET api/photos/filteredMatches
 // @desc    Get profile pics of profiles that fit the user's criteria
 // @access  Private
 router.get('/filteredMatches', auth, async (req, res) => {
@@ -253,7 +253,7 @@ router.get('/filteredMatches', auth, async (req, res) => {
   }
 });
 
-// @route   GET api/photo/me
+// @route   GET api/photos/me
 // @desc    Get current user's photos by his/her userid
 // @access  Private
 router.get('/me', auth, async (req, res) => {
@@ -292,6 +292,110 @@ router.get('/:id/all', auth, async (req, res) => {
         .json({ msg: ' No photos found. Try uploading some !' });
     }
     res.json(photos);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
+});
+
+// @route   GET api/photos/recentPhotos
+// @desc    Get profile pics of recently checked out  profiles
+// @access  Private
+router.get('/recentPhotos', auth, async (req, res) => {
+  try {
+    const myProfile = await Profile.findOne({ user: req.user.id });
+    if (!myProfile) {
+      return res.status(400).json({ msg: ' Profile not found' });
+    }
+    const profile_list = myProfile.checkedOut;
+    const photos = await Photo.find({ isProfilePic: true }).populate(
+      'profile',
+      [
+        '_id',
+        'user',
+        'location',
+        'bday',
+        'bio',
+        'gender',
+        'interestedGender',
+        'tags',
+        'fame',
+        'distance',
+        'maxCommonTags',
+        'likes',
+        'likedBy',
+        'checkedOut',
+        'checkedOutBy',
+      ]
+    );
+
+    if (myProfile.checkedOut.length !== 0) {
+      var filtered_array = [];
+      photos.forEach(function (photo) {
+        if (
+          myProfile.checkedOut.filter(
+            (item) => item.user.toString() === photo.user._id.toString()
+          ).length !== 0
+        ) {
+          filtered_array.push(photo);
+        }
+      });
+
+      return res.json(filtered_array);
+    }
+    // res.json(ProfilePics);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
+});
+
+// @route   GET api/photos/recentPhotos
+// @desc    Get profile pics of recently checked out  profiles
+// @access  Private
+router.get('/connectedPhotos', auth, async (req, res) => {
+  try {
+    const myProfile = await Profile.findOne({ user: req.user.id });
+    if (!myProfile) {
+      return res.status(400).json({ msg: ' Profile not found' });
+    }
+    const profile_list = myProfile.correspondances;
+    const photos = await Photo.find({ isProfilePic: true }).populate(
+      'profile',
+      [
+        '_id',
+        'user',
+        'location',
+        'bday',
+        'bio',
+        'gender',
+        'interestedGender',
+        'tags',
+        'fame',
+        'distance',
+        'maxCommonTags',
+        'likes',
+        'likedBy',
+        'checkedOut',
+        'checkedOutBy',
+      ]
+    );
+
+    if (myProfile.correspondances.length !== 0) {
+      var filtered_array = [];
+      photos.forEach(function (photo) {
+        if (
+          myProfile.correspondances.filter(
+            (item) => item.user.toString() === photo.user._id.toString()
+          ).length !== 0
+        ) {
+          filtered_array.push(photo);
+        }
+      });
+
+      return res.json(filtered_array);
+    }
+    // res.json(ProfilePics);
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server Error');
@@ -512,6 +616,7 @@ router.put('/likedby/:id', auth, async (req, res) => {
           //   });
         }
       }
+
       return res.status(200).json({ profile_liked_by });
       // return res.status(200).json({ profile_liked_by, notify_user });
     } else if (
@@ -580,6 +685,8 @@ router.put('/likedby/:id', auth, async (req, res) => {
           });
         }
       }
+      console.log('roar');
+
       return res.status(200).json({ profile_liked_by });
 
       // return res.status(200).json({ profile_liked_by, notify_user });

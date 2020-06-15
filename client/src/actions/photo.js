@@ -19,10 +19,13 @@ import {
   ADD_LIKED_BY,
   GET_FILTERED_PHOTOS,
   ADD_NOTIFICATION_LIKE,
+  GET_RECENT_PHOTOS,
+  GET_CONNECTED_PHOTOS,
   // ADD_COMMENT,
   // REMOVE_COMMENT
 } from './types';
 import io from 'socket.io-client';
+import { forceRefresh } from './socClient';
 // Get photos
 export const getPhotos = () => async (dispatch) => {
   dispatch({ type: CLEAR_PHOTOS });
@@ -42,7 +45,7 @@ export const getPhotos = () => async (dispatch) => {
   }
 };
 
-// Get photos
+// Get filtered photos
 export const getFilteredPhotos = () => async (dispatch) => {
   dispatch({ type: CLEAR_PHOTOS });
   // dispatch({ type: CLEAR_PROFILE });
@@ -51,6 +54,40 @@ export const getFilteredPhotos = () => async (dispatch) => {
     console.log(res);
     dispatch({
       type: GET_FILTERED_PHOTOS,
+      payload: res.data,
+    });
+  } catch (err) {
+    dispatch({
+      type: PHOTO_ERROR,
+      payload: { msg: err.response.statusText, status: err.response.status },
+    });
+  }
+};
+
+// Get Recent photos
+export const getRecentPhotos = () => async (dispatch) => {
+  try {
+    const res = await axios.get('/api/photos/recentPhotos');
+    console.log(res);
+    dispatch({
+      type: GET_RECENT_PHOTOS,
+      payload: res.data,
+    });
+  } catch (err) {
+    dispatch({
+      type: PHOTO_ERROR,
+      payload: { msg: err.response.statusText, status: err.response.status },
+    });
+  }
+};
+
+// Get Connected photos
+export const getConnectedPhotos = () => async (dispatch) => {
+  try {
+    const res = await axios.get('/api/photos/connectedPhotos');
+    console.log(res);
+    dispatch({
+      type: GET_CONNECTED_PHOTOS,
       payload: res.data,
     });
   } catch (err) {
@@ -181,6 +218,7 @@ export const addLikedBy = (id) => async (dispatch) => {
   try {
     const res = await axios.put(`/api/photos/likedby/${id}`);
     console.log(res);
+
     dispatch({
       type: ADD_LIKED_BY,
       payload: { id, likedBy: res.data },

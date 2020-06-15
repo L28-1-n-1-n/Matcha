@@ -727,6 +727,50 @@ a {
   font-size: 17px;
 }
 
+/* shape divider */
+.custom-shape-divider-bottom-1592107561 {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  overflow: hidden;
+  line-height: 0;
+  transform: rotate(180deg);
+}
+
+.custom-shape-divider-bottom-1592107561 svg {
+  position: relative;
+  display: block;
+  width: calc(141% + 1.3px);
+  height: 167px;
+}
+
+.custom-shape-divider-bottom-1592107561 .shape-fill {
+  fill: #f59923;
+}
+
+/* shape divider purple */
+
+.custom-shape-divider-bottom-1592108734 {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  overflow: hidden;
+  line-height: 0;
+  transform: rotate(180deg);
+}
+
+.custom-shape-divider-bottom-1592108734 svg {
+  position: relative;
+  display: block;
+  width: calc(197% + 1.3px);
+  height: 500px;
+}
+
+.custom-shape-divider-bottom-1592108734 .shape-fill {
+  fill: #9923f5;
+}
 /* Chat Page */
 
 .chat-container {

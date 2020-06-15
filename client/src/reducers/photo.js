@@ -13,6 +13,8 @@ import {
   GET_ALL_PHOTOS_BY_ID,
   GET_FILTERED_PHOTOS,
   CLEAR_PHOTOS,
+  GET_RECENT_PHOTOS,
+  GET_CONNECTED_PHOTOS,
 } from '../actions/types';
 
 const initialState = {
@@ -38,6 +40,8 @@ export default function (state = initialState, action) {
     case GET_ALL_PHOTOS_BY_ID:
     case GET_PROFILE_PIC_BY_ID:
     case GET_FILTERED_PHOTOS:
+    case GET_RECENT_PHOTOS:
+    case GET_CONNECTED_PHOTOS:
       return {
         ...state,
         photos: payload,

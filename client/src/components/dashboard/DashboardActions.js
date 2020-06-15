@@ -11,6 +11,12 @@ export const DashboardActions = ({ profile: { user: _id } }) => {
       <Link to='/filters' className='btn btn-light'>
         <i className='fas fa-images text-primary'></i> Matching Criteria
       </Link>
+      <Link to='/recent-profiles' className='btn btn-light'>
+        <i className='fas fa-images text-primary'></i> Recent Profiles
+      </Link>
+      <Link to='/connected-users' className='btn btn-light'>
+        <i className='fas fa-images text-primary'></i> Connected Profiles
+      </Link>
       <Link to='/add-experience' className='btn btn-light'>
         <i className='fab fa-black-tie text-primary'></i> Add Experience
       </Link>

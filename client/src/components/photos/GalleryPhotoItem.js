@@ -86,11 +86,12 @@ const GalleryPhotoItem = ({
         <button type='button' className='btn btn-light'>
           <i className='fas fa-fire-alt' />{' '}
           <span>
-            {profile.checkedOutBy.length + profile.likedBy.length > 0 && (
-              <span>
-                {profile.checkedOutBy.length + profile.likedBy.length}
-              </span>
-            )}
+            {profile.checkedOutBy &&
+              profile.checkedOutBy.length + profile.likedBy.length > 0 && (
+                <span>
+                  {profile.checkedOutBy.length + profile.likedBy.length}
+                </span>
+              )}
           </span>
         </button>
         {/* <img className='round-img' src={avatar} alt='' /> */}

@@ -15,6 +15,7 @@ export const forceRefresh = (userID) => async () => {
       let tmp = list.findIndex((x) => x.user === userID);
       // If user is online
       if (tmp !== -1) {
+        console.log('initiating refresh');
         socket.emit('initiateRefresh', userID, list[tmp].sid);
       }
     });
