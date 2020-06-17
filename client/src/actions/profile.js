@@ -12,6 +12,7 @@ import {
   PROMPT_UPLOAD_PROFILE_PHOTO,
   ADD_MATCH_PREFERENCES,
   GET_CHAT_LIST,
+  DISCONNECT,
 } from './types';
 
 // Get current users profile
@@ -314,25 +315,38 @@ export const editPreferences = (formData, history) => async (dispatch) => {
     });
   }
 };
+// Disconnect with users
+export const disconnect = (id) => async (dispatch) => {
+  if (window.confirm('Are you sure? This CANNOT be undone!')) {
+    try {
+      await axios.post(`/api/profile/disconnect/${id}`);
 
-// get Chat users first names
+      dispatch({ type: DISCONNECT });
 
-// // Get current users profile
-// export const getChatNames = () => async (dispatch) => {
-//   console.log('front reached');
+      dispatch(setAlert('You have disconnected with this user.'));
+    } catch (err) {
+      dispatch({
+        type: PROFILE_ERROR,
+        payload: { msg: err.response.statusText, status: err.response.status },
+      });
+    }
+  }
+};
+
+// export const addLike = (id) => async (dispatch) => {
 //   try {
-//     // make request to backend api/profile/me
-//     const res = await axios.get('/api/profile/my_correspondances');
-
+//     const res = await axios.put(`/api/photos/like/${id}`);
+//     console.log('res.data is');
+//     console.log(res.data);
 //     dispatch({
-//       type: GET_CHAT_LIST,
-//       payload: res.data,
+//       type: UPDATE_LIKES,
+//       payload: { id, likes: res.data },
 //     });
 //   } catch (err) {
-//     dispatch({ type: CLEAR_PROFILE });
 //     dispatch({
-//       type: PROFILE_ERROR,
-//       payload: { msg: err.response.statusText, status: err.response.status },
+//       type: PHOTO_ERROR,
+//       // payload: { msg: err.response.statusText, status: err.response.status },
+//       payload: { msg: 'server error', status: 500 },
 //     });
 //   }
 // };

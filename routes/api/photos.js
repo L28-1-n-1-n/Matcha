@@ -350,8 +350,8 @@ router.get('/recentPhotos', auth, async (req, res) => {
   }
 });
 
-// @route   GET api/photos/recentPhotos
-// @desc    Get profile pics of recently checked out  profiles
+// @route   GET api/photos/connectedPhotos
+// @desc    Get profile pics of connected profiles
 // @access  Private
 router.get('/connectedPhotos', auth, async (req, res) => {
   try {

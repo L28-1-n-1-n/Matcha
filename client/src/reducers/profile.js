@@ -5,6 +5,7 @@ import {
   UPDATE_PROFILE,
   GET_PROFILES,
   GET_REPOS,
+  DISCONNECT,
   // GET_CHAT_LIST,
 } from '../actions/types';
 
@@ -24,6 +25,7 @@ export default function (state = initialState, action) {
   switch (type) {
     case GET_PROFILE:
     case UPDATE_PROFILE:
+    case DISCONNECT:
       return {
         ...state,
         profile: payload,

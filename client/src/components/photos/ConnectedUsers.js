@@ -2,7 +2,7 @@ import React, { Fragment, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Spinner from '../layout/Spinner';
-import GalleryPhotoItem from './GalleryPhotoItem';
+import ConnectedPhotoItem from './ConnectedPhotoItem';
 import { getConnectedPhotos } from '../../actions/photo';
 import { getCurrentProfile } from '../../actions/profile';
 
@@ -27,21 +27,21 @@ const ConnectedUsers = ({
 
   // Get profile pics of other users, excluding my own
 
-  return (
+  return loading && ProfilePics == null ? (
+    <Spinner />
+  ) : (
     <Fragment>
-      {loading ? (
-        <Spinner />
-      ) : (
+      <h1 className='large text-primary-T'>Connected Users</h1>
+      {ProfilePics.length !== 0 ? (
         <Fragment>
-          <h1 className='large text-primary-T'>Recent Profiles</h1>
           <p className='lead'>
-            <i className='fas fa-heartbeat' /> You recently checked out these
-            profiles
+            <i className='fas fa-heartbeat' /> You recently connected with these
+            users
           </p>
           <div className='photo-collection'>
             {ProfilePics &&
               ProfilePics.map((photo) => (
-                <GalleryPhotoItem
+                <ConnectedPhotoItem
                   key={photo._id}
                   photo={photo}
                   myProfile={profile}
@@ -49,6 +49,11 @@ const ConnectedUsers = ({
               ))}
           </div>
         </Fragment>
+      ) : (
+        <p className='lead'>
+          <i className='fas fa-heartbeat' /> No connections yet... Start giving
+          more likes!
+        </p>
       )}
     </Fragment>
   );

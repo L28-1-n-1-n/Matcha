@@ -598,4 +598,110 @@ router.post(
 //     res.status(500).send('Server Error');
 //   }
 // });
+
+// @route   PUT api/profile/experience
+// @desc    Add profile experience
+// @access  Private
+
+router.post('/disconnect/:id', auth, async (req, res) => {
+  console.log('back reached');
+  console.log(req.params);
+  try {
+    const myProfile = await Profile.findOne({ user: req.user.id });
+    console.log('back reached 2');
+    console.log(req.params.id);
+    const disconnectProfile = await Profile.findOne({
+      user: req.params.id.toString(),
+    });
+    // myProfile.updateOne({
+    //   $pull: {
+    //     correspondances: {
+    //       user: req.params.id.toString(),
+    //       // name: likedBy_user.firstname,
+    //     },
+    //   },
+    // });
+    console.log('back one');
+
+    myProfile.updateOne(
+      {
+        $pull: {
+          likes: {
+            user: req.params.id,
+          },
+          correspondances: {
+            user: req.params.id,
+          },
+          likedBy: {
+            user: req.params.id,
+          },
+        },
+      },
+      function (err, data) {
+        console.log(err, data);
+      }
+    );
+    console.log(myProfile.likes);
+    console.log('back two');
+    disconnectProfile.updateOne(
+      {
+        $pull: {
+          likes: {
+            user: req.user.id,
+          },
+          correspondances: {
+            user: req.user.id,
+          },
+          likedBy: {
+            user: req.user.id,
+          },
+        },
+      },
+      function (err, data) {
+        console.log(err, data);
+      }
+    );
+    console.log(disconnectProfile.likes);
+    console.log('back three');
+    // myProfile.updateOne({
+    //   $pull: {
+    //     likedBy: {
+    //       user: req.params.id.toString(),
+    //     },
+    //   },
+    // });
+    // console.log('back three');
+
+    // disconnectProfile.updateOne({
+    //   $pull: {
+    //     correspondances: {
+    //       user: req.user.id,
+    //       // name: likedBy_user.firstname,
+    //     },
+    //   },
+    // });
+    // console.log('back four');
+
+    // disconnectProfile.updateOne({
+    //   $pull: {
+    //     likes: {
+    //       user: req.user.id,
+    //     },
+    //   },
+    // });
+    // console.log('back five');
+
+    // disconnectProfile.updateOne({
+    //   $pull: {
+    //     likedBy: {
+    //       user: req.user.id,
+    //     },
+    //   },
+    // });
+    // res.json(profile);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
+});
 module.exports = router;
