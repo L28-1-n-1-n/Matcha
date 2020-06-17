@@ -19,6 +19,7 @@ const ConnectedUsers = ({
   //   getPhotos();
   // });
   let ProfilePics = photos;
+  console.log(profile.correspondances);
   useEffect(() => {
     getCurrentProfile();
     getConnectedPhotos();
@@ -32,7 +33,7 @@ const ConnectedUsers = ({
   ) : (
     <Fragment>
       <h1 className='large text-primary-T'>Connected Users</h1>
-      {ProfilePics.length !== 0 ? (
+      {profile.correspondances.length !== 0 ? (
         <Fragment>
           <p className='lead'>
             <i className='fas fa-heartbeat' /> You recently connected with these

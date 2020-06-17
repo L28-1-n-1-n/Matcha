@@ -2,6 +2,7 @@ import React, { Fragment, useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Link, withRouter } from 'react-router-dom';
 import { forceRefresh } from '../../actions/socClient';
+import { block } from '../../actions/profile';
 
 import Moment from 'react-moment';
 import { connect } from 'react-redux';
@@ -20,6 +21,7 @@ const ProfilePhotoItem = ({
   photo: { _id, isProfilePic, firstname, user, likes, date, data, profile },
   showActions,
   forceRefresh,
+  block,
 }) => {
   return (
     <div className='profile-all-img bg-white p-1 my-1'>
@@ -51,6 +53,13 @@ const ProfilePhotoItem = ({
             >
               <i className='fas fa-thumbs-down' />
             </button>
+            <button
+              onClick={() => block(profile.user)}
+              type='button'
+              className='btn btn-danger'
+            >
+              <i className='fas fa-ban' /> {'Block'}
+            </button>
           </Fragment>
         )}
       </div>
@@ -71,6 +80,7 @@ ProfilePhotoItem.propTypes = {
   makeProfilePic: PropTypes.func.isRequired,
   profile: PropTypes.object.isRequired,
   forceRefresh: PropTypes.func.isRequired,
+  block: PropTypes.func.isRequired,
 };
 
 export default connect(null, {
@@ -79,4 +89,5 @@ export default connect(null, {
   removeLike,
   makeProfilePic,
   forceRefresh,
+  block,
 })(ProfilePhotoItem);

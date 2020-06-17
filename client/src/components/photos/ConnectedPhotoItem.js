@@ -5,6 +5,7 @@ import Moment from 'react-moment';
 import { forceRefresh } from '../../actions/socClient';
 import { disconnect } from '../../actions/profile';
 import { connect } from 'react-redux';
+import { block } from '../../actions/profile';
 
 import {
   addLike,
@@ -28,6 +29,7 @@ const ConnectedPhotoItem = ({
   addClickedBy,
   forceRefresh,
   disconnect,
+  block,
   auth,
   photo: {
     _id,
@@ -127,6 +129,13 @@ const ConnectedPhotoItem = ({
               <i className='fas fa-thumbs-down' />
             </button>
             <button
+              onClick={() => block(profile.user)}
+              type='button'
+              className='btn btn-danger'
+            >
+              <i className='fas fa-ban' /> {'Block'}
+            </button>
+            <button
               onClick={() => disconnect(profile.user)}
               type='button'
               className='btn btn-danger'
@@ -134,6 +143,7 @@ const ConnectedPhotoItem = ({
               <i className='fas fa-times' /> {'Disconnect with '}
               {firstname}
             </button>
+
             {/* To tell whether the current user is owner of this photo, if yes then display delete button */}
             {/* {!auth.loading && user === auth.user._id && (
             <button
@@ -168,6 +178,7 @@ ConnectedPhotoItem.propTypes = {
   makeProfilePic: PropTypes.func.isRequired,
   forceRefresh: PropTypes.func.isRequired,
   disconnect: PropTypes.func.isRequired,
+  block: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
@@ -185,6 +196,7 @@ export default connect(mapStateToProps, {
   addClickedBy,
   forceRefresh,
   disconnect,
+  block,
 })(ConnectedPhotoItem);
 
 // export default connect(mapStateToProps, {

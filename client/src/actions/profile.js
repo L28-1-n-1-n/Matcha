@@ -13,6 +13,7 @@ import {
   ADD_MATCH_PREFERENCES,
   GET_CHAT_LIST,
   DISCONNECT,
+  BLOCK_USER,
 } from './types';
 
 // Get current users profile
@@ -243,7 +244,7 @@ export const deleteAccount = (id) => async (dispatch) => {
       dispatch({ type: CLEAR_PROFILE });
       dispatch({ type: ACCOUNT_DELETED });
 
-      dispatch(setAlert('Your account has been permanently deleted'));
+      dispatch(setAlert('Your account has been permanently deleted', 'danger'));
     } catch (err) {
       dispatch({
         type: PROFILE_ERROR,
@@ -323,7 +324,7 @@ export const disconnect = (id) => async (dispatch) => {
 
       dispatch({ type: DISCONNECT });
 
-      dispatch(setAlert('You have disconnected with this user.'));
+      dispatch(setAlert('You have disconnected with this user.', 'success'));
     } catch (err) {
       dispatch({
         type: PROFILE_ERROR,
@@ -333,6 +334,23 @@ export const disconnect = (id) => async (dispatch) => {
   }
 };
 
+// Disconnect with users
+export const block = (id) => async (dispatch) => {
+  if (window.confirm('Are you sure? This CANNOT be undone!')) {
+    try {
+      await axios.post(`/api/profile/block/${id}`);
+
+      dispatch({ type: BLOCK_USER });
+
+      dispatch(setAlert('You have blocked this user.', 'success'));
+    } catch (err) {
+      dispatch({
+        type: PROFILE_ERROR,
+        payload: { msg: err.response.statusText, status: err.response.status },
+      });
+    }
+  }
+};
 // export const addLike = (id) => async (dispatch) => {
 //   try {
 //     const res = await axios.put(`/api/photos/like/${id}`);

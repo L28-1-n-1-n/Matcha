@@ -82,8 +82,29 @@ router.get('/', auth, async (req, res) => {
 // @access  Private
 router.get('/filteredMatches', auth, async (req, res) => {
   try {
-    const photos = await Photo.find()
-      .populate('profile', [
+    // const photos = await Photo.find()
+    //   .populate('profile', [
+    //     '_id',
+    //     'user',
+    //     'location',
+    //     'bday',
+    //     'bio',
+    //     'gender',
+    //     'interestedGender',
+    //     'tags',
+    //     'fame',
+    //     'distance',
+    //     'maxCommonTags',
+    //     'likes',
+    //     'likedBy',
+    //     'checkedOut',
+    //     'checkedOutBy',
+    //   ])
+    //   .sort({ date: -1 }); // latest photo first
+
+    const photos = await Photo.find({ isProfilePic: true }).populate(
+      'profile',
+      [
         '_id',
         'user',
         'location',
@@ -99,8 +120,8 @@ router.get('/filteredMatches', auth, async (req, res) => {
         'likedBy',
         'checkedOut',
         'checkedOutBy',
-      ])
-      .sort({ date: -1 }); // latest photo first
+      ]
+    );
     const myProfile = await Profile.findOne({ user: req.user.id });
 
     if (!myProfile) {
@@ -117,9 +138,29 @@ router.get('/filteredMatches', auth, async (req, res) => {
       return (age = month < 0 ? age - 1 : day < 0 ? age - 1 : age);
     };
 
-    if (photos) {
-      ProfilePics = photos.filter((photo) => photo.profile);
+    let ProfilePics;
+
+    if (!myProfile.blocked && !myProfile.blockedBy) {
+      ProfilePics = photos;
     }
+    // Remove blocked profiles
+    if (photos && myProfile.blocked) {
+      ProfilePics = photos.filter(function (e) {
+        return !myProfile.blocked.some(function (s) {
+          return s.user.toString() === e.user._id.toString();
+        });
+      });
+    }
+
+    // Remove possibility to see profiles of ppl who has blocked this user
+    if (photos && myProfile.blockedBy) {
+      ProfilePics = ProfilePics.filter(function (e) {
+        return !myProfile.blockedBy.some(function (s) {
+          return s.user.toString() === e.user._id.toString();
+        });
+      });
+    }
+
     if (ProfilePics && myProfile) {
       if (myProfile.interestedGender == 'Female') {
         ProfilePics = ProfilePics.filter(

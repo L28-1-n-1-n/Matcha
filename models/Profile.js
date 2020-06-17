@@ -119,6 +119,22 @@ const ProfileSchema = new mongoose.Schema({
       },
     },
   ],
+  blocked: [
+    {
+      user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'user',
+      },
+    },
+  ],
+  blockedBy: [
+    {
+      user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'user',
+      },
+    },
+  ],
   ageStarts: {
     type: Number,
   },

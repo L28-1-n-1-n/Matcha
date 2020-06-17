@@ -4,6 +4,7 @@ import { Link, withRouter } from 'react-router-dom';
 import Moment from 'react-moment';
 import { forceRefresh } from '../../actions/socClient';
 import { connect } from 'react-redux';
+import { block } from '../../actions/profile';
 
 import {
   addLike,
@@ -26,6 +27,7 @@ const GalleryPhotoItem = ({
   makeProfilePic,
   addClickedBy,
   forceRefresh,
+  block,
   auth,
   photo: {
     _id,
@@ -123,7 +125,13 @@ const GalleryPhotoItem = ({
             >
               <i className='fas fa-thumbs-down' />
             </button>
-
+            <button
+              onClick={() => block(profile.user)}
+              type='button'
+              className='btn btn-danger'
+            >
+              <i className='fas fa-ban' /> {'Block'}
+            </button>
             {/* To tell whether the current user is owner of this photo, if yes then display delete button */}
             {/* {!auth.loading && user === auth.user._id && (
             <button
@@ -157,6 +165,7 @@ GalleryPhotoItem.propTypes = {
   showActions: PropTypes.bool,
   makeProfilePic: PropTypes.func.isRequired,
   forceRefresh: PropTypes.func.isRequired,
+  block: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
@@ -173,6 +182,7 @@ export default connect(mapStateToProps, {
   makeProfilePic,
   addClickedBy,
   forceRefresh,
+  block,
 })(GalleryPhotoItem);
 
 // export default connect(mapStateToProps, {

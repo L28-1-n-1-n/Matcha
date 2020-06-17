@@ -484,41 +484,8 @@ router.get('/github/:gusername', (req, res) => {
 router.post(
   '/matchpreferences',
   auth,
-  // [
-  //   auth,
-  //   [
-  //     check('gender', 'Gender is required').isIn([
-  //       'Male',
-  //       'Female',
-  //       'Non-Binary',
-  //     ]),
-  //     check('bday', 'Date of birth is required').not().isEmpty(),
-  //     check('bday.day', 'Date of birth is required')
-  //       .not()
-  //       .isIn(['Invalid date', 'undefined', NaN]),
-  //     check(
-  //       'interestedGender',
-  //       'Please specify the gender/s/ you are interested in.'
-  //     ).isIn(['Male', 'Female', 'Both']),
-  //     check('bio', 'Please fill in Short Bio').not().isEmpty(),
-  //     check('tags', 'Enter a list of interests').not().isEmpty(),
-  //     check(
-  //       'bio',
-  //       'Please make sure your bio is less than 100 characters.'
-  //     ).isLength({ max: 200 }),
-  //     check('firstname', 'Please fill in first name').not().isEmpty(),
-  //     check('lastname', 'Please fill in last name').not().isEmpty(),
-  //     check('email', 'Please ensure email is in correct format').isEmail(),
-  //     check('firstname', 'First name is too long').isLength({ max: 15 }),
-  //     check('lastname', 'Last name is too long').isLength({ max: 15 }),
-  //   ],
-  // ],
-  async (req, res) => {
-    // const errors = validationResult(req);
-    // if (!errors.isEmpty()) {
-    //   return res.status(400).json({ errors: errors.array() });
-    // }
 
+  async (req, res) => {
     const {
       ageStarts,
       ageEnds,
@@ -565,42 +532,8 @@ router.post(
   }
 );
 
-// // @route   GET api/profile/my_correspondances
-// // @desc    Get the list of names
-// // @access  Private
-// router.get('/my_correspondances', auth, async (req, res) => {
-//   console.log('back reached');
-//   console.log(req.user.id);
-//   try {
-//     // find user by its objectid
-//     // populate the user with firstname and avatar
-//     const profile = await Profile.findOne({
-//       user: req.user.id,
-//     });
-//     if (!profile) {
-//       return res
-//         .status(400)
-//         .json({ msg: ' There is no profile for this user' });
-//     }
-//     console.log(profile.correspondances);
-//     var userlist = [];
-//     profile.correspondances.forEach(function (entry) {
-//       const member = User.findById(entry.user.toString()).select(
-//         'id firstname'
-//       );
-//       console.log(member);
-//       userlist.push({ no: id, name: firstname });
-//     });
-
-//     res.json(userlist);
-//   } catch (err) {
-//     console.error(err.message);
-//     res.status(500).send('Server Error');
-//   }
-// });
-
-// @route   PUT api/profile/experience
-// @desc    Add profile experience
+// @route   POST api/disconnect/:id
+// @desc    Disconnect with a user
 // @access  Private
 
 router.post('/disconnect/:id', auth, async (req, res) => {
@@ -608,22 +541,12 @@ router.post('/disconnect/:id', auth, async (req, res) => {
   console.log(req.params);
   try {
     const myProfile = await Profile.findOne({ user: req.user.id });
-    console.log('back reached 2');
-    console.log(req.params.id);
+
     const disconnectProfile = await Profile.findOne({
       user: req.params.id.toString(),
     });
-    // myProfile.updateOne({
-    //   $pull: {
-    //     correspondances: {
-    //       user: req.params.id.toString(),
-    //       // name: likedBy_user.firstname,
-    //     },
-    //   },
-    // });
-    console.log('back one');
 
-    myProfile.updateOne(
+    await myProfile.updateOne(
       {
         $pull: {
           likes: {
@@ -641,9 +564,8 @@ router.post('/disconnect/:id', auth, async (req, res) => {
         console.log(err, data);
       }
     );
-    console.log(myProfile.likes);
-    console.log('back two');
-    disconnectProfile.updateOne(
+
+    await disconnectProfile.updateOne(
       {
         $pull: {
           likes: {
@@ -661,44 +583,68 @@ router.post('/disconnect/:id', auth, async (req, res) => {
         console.log(err, data);
       }
     );
-    console.log(disconnectProfile.likes);
-    console.log('back three');
-    // myProfile.updateOne({
-    //   $pull: {
-    //     likedBy: {
-    //       user: req.params.id.toString(),
-    //     },
-    //   },
-    // });
-    // console.log('back three');
+    res.json(myProfile);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
+});
 
-    // disconnectProfile.updateOne({
-    //   $pull: {
-    //     correspondances: {
-    //       user: req.user.id,
-    //       // name: likedBy_user.firstname,
-    //     },
-    //   },
-    // });
-    // console.log('back four');
+// @route   POST api/disconnect/:id
+// @desc    Disconnect with a user
+// @access  Private
 
-    // disconnectProfile.updateOne({
-    //   $pull: {
-    //     likes: {
-    //       user: req.user.id,
-    //     },
-    //   },
-    // });
-    // console.log('back five');
+router.post('/block/:id', auth, async (req, res) => {
+  try {
+    const myProfile = await Profile.findOne({ user: req.user.id });
+    const blockProfile = await Profile.findOne({
+      user: req.params.id.toString(),
+    });
 
-    // disconnectProfile.updateOne({
-    //   $pull: {
-    //     likedBy: {
-    //       user: req.user.id,
-    //     },
-    //   },
-    // });
-    // res.json(profile);
+    await myProfile.updateOne({
+      $pull: {
+        likes: {
+          user: req.params.id,
+        },
+        correspondances: {
+          user: req.params.id,
+        },
+        likedBy: {
+          user: req.params.id,
+        },
+      },
+    });
+
+    await myProfile.updateOne({
+      $push: {
+        blocked: {
+          user: req.params.id,
+        },
+      },
+    });
+
+    await blockProfile.updateOne({
+      $push: {
+        blockedBy: {
+          user: req.user.id,
+        },
+      },
+    });
+
+    await blockProfile.updateOne({
+      $pull: {
+        likes: {
+          user: req.user.id,
+        },
+        correspondances: {
+          user: req.user.id,
+        },
+        likedBy: {
+          user: req.user.id,
+        },
+      },
+    });
+    res.json(myProfile);
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server Error');
