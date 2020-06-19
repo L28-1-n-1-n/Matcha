@@ -135,6 +135,9 @@ const ProfileSchema = new mongoose.Schema({
       },
     },
   ],
+  onlineNow: {
+    type: String,
+  },
   ageStarts: {
     type: Number,
   },

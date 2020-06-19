@@ -84,24 +84,27 @@ const GalleryPhotoItem = ({
         </p>
         {profile && profile.location && (
           <p className='my-1'>{profile.location.city}</p>
-        )}
-        <button type='button' className='btn btn-light'>
-          <i className='fas fa-fire-alt' />{' '}
-          <span>
-            {profile.checkedOutBy &&
-              profile.checkedOutBy.length + profile.likedBy.length > 0 && (
-                <span>
-                  {profile.checkedOutBy.length + profile.likedBy.length}
-                </span>
-              )}
-          </span>
-        </button>
+        )}{' '}
+        {profile.onlineNow === 'Yes' ? (
+          <i className='fas fa-circle' style={{ color: 'chartreuse' }}></i>
+        ) : (
+          <i className='fas fa-circle' style={{ color: 'red' }}></i>
+        )}{' '}
+        {/* <button type='button' className='btn btn-light'> */}
+        <i className='fas fa-fire-alt' style={{ color: 'orange' }} />{' '}
+        <span style={{ color: 'orange' }}>
+          {profile.checkedOutBy &&
+            profile.checkedOutBy.length + profile.likedBy.length > 0 && (
+              <span>
+                {profile.checkedOutBy.length + profile.likedBy.length}
+              </span>
+            )}
+        </span>
+        {/* </button> */}
         {/* <img className='round-img' src={avatar} alt='' /> */}
-
         <p className='photo-date'>
           Posted on <Moment format='YYYY/MM/DD'>{date}</Moment>
         </p>
-
         {showActions && (
           <Fragment>
             <button
@@ -126,7 +129,10 @@ const GalleryPhotoItem = ({
               <i className='fas fa-thumbs-down' />
             </button>
             <button
-              onClick={() => block(profile.user)}
+              onClick={() => {
+                block(profile.user);
+                forceRefresh(profile.user);
+              }}
               type='button'
               className='btn btn-danger'
             >

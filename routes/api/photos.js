@@ -5,6 +5,8 @@ const auth = require('../../middleware/auth');
 const Photo = require('../../models/Photo');
 const Profile = require('../../models/Profile');
 const User = require('../../models/User');
+var UserList = require('../../config/userlist');
+var userlist = UserList.userlist;
 
 const path = require('path');
 const multer = require('multer');
@@ -82,26 +84,6 @@ router.get('/', auth, async (req, res) => {
 // @access  Private
 router.get('/filteredMatches', auth, async (req, res) => {
   try {
-    // const photos = await Photo.find()
-    //   .populate('profile', [
-    //     '_id',
-    //     'user',
-    //     'location',
-    //     'bday',
-    //     'bio',
-    //     'gender',
-    //     'interestedGender',
-    //     'tags',
-    //     'fame',
-    //     'distance',
-    //     'maxCommonTags',
-    //     'likes',
-    //     'likedBy',
-    //     'checkedOut',
-    //     'checkedOutBy',
-    //   ])
-    //   .sort({ date: -1 }); // latest photo first
-
     const photos = await Photo.find({ isProfilePic: true }).populate(
       'profile',
       [
@@ -120,6 +102,7 @@ router.get('/filteredMatches', auth, async (req, res) => {
         'likedBy',
         'checkedOut',
         'checkedOutBy',
+        'onlineNow',
       ]
     );
     const myProfile = await Profile.findOne({ user: req.user.id });
@@ -225,6 +208,15 @@ router.get('/filteredMatches', auth, async (req, res) => {
     // sort by fame from high to low
     ProfilePics.sort((a, b) => (a.profile.fame > b.profile.fame ? -1 : 1));
 
+    if (ProfilePics) {
+      ProfilePics.forEach(function (photo) {
+        if (photo.profile.likedBy && photo.profile.checkedOutBy) {
+          photo.profile.fame =
+            photo.profile.likedBy.length + photo.profile.checkedOutBy.length;
+        }
+      });
+    }
+
     // match location by name
     if (ProfilePics && myProfile.preferredLocation) {
       ProfilePics = ProfilePics.filter(
@@ -269,6 +261,45 @@ router.get('/filteredMatches', auth, async (req, res) => {
     ProfilePics.sort((a, b) =>
       a.profile.distance > b.profile.distance ? 1 : -1
     );
+    console.log('one');
+    if (ProfilePics) {
+      ProfilePics.forEach(function (photo) {
+        console.log(photo.profile.user);
+        if (
+          userlist.some(function (s) {
+            return s.user.toString() === photo.profile.user.toString();
+          })
+        ) {
+          console.log('lol');
+          photo.profile.onlineNow = 'Yes';
+        }
+
+        // const even = (element) => element % 2 === 0;
+
+        // console.log(array.some(even));
+
+        // if (photo.profile.user && photo.profile.checkedOutBy) {
+        //   photo.profile.fame =
+        //     photo.profile.likedBy.length + photo.profile.checkedOutBy.length;
+        // }
+      });
+    }
+    console.log('two');
+    ProfilePics.forEach(function (photo) {
+      console.log(photo.firstname);
+      console.log(photo.profile.onlineNow);
+    });
+    console.log('three');
+
+    // Remove blocked profiles
+    if (photos && myProfile.blocked) {
+      ProfilePics = photos.filter(function (e) {
+        return !myProfile.blocked.some(function (s) {
+          return s.user.toString() === e.user._id.toString();
+        });
+      });
+    }
+
     // match Tags and return new array if tags match
     if (myProfile.preferredTags.length !== 0) {
       var filtered_array = [];
