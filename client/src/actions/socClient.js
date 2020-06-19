@@ -36,7 +36,7 @@ export const forceRefresh = (userID) => async () => {
 //     if (user && socid) {
 //       connDetails = { user: user._id, name: user.firstname, sid: socid };
 //       console.log(connDetails);
-//       socket.emit('lol', connDetails);
+//       socket.emit('conn_transfer', connDetails);
 //     }
 //     // setMessageList(messageList);
 //     // outputMessage(message);

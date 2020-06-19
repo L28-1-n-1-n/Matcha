@@ -137,6 +137,11 @@ const ProfileSchema = new mongoose.Schema({
   ],
   onlineNow: {
     type: String,
+    default: 'No',
+  },
+  lastOnline: {
+    type: Date,
+    default: Date.now,
   },
   ageStarts: {
     type: Number,

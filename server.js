@@ -52,7 +52,7 @@ io.on('connection', (socket) => {
   // io.emit(); will emit to ALL clients
   console.log('before, userlist is ');
   console.log(userlist);
-  socket.on('lol', (m) => {
+  socket.on('conn_transfer', (m) => {
     let tmp = userlist.findIndex((x) => x.user === m.user);
 
     if (tmp !== -1) {
@@ -66,6 +66,7 @@ io.on('connection', (socket) => {
   // Runs when client disconnects
   socket.on('disconnect', () => {
     // io.emit('message', 'A user has left the chat');
+
     console.log('disconnected user is', socket.id);
     let tmp = userlist.findIndex((x) => x.sid === socket.id);
     if (tmp !== -1) {
@@ -73,6 +74,13 @@ io.on('connection', (socket) => {
       console.log(userlist);
     }
     clearInterval(interval);
+  });
+  socket.on('logout_disconnect', (m) => {
+    let tmp = userlist.findIndex((x) => x.user === m);
+    if (tmp !== -1) {
+      userlist.splice(tmp, 1);
+      console.log(userlist);
+    }
   });
   // Listen for newChatMessage
   socket.on('newChatMessage', (msg) => {

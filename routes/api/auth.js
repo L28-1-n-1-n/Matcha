@@ -9,6 +9,7 @@ const User = require('../../models/User');
 // const transporter = require('../../mail/mailer');
 
 const nodemailer = require('nodemailer');
+const Profile = require('../../models/Profile');
 
 const MAILER_USER = config.get('mailerUser');
 const MAILER_PASS = config.get('mailerPass');
@@ -26,6 +27,12 @@ const transporter = nodemailer.createTransport({
 router.get('/', auth, async (req, res) => {
   try {
     const user = await User.findById(req.user.id).select('-password');
+    const profile = await Profile.findOne({ user: req.user.id });
+    const logon_time = new Date();
+    if (profile) {
+      profile.updateOne({ lastOnline: logon_time });
+      console.log(profile.lastOnline);
+    }
     res.json(user);
   } catch (err) {
     console.error(err.message);

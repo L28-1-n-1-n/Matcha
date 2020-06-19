@@ -103,6 +103,7 @@ router.get('/filteredMatches', auth, async (req, res) => {
         'checkedOut',
         'checkedOutBy',
         'onlineNow',
+        'lastOnline',
       ]
     );
     const myProfile = await Profile.findOne({ user: req.user.id });
@@ -270,7 +271,6 @@ router.get('/filteredMatches', auth, async (req, res) => {
             return s.user.toString() === photo.profile.user.toString();
           })
         ) {
-          console.log('lol');
           photo.profile.onlineNow = 'Yes';
         }
 

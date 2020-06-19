@@ -6,6 +6,7 @@ import { NavLink } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { logout, removeNotifications } from '../../actions/auth';
+import { forceRefresh } from '../../actions/socClient';
 
 import io from 'socket.io-client';
 import { socket } from '../../actions/socClient';
@@ -49,7 +50,7 @@ export const Navbar = ({
     //   if (user && socid) {
     //     connDetails = { user: user._id, name: user.firstname, sid: socid };
     //     console.log(connDetails);
-    //     socket.emit('lol', connDetails);
+    //     socket.emit('conn_transfer', connDetails);
     //   }
     // });
   };
@@ -105,7 +106,7 @@ export const Navbar = ({
       connDetails = { user: user._id, sid: socid };
       console.log('ONE');
       console.log(connDetails);
-      socket.emit('lol', connDetails);
+      socket.emit('conn_transfer', connDetails);
       // window.localStorage.setItem('refresh', 0);
     }
 
@@ -120,7 +121,7 @@ export const Navbar = ({
       //   connDetails = { user: user._id, name: user.firstname, sid: socid };
       //   console.log('TWO');
       //   console.log(connDetails);
-      //   socket.emit('lol', connDetails);
+      //   socket.emit('conn_transfer', connDetails);
       // }
     });
 
@@ -133,7 +134,7 @@ export const Navbar = ({
     // if (user && socid) {
     //   connDetails = { user: user._id, sid: socid };
     //   console.log(connDetails);
-    //   socket.emit('lol', connDetails);
+    //   socket.emit('conn_transfer', connDetails);
     // }
     console.log('socid four', socid);
     socket.on('refreshTarget', (target_ID) => {
@@ -164,7 +165,7 @@ export const Navbar = ({
   //   if (user && socid) {
   //     connDetails = { user: user._id, name: user.firstname, sid: socid };
   //     console.log(connDetails);
-  //     socket.emit('lol', connDetails);
+  //     socket.emit('conn_transfer', connDetails);
   //   }
   // });
   const authLinks = (
@@ -211,7 +212,13 @@ export const Navbar = ({
         </Link>
       </li>
       <li>
-        <a onClick={logout} href='#!'>
+        <a
+          onClick={() => {
+            logout(user._id);
+            forceRefresh(user._id);
+          }}
+          href='#!'
+        >
           <i className='fas fa-door-open'></i>{' '}
           <span className='hide-sm'>Logout</span>
         </a>

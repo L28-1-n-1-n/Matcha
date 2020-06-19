@@ -15,6 +15,7 @@ import {
   DELETE_NOTIFICATIONS,
 } from './types';
 import setAuthToken from '../utils/setAuthToken';
+import { socket } from './socClient';
 
 // Load User
 export const loadUser = () => async (dispatch) => {
@@ -140,7 +141,8 @@ export const login = (username, password) => async (dispatch) => {
 };
 
 // Logout / Clear Profile
-export const logout = () => (dispatch) => {
+export const logout = (userID) => async (dispatch) => {
+  await socket.emit('logout_disconnect', userID);
   dispatch({ type: CLEAR_PROFILE });
   dispatch({ type: LOGOUT });
 };

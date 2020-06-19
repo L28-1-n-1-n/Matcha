@@ -85,26 +85,34 @@ const GalleryPhotoItem = ({
         {profile && profile.location && (
           <p className='my-1'>{profile.location.city}</p>
         )}{' '}
-        {profile.onlineNow === 'Yes' ? (
-          <i className='fas fa-circle' style={{ color: 'chartreuse' }}></i>
-        ) : (
-          <i className='fas fa-circle' style={{ color: 'red' }}></i>
-        )}{' '}
-        {/* <button type='button' className='btn btn-light'> */}
-        <i className='fas fa-fire-alt' style={{ color: 'orange' }} />{' '}
-        <span style={{ color: 'orange' }}>
-          {profile.checkedOutBy &&
-            profile.checkedOutBy.length + profile.likedBy.length > 0 && (
-              <span>
-                {profile.checkedOutBy.length + profile.likedBy.length}
-              </span>
-            )}
-        </span>
+        <div>
+          {profile.onlineNow === 'Yes' ? (
+            <i className='fas fa-circle' style={{ color: 'chartreuse' }}></i>
+          ) : (
+            <i className='fas fa-circle' style={{ color: 'red' }}></i>
+          )}{' '}
+          {/* <button type='button' className='btn btn-light'> */}
+          <i className='fas fa-fire-alt' style={{ color: 'orange' }} />{' '}
+          <span style={{ color: 'orange' }}>
+            {profile.checkedOutBy &&
+              profile.checkedOutBy.length + profile.likedBy.length > 0 && (
+                <span>
+                  {profile.checkedOutBy.length + profile.likedBy.length}
+                </span>
+              )}
+          </span>
+        </div>
         {/* </button> */}
-        {/* <img className='round-img' src={avatar} alt='' /> */}
+        {/* 
         <p className='photo-date'>
           Posted on <Moment format='YYYY/MM/DD'>{date}</Moment>
-        </p>
+        </p> */}
+        {profile.onlineNow === 'Yes' ? null : (
+          <p className='photo-date'>
+            Last Online :{' '}
+            <Moment format='YYYY/MM/DD'>{profile.lastOnline}</Moment>
+          </p>
+        )}{' '}
         {showActions && (
           <Fragment>
             <button
