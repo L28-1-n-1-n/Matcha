@@ -3,11 +3,12 @@ import UploadAlertMessage from './UploadAlertMessage';
 import Progress from './Progress';
 import PropTypes from 'prop-types';
 import axios from 'axios';
+import { forceRefresh } from '../actions/socClient';
 
 import { connect } from 'react-redux';
 import { addPhoto } from '../actions/photo';
 
-const FileUpload = ({ addPhoto }) => {
+const FileUpload = ({ addPhoto, forceRefresh, user, photos }) => {
   const [file, setFile] = useState('');
   const [text, setText] = useState('');
   const [filename, setFilename] = useState('Choose File');
@@ -79,7 +80,10 @@ const FileUpload = ({ addPhoto }) => {
       //   console.log(message);
       //   // outputMessage(message);
       // });
-
+      if (photos.length === 0) {
+        console.log('refresh at photo');
+        forceRefresh(user._id);
+      }
       addPhoto(formData);
     } catch (err) {
       if (err.response.status === 500) {
@@ -89,7 +93,8 @@ const FileUpload = ({ addPhoto }) => {
       }
     }
   };
-
+  console.log('user here is', user);
+  console.log('photos length is', photos.length);
   return (
     <Fragment>
       {/* <h4 className='display-4 text-center mb-4'>
@@ -157,6 +162,7 @@ const FileUpload = ({ addPhoto }) => {
 
 FileUpload.propTypes = {
   addPhoto: PropTypes.func.isRequired,
+  forceRefresh: PropTypes.func.isRequired,
 };
 
-export default connect(null, { addPhoto })(FileUpload);
+export default connect(null, { addPhoto, forceRefresh })(FileUpload);

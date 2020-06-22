@@ -14,6 +14,7 @@ import {
   GET_CHAT_LIST,
   DISCONNECT,
   BLOCK_USER,
+  REPORT_FAKE,
 } from './types';
 
 // Get current users profile
@@ -118,7 +119,7 @@ export const createProfile = (formData, history, edit = false) => async (
 
     if (!edit) {
       history.push('/dashboard');
-      console.log('yo we are here');
+
       dispatch({
         type: PROMPT_UPLOAD_PROFILE_PHOTO,
       });
@@ -334,7 +335,7 @@ export const disconnect = (id) => async (dispatch) => {
   }
 };
 
-// Disconnect with users
+// Block user
 export const block = (id) => async (dispatch) => {
   if (window.confirm('Are you sure? This CANNOT be undone!')) {
     try {
@@ -351,6 +352,25 @@ export const block = (id) => async (dispatch) => {
     }
   }
 };
+
+// Report user as fake
+export const reportFake = (id) => async (dispatch) => {
+  if (window.confirm('Are you sure? This CANNOT be undone!')) {
+    try {
+      await axios.post(`/api/profile/reportfake/${id}`);
+
+      dispatch({ type: REPORT_FAKE });
+
+      dispatch(setAlert('You have reported this user as fake.', 'success'));
+    } catch (err) {
+      dispatch({
+        type: PROFILE_ERROR,
+        payload: { msg: err.response.statusText, status: err.response.status },
+      });
+    }
+  }
+};
+
 // export const addLike = (id) => async (dispatch) => {
 //   try {
 //     const res = await axios.put(`/api/photos/like/${id}`);

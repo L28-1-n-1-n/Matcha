@@ -262,10 +262,9 @@ router.get('/filteredMatches', auth, async (req, res) => {
     ProfilePics.sort((a, b) =>
       a.profile.distance > b.profile.distance ? 1 : -1
     );
-    console.log('one');
+
     if (ProfilePics) {
       ProfilePics.forEach(function (photo) {
-        console.log(photo.profile.user);
         if (
           userlist.some(function (s) {
             return s.user.toString() === photo.profile.user.toString();
@@ -284,12 +283,6 @@ router.get('/filteredMatches', auth, async (req, res) => {
         // }
       });
     }
-    console.log('two');
-    ProfilePics.forEach(function (photo) {
-      console.log(photo.firstname);
-      console.log(photo.profile.onlineNow);
-    });
-    console.log('three');
 
     // Remove blocked profiles
     if (photos && myProfile.blocked) {
@@ -537,7 +530,7 @@ router.post('/', auth, upload.single('file'), async (req, res) => {
     });
     const photo = newPhoto.save();
     res.json(photo);
-    console.log(photo);
+
     // io.on('connection', (socket) => {
     //   console.log('New WS Connection 222...');
     //   console.log('socket connected with id:' + socket.id);
@@ -546,6 +539,12 @@ router.post('/', auth, upload.single('file'), async (req, res) => {
     //   socket.emit('message', newPhoto.fileName);
     // });
   });
+
+  // const photoLen = await Photo.find({
+  //   user: req.user.id,
+  // });
+  // console.log('photo.length is ', photoLen.length);
+  // res.json(photoLen.length);
 });
 
 // @route PUT api/photos/like/:id
@@ -658,9 +657,7 @@ router.put('/likedby/:id', auth, async (req, res) => {
               },
             },
           });
-          console.log('correspondances');
-          console.log(likedBy_user.firstname);
-          console.log(target_user.firstname);
+
           await myProfile.updateOne({
             $push: {
               correspondances: {
@@ -722,9 +719,7 @@ router.put('/likedby/:id', auth, async (req, res) => {
               },
             },
           });
-          console.log('correspondances');
-          console.log(likedBy_user.firstname);
-          console.log(target_user.firstname);
+
           await myProfile.updateOne({
             $push: {
               correspondances: {
@@ -757,7 +752,6 @@ router.put('/likedby/:id', auth, async (req, res) => {
           });
         }
       }
-      console.log('roar');
 
       return res.status(200).json({ profile_liked_by });
 

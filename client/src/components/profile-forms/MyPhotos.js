@@ -10,11 +10,16 @@ import axios from 'axios';
 // import { addPhoto } from '../../actions/photo';
 import FileUpload from '../FileUpload';
 
-const MyPhotos = ({ getMyPhotos, photo: { photos, loading } }) => {
+const MyPhotos = ({
+  getMyPhotos,
+  photo: { photos, loading },
+  auth: { user },
+}) => {
   useEffect(() => {
     getMyPhotos();
   }, [getMyPhotos]);
   console.log(photos.length);
+  console.log(user);
   return loading ? (
     <Spinner />
   ) : (
@@ -38,7 +43,7 @@ const MyPhotos = ({ getMyPhotos, photo: { photos, loading } }) => {
         {/* <h4 className='display-4 text-center mb-4'>
           <i className='far fa-images' /> Upload a photo
         </h4> */}
-        {photos.length > 4 ? null : <FileUpload />}
+        {photos.length > 4 ? null : <FileUpload user={user} photos={photos} />}
       </div>
     </Fragment>
   );
@@ -47,10 +52,12 @@ const MyPhotos = ({ getMyPhotos, photo: { photos, loading } }) => {
 MyPhotos.propTypes = {
   getMyPhotos: PropTypes.func.isRequired,
   photo: PropTypes.object.isRequired,
+  auth: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = (state) => ({
   photo: state.photo,
+  auth: state.auth,
 });
 
 export default connect(mapStateToProps, { getMyPhotos })(MyPhotos);

@@ -56,4 +56,5 @@ export const GET_RECENT_PHOTOS = 'GET_RECENT_PHOTOS';
 export const GET_CONNECTED_PHOTOS = 'GET_CONNECTED_PHOTOS';
 export const DISCONNECT = 'DISCONNECT';
 export const BLOCK_USER = 'BLOCK_USER';
+export const REPORT_FAKE = 'REPORT_FAKE';
 // export const GET_CHAT_LIST = 'GET_CHAT_LIST';

@@ -537,8 +537,6 @@ router.post(
 // @access  Private
 
 router.post('/disconnect/:id', auth, async (req, res) => {
-  console.log('back reached');
-  console.log(req.params);
   try {
     const myProfile = await Profile.findOne({ user: req.user.id });
 
@@ -590,8 +588,8 @@ router.post('/disconnect/:id', auth, async (req, res) => {
   }
 });
 
-// @route   POST api/disconnect/:id
-// @desc    Disconnect with a user
+// @route   POST api/block/:id
+// @desc    Block a user
 // @access  Private
 
 router.post('/block/:id', auth, async (req, res) => {
@@ -650,4 +648,31 @@ router.post('/block/:id', auth, async (req, res) => {
     res.status(500).send('Server Error');
   }
 });
+
+// @route   POST api/reportfake/:id
+// @desc    Report a user as fake
+// @access  Private
+
+router.post('/reportfake/:id', auth, async (req, res) => {
+  try {
+    const myProfile = await Profile.findOne({ user: req.user.id });
+    const targetProfile = await Profile.findOne({
+      user: req.params.id.toString(),
+    });
+
+    await targetProfile.updateOne({
+      $push: {
+        fakeVote: {
+          user: req.user.id,
+        },
+      },
+    });
+
+    res.json(myProfile);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
+});
+
 module.exports = router;

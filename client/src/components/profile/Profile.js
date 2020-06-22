@@ -9,7 +9,7 @@ import ProfilePhotoItem from '../photos/ProfilePhotoItem';
 // import ProfileExperience from './ProfileExperience';
 // import ProfileEducation from './ProfileEducation';
 // import ProfileGithub from './ProfileGithub';
-import { getProfileById } from '../../actions/profile';
+import { getProfileById, reportFake } from '../../actions/profile';
 import {
   getMyPhotos,
   // getProfilePicById,
@@ -18,6 +18,7 @@ import {
 
 const Profile = ({
   getMyPhotos,
+  reportFake,
   getProfileById,
   // getProfilePicById,
   getAllPhotosById,
@@ -64,7 +65,16 @@ const Profile = ({
                 <Link to='/edit-profile' className='btn btn-dark'>
                   Edit Profile
                 </Link>
-              )}
+              )}{' '}
+            <button
+              onClick={() => {
+                reportFake(profile.user._id);
+              }}
+              type='button'
+              className='btn btn-danger'
+            >
+              <i className='fas fa-ban' /> {'Report Fake Profile'}
+            </button>
             {/* <div className='profile-exp bg-white p-2'>
               <h2 className='text-primary-T'>Experience</h2> */}
             {/* {(profile.experience & profile.experience.length > 0) ? ( */}
@@ -111,6 +121,7 @@ const Profile = ({
 
 Profile.propTypes = {
   getProfileById: PropTypes.func.isRequired,
+  reportFake: PropTypes.func.isRequired,
   // getProfilePicById: PropTypes.func.isRequired,
   profile: PropTypes.object.isRequired,
   auth: PropTypes.object.isRequired,
@@ -126,6 +137,7 @@ const mapStateToProps = (state) => ({
 export default connect(mapStateToProps, {
   getProfileById,
   getAllPhotosById,
+  reportFake,
   // getProfilePicById,
   getMyPhotos,
 })(Profile);
