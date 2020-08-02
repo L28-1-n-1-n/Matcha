@@ -18,6 +18,7 @@ A dating webApp based on Geolocation and profile matches based on personal prefe
 * Advanced user registration, sign-in and password reset
 * JWT token management
 * Password Encryption
+* Image upload to MongoDB in binary format + conversion between binary data and JSON
 * Input validation by Express Validator
 * Real-time Chat and Notifications using Websockets
 * 2 methods of Geolocation - depending on Browser permission and IP address
