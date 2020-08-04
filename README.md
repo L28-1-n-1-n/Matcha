@@ -37,5 +37,9 @@ Forbidden tools:
 * Registration / Authentication library 
 
 <img src="/screenshots/Dashboard.png" height="500">
+### Personalized Matches
 <img src="/screenshots/Matches.png" height="500">
-<img src="/screenshots/Mobile\_View.png" height="500">
+### Mobile View
+<img src="/screenshots/mobile_view.png" height="500">
+### Instant Chat
+<img src="/screenshots/instant_chat.png" height="500">
