@@ -1,9 +1,11 @@
 # Matcha / Tindurr
 A dating webApp based on Geolocation and profile matches based on personal preferences. 
 
-<<< Insert image here >>>
-![Landing Page](/screenshots/Profile.png =50x100)
-<img src="/screenshots/Profile.png" height="50">
+<img src="/screenshots/landing_page.png" height="500">
+
+### Installation
+```npm i && cd ./client && npm i && cd ../ && npm run dev```
+
 ### Languages and Frameworks used:
 * React 
 * React-router-dom
@@ -34,5 +36,6 @@ Forbidden tools:
 * Validators 
 * Registration / Authentication library 
 
-### Installation
-```npm i && cd ./client && npm i && cd ../ && npm run dev```
+<img src="/screenshots/Dashboard.png" height="500">
+<img src="/screenshots/Matches.png" height="500">
+<img src="/screenshots/Mobile\_View.png" height="500">
