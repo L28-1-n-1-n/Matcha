@@ -2,7 +2,7 @@
 A dating webApp based on Geolocation and profile matches based on personal preferences. 
 
 <<< Insert image here >>>
-![Landing Page](/screenshots/Profile.png | width=50)
+![Landing Page](/screenshots/Profile.png =50x100)
 ### Languages and Frameworks used:
 * React 
 * React-router-dom
